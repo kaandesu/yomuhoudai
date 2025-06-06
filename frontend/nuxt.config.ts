@@ -48,6 +48,7 @@ export default defineNuxtConfig({
   },
   css: [
     "shepherd.js/dist/css/shepherd.css",
+    "~/assets/css/tailwindcss.css",
     "~/assets/css/main.css",
     "~/assets/css/index.css",
   ],
