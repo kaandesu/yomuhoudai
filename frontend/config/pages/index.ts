@@ -1,25 +1,32 @@
 import type { Page } from "~/types/config";
 
-/* NOTE:
- * I added some pages but i don't have a
- * clear idea yet so they are likely to change
- * once i do
- * */
 import { Explore } from "./Explore";
 import { Settings } from "./settings";
 import { Tour } from "./tour";
+import { Dashboard } from "./dashboard";
+import { Manage } from "./manage";
 
 export type PageId =
+  | "dashboard"
   | "editors-choice"
+  | "manage"
   | "explore"
   | "for-you"
   | "settings"
   | "tour";
 
-export const pages: Page[] = [Explore.value, Settings.value, Tour.value];
+export const pages: Page[] = [
+  Dashboard.value,
+  Explore.value,
+  Manage.value,
+  Settings.value,
+  Tour.value,
+];
 
 export const pagesDict: Record<string, Ref<Page>> = {
+  Dashboard,
   Explore,
+  Manage,
   Settings,
   Tour,
 };

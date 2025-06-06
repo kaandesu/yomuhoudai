@@ -6,6 +6,6 @@ export const Explore = ref<Page>({
   uid: "dashboard-explore",
   desc: "Explore ai-powered suggestions based on your profile.",
   tourDesc: "Explore book suggestions based on your profile.",
-  icon: "healthicons:artificial-intelligence-outline",
+  icon: "material-symbols:book-4-spark-outline",
   parent: "dashboard",
 });
