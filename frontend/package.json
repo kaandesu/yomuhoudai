@@ -24,6 +24,7 @@
     "@nuxtjs/i18n": "^9.3.4",
     "@radix-icons/vue": "^1.0.0",
     "@selemondev/vue3-marquee": "^0.0.8",
+    "@tanstack/vue-table": "^8.21.3",
     "@types/ejs": "^3.1.5",
     "@types/js-yaml": "^4.0.9",
     "@unovis/ts": "^1.5.1",
