@@ -1,13 +1,11 @@
-import { image, viewport, i18n } from "./config/";
-import tailwindcss from "@tailwindcss/vite";
+import { image, tailwindcss, viewport, i18n } from "./config/";
 export default defineNuxtConfig({
   ssr: false,
   pages: true,
-  // TODO: add 'lang' to the header and update title on change
   modules: [
-    // 'nuxt-capo',
     "nuxt-typed-router",
     "@formkit/auto-animate/nuxt",
+    "@nuxtjs/tailwindcss",
     "nuxt-icon",
     [
       "@nuxtjs/color-mode",
@@ -36,7 +34,6 @@ export default defineNuxtConfig({
   },
   vite: {
     base: "",
-    plugins: [tailwindcss()],
     optimizeDeps: {
       exclude: ["vee-validate"],
     },
@@ -46,14 +43,10 @@ export default defineNuxtConfig({
     baseURL: "",
     pageTransition: { name: "page", mode: "out-in" },
   },
-  css: [
-    "shepherd.js/dist/css/shepherd.css",
-    "~/assets/css/tailwindcss.css",
-    "~/assets/css/main.css",
-    "~/assets/css/index.css",
-  ],
+  tailwindcss,
+  css: ["shepherd.js/dist/css/shepherd.css", "~/assets/css/main.css"],
   devtools: { enabled: false },
-  compatibilityDate: "2024-04-03",
+  compatibilityDate: "2025-06-06",
   routeRules: {
     "/": { prerender: true },
   },

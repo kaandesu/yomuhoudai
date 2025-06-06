@@ -24,7 +24,6 @@
     "@nuxtjs/i18n": "^9.3.4",
     "@radix-icons/vue": "^1.0.0",
     "@selemondev/vue3-marquee": "^0.0.8",
-    "@tailwindcss/vite": "^4.1.8",
     "@types/ejs": "^3.1.5",
     "@types/js-yaml": "^4.0.9",
     "@unovis/ts": "^1.5.1",
@@ -47,7 +46,7 @@
     "reka-ui": "^2.1.0",
     "shadcn-nuxt": "^0.10.4",
     "tailwind-merge": "^2.6.0",
-    "tailwindcss": "^4.1.8",
+    "tailwindcss": "3.4.16",
     "tailwindcss-animate": "^1.0.7",
     "tw-animate-css": "^1.3.4",
     "vaul-vue": "^0.2.0",
@@ -75,8 +74,5 @@
     "vue3-calendar-heatmap": "^2.0.5",
     "zod": "^3.23.8"
   },
-  "packageManager": "pnpm@9.5.0",
-  "overrides": {
-    "vue": "latest"
-  }
+  "packageManager": "pnpm@9.5.0"
 }
