@@ -12,6 +12,8 @@ export const useStateManager = defineStore(
       collapsed: false,
     });
 
+    const apikeys = ref<Record<"gpt", string>>({ gpt: "" });
+
     const loadingPage = ref<boolean>(false);
 
     const currentPageInfo = ref<Page>({ uid: "" });
@@ -56,11 +58,12 @@ export const useStateManager = defineStore(
       navState,
       navigatePageById,
       loadingPage,
+      apikeys,
     };
   },
   {
     persist: {
-      paths: ["navState"],
+      paths: ["navState", "apikeys"],
     },
   },
 );
