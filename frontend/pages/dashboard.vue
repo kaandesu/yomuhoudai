@@ -1,3 +1,9 @@
 <template>
-  <main>this is dashboard</main>
+  <NuxtPage />
 </template>
+
+<script setup lang="ts">
+definePageMeta({
+  layout: "main",
+});
+</script>
