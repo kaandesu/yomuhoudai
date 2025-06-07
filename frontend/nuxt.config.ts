@@ -48,6 +48,20 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   compatibilityDate: "2025-06-06",
   routeRules: {
-    "/": { prerender: true },
+    "/api/**": {
+      proxy: {
+        to: "http://127.0.0.1:80/api/**",
+      },
+    },
+    "/api/v1/books/**": {
+      proxy: {
+        to: "http://127.0.0.1:80/api/v1/books/**",
+      },
+    },
+    "/api/v1/**": {
+      proxy: {
+        to: "http://127.0.0.1:80/api/v1/**",
+      },
+    },
   },
 });
