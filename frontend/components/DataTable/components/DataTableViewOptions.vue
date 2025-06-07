@@ -44,8 +44,3 @@ const columns = computed(() =>
     </DropdownMenuContent>
   </DropdownMenu>
 </template>
-
-<!-- <Button variant="default" class="h-4 bg-primary"> -->
-<!--   New Book -->
-<!--   <Icon name="proicons:book-add" class="ml-3" /> -->
-<!-- </Button> -->
