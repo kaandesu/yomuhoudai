@@ -87,7 +87,7 @@ importers:
         specifier: ^1.9.11
         version: 1.9.17(vue@3.5.16(typescript@5.8.3))
       reka-ui:
-        specifier: ^2.1.0
+        specifier: ^2.3.0
         version: 2.3.0(typescript@5.8.3)(vue@3.5.16(typescript@5.8.3))
       shadcn-nuxt:
         specifier: ^0.10.4
