@@ -17,8 +17,6 @@ services:
       - ./src:/var/www/html
     ports:
       - "80:80"
-    networks:
-      - yomuhoudai-net
 
   frontend:
     image: node:20
@@ -36,8 +34,6 @@ services:
         pnpm install &&
         pnpm dev --host
       "
-    networks:
-      - yomuhoudai-net
 
   mysql:
     image: mysql:8
@@ -49,9 +45,3 @@ services:
       MYSQL_PASSWORD: secret
       MYSQL_DATABASE: laravel
       MYSQL_ROOT_PASSWORD: secret
-    networks:
-      - yomuhoudai-net
-
-networks:
-  yomuhoudai-net:
-    driver: bridge
