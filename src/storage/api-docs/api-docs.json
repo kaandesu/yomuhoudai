@@ -84,14 +84,6 @@
                                         "type": "string",
                                         "example": "200"
                                     },
-                                    "language": {
-                                        "type": "string",
-                                        "example": "English"
-                                    },
-                                    "publisher": {
-                                        "type": "string",
-                                        "example": "Scribner"
-                                    },
                                     "publishedDate": {
                                         "type": "string",
                                         "example": "1925-04-10"
@@ -99,10 +91,6 @@
                                     "averageRating": {
                                         "type": "string",
                                         "example": "4.5"
-                                    },
-                                    "ratingsCount": {
-                                        "type": "string",
-                                        "example": "10000"
                                     }
                                 },
                                 "type": "object"
@@ -179,14 +167,6 @@
                                         "type": "string",
                                         "example": "277"
                                     },
-                                    "language": {
-                                        "type": "string",
-                                        "example": "English"
-                                    },
-                                    "publisher": {
-                                        "type": "string",
-                                        "example": "Little, Brown and Company"
-                                    },
                                     "publishedDate": {
                                         "type": "string",
                                         "example": "1951-07-16"
@@ -194,10 +174,6 @@
                                     "averageRating": {
                                         "type": "string",
                                         "example": "4.2"
-                                    },
-                                    "ratingsCount": {
-                                        "type": "string",
-                                        "example": "5000"
                                     }
                                 },
                                 "type": "object"
@@ -313,14 +289,6 @@
                                         "type": "string",
                                         "example": "200"
                                     },
-                                    "language": {
-                                        "type": "string",
-                                        "example": "English"
-                                    },
-                                    "publisher": {
-                                        "type": "string",
-                                        "example": "Scribner"
-                                    },
                                     "publishedDate": {
                                         "type": "string",
                                         "example": "1925-04-10"
@@ -328,10 +296,6 @@
                                     "averageRating": {
                                         "type": "string",
                                         "example": "4.5"
-                                    },
-                                    "ratingsCount": {
-                                        "type": "string",
-                                        "example": "10000"
                                     }
                                 },
                                 "type": "object"
@@ -499,14 +463,6 @@
                         "type": "string",
                         "example": "200"
                     },
-                    "language": {
-                        "type": "string",
-                        "example": "English"
-                    },
-                    "publisher": {
-                        "type": "string",
-                        "example": "Scribner"
-                    },
                     "publishedDate": {
                         "type": "string",
                         "example": "1925-04-10"
@@ -514,10 +470,6 @@
                     "averageRating": {
                         "type": "string",
                         "example": "4.5"
-                    },
-                    "ratingsCount": {
-                        "type": "string",
-                        "example": "10000"
                     }
                 },
                 "type": "object"

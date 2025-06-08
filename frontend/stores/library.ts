@@ -9,11 +9,8 @@ export type Book = {
   description?: string;
   categories?: string[];
   pageCount?: string;
-  language?: string;
-  publisher?: string;
   publishedDate?: string;
   averageRating?: string;
-  ratingsCount?: string;
   added?: boolean;
   status?: "completed" | "ongoing" | "on-hold" | "plan-to-read" | "dropped";
 };

@@ -24,11 +24,8 @@ class CreateBooksTable extends Migration
                 $table->text('description')->nullable();
                 $table->json('categories')->nullable();
                 $table->string('pageCount')->nullable();
-                $table->string('language')->nullable();
-                $table->string('publisher')->nullable();
                 $table->string('publishedDate')->nullable();
                 $table->string('averageRating')->nullable();
-                $table->string('ratingsCount')->nullable();
                 $table->enum('status', ['completed', 'ongoing', 'on-hold', 'plan-to-read', 'dropped'])->nullable();
                 $table->timestamps();
             }

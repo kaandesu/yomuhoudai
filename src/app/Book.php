@@ -8,8 +8,8 @@ class Book extends Model
 {
     protected $fillable = [
         'title', 'author', 'currentPage', 'cover', 'description', 'categories',
-        'pageCount', 'language', 'publisher', 'publishedDate',
-        'averageRating', 'ratingsCount', 'added', 'status'
+        'pageCount', 'publishedDate',
+        'averageRating', 'added', 'status'
     ];
 
     protected $casts = [
