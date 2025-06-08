@@ -40,7 +40,9 @@ export default defineNuxtConfig({
   },
 
   app: {
-    baseURL: "",
+    // WARN: /yomuhoudai/ is used only when its being deployed to github pages
+    // if its being deployed by a VPS change it to empty string
+    baseURL: "/yomuhoudai/",
     pageTransition: { name: "page", mode: "out-in" },
   },
   tailwindcss,
