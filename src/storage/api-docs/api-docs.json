@@ -1,0 +1,527 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Yomuhoudai API",
+        "description": "API for managing Yomuhoudai book tracker",
+        "contact": {
+            "email": "kaandesu00@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/books": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Get all books",
+                "description": "Retrieve a list of all books",
+                "operationId": "a9d13283dfab262e97af3c914d51b7a8",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Book"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Create a new book",
+                "description": "Creates a new book record in the database",
+                "operationId": "ee195f5779f5c36648b4fa1eefa4e7ee",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "author"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "The Great Gatsby"
+                                    },
+                                    "author": {
+                                        "type": "string",
+                                        "example": "F. Scott Fitzgerald"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "completed"
+                                    },
+                                    "categories": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "currentPage": {
+                                        "type": "string",
+                                        "example": "100"
+                                    },
+                                    "cover": {
+                                        "type": "string",
+                                        "example": "url_to_cover_image"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "A novel about the American dream."
+                                    },
+                                    "pageCount": {
+                                        "type": "string",
+                                        "example": "200"
+                                    },
+                                    "language": {
+                                        "type": "string",
+                                        "example": "English"
+                                    },
+                                    "publisher": {
+                                        "type": "string",
+                                        "example": "Scribner"
+                                    },
+                                    "publishedDate": {
+                                        "type": "string",
+                                        "example": "1925-04-10"
+                                    },
+                                    "averageRating": {
+                                        "type": "string",
+                                        "example": "4.5"
+                                    },
+                                    "ratingsCount": {
+                                        "type": "string",
+                                        "example": "10000"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Book created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Book"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/books/store": {
+            "post": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Store a new book",
+                "description": "Stores a newly created book",
+                "operationId": "4f6ddb28b9f8f2143526c16ff6f30494",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "author"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "The Catcher in the Rye"
+                                    },
+                                    "author": {
+                                        "type": "string",
+                                        "example": "J.D. Salinger"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "ongoing"
+                                    },
+                                    "categories": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "currentPage": {
+                                        "type": "string",
+                                        "example": "150"
+                                    },
+                                    "cover": {
+                                        "type": "string",
+                                        "example": "url_to_cover_image"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "A novel about teenage angst."
+                                    },
+                                    "pageCount": {
+                                        "type": "string",
+                                        "example": "277"
+                                    },
+                                    "language": {
+                                        "type": "string",
+                                        "example": "English"
+                                    },
+                                    "publisher": {
+                                        "type": "string",
+                                        "example": "Little, Brown and Company"
+                                    },
+                                    "publishedDate": {
+                                        "type": "string",
+                                        "example": "1951-07-16"
+                                    },
+                                    "averageRating": {
+                                        "type": "string",
+                                        "example": "4.2"
+                                    },
+                                    "ratingsCount": {
+                                        "type": "string",
+                                        "example": "5000"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Book created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Book"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/books/{id}": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Get a book by ID",
+                "description": "Retrieve a book by its unique ID",
+                "operationId": "2fdd668eb661591758aff4c56ca9b66a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Book"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Book not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Update a book",
+                "description": "Updates a book record",
+                "operationId": "f5ca658c501a803d68655af0365e3802",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "The Great Gatsby"
+                                    },
+                                    "author": {
+                                        "type": "string",
+                                        "example": "F. Scott Fitzgerald"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "completed"
+                                    },
+                                    "categories": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "currentPage": {
+                                        "type": "string",
+                                        "example": "200"
+                                    },
+                                    "cover": {
+                                        "type": "string",
+                                        "example": "url_to_cover_image"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "A novel about the American dream."
+                                    },
+                                    "pageCount": {
+                                        "type": "string",
+                                        "example": "200"
+                                    },
+                                    "language": {
+                                        "type": "string",
+                                        "example": "English"
+                                    },
+                                    "publisher": {
+                                        "type": "string",
+                                        "example": "Scribner"
+                                    },
+                                    "publishedDate": {
+                                        "type": "string",
+                                        "example": "1925-04-10"
+                                    },
+                                    "averageRating": {
+                                        "type": "string",
+                                        "example": "4.5"
+                                    },
+                                    "ratingsCount": {
+                                        "type": "string",
+                                        "example": "10000"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Book updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Book"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Book not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Delete a book",
+                "description": "Deletes a book by its ID",
+                "operationId": "1a9c26667c32b8ed5e5770d7a1cc9d5c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Book deleted successfully"
+                    },
+                    "404": {
+                        "description": "Book not found"
+                    }
+                }
+            }
+        },
+        "/api/books/searchTitle": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Search books by title",
+                "description": "Search for books using a partial title match",
+                "operationId": "bec820b8ba0bf46915f1540100b02ea3",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Book"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/books/searchAuthor": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Search books by author",
+                "description": "Search for books using a partial author match",
+                "operationId": "cf1fd79da8edeb81848e9bfad584f81d",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Book"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Book": {
+                "required": [
+                    "title",
+                    "author"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "The Great Gatsby"
+                    },
+                    "author": {
+                        "type": "string",
+                        "example": "F. Scott Fitzgerald"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "completed"
+                    },
+                    "categories": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "currentPage": {
+                        "type": "string",
+                        "example": "100"
+                    },
+                    "cover": {
+                        "type": "string",
+                        "example": "url_to_cover_image"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "A novel about the American dream."
+                    },
+                    "pageCount": {
+                        "type": "string",
+                        "example": "200"
+                    },
+                    "language": {
+                        "type": "string",
+                        "example": "English"
+                    },
+                    "publisher": {
+                        "type": "string",
+                        "example": "Scribner"
+                    },
+                    "publishedDate": {
+                        "type": "string",
+                        "example": "1925-04-10"
+                    },
+                    "averageRating": {
+                        "type": "string",
+                        "example": "4.5"
+                    },
+                    "ratingsCount": {
+                        "type": "string",
+                        "example": "10000"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    }
+}
