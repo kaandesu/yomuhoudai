@@ -24,6 +24,12 @@ interface BookResponse {
   message?: string;
 }
 
+interface ApiResponseGeneric<T> {
+  code?: number;
+  data?: T | null;
+  message?: string;
+}
+
 type BooksResponse = {
   code: number;
   data: Book[];
@@ -58,7 +64,7 @@ export const useLibrary = defineStore(
       );
       loading.value = false;
 
-      if (status.value === "success" && !error.value) {
+      if (status.value === "success" && !error.value && data.value != null) {
         books.value = data.value?.data ?? [];
         createToast({
           message: "Books loaded successfully",
@@ -72,11 +78,11 @@ export const useLibrary = defineStore(
         createToast({
           message: "Failed to load books",
           toastOps: {
-            description: error.value ?? "Unknown error",
+            description: error.value?.statusMessage ?? "Unknown error",
           },
           type: "error",
         })();
-        onError?.(error.value ?? "Failed to fetch books");
+        onError?.(error.value?.statusMessage ?? "Failed to fetch books");
       }
     };
 
@@ -191,12 +197,13 @@ export const useLibrary = defineStore(
     }: { id: number } & Callbacks) => {
       loading.value = true;
       const route: Route = `/api/v1/books/${id}`;
-      const { data, error, status } = await useFetch(`${route}`, {
-        method: "DELETE",
-      });
+      const { data, error, status } = await useFetch<ApiResponseGeneric<any>>(
+        `${route}`,
+        {
+          method: "DELETE",
+        },
+      );
       loading.value = false;
-
-      console.log("deleting", status.value, error.value, data.value);
 
       if (status.value === "success" && !error.value) {
         createToast({
@@ -210,7 +217,11 @@ export const useLibrary = defineStore(
         createToast({
           message: `Failed to delete book with id ${id}`,
           toastOps: {
-            description: error.value ?? `Error deleting book with id ${id}`,
+            description:
+              data.value && data.value.message
+                ? data.value.message
+                : (error.value?.statusMessage ??
+                  `Error deleting book with id ${id}`),
           },
           type: "error",
         })();
@@ -300,7 +311,7 @@ export const useLibrary = defineStore(
   },
   {
     persist: {
-      // paths: ['books'], // Uncomment if needed
+      // paths: ['books'], // TODO: Uncomment if needed
     },
   },
 );
