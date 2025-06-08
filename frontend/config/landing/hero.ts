@@ -11,11 +11,11 @@ export const hero = {
   button: {
     primary: {
       link: "/dashboard",
-      label: "Start Reading (demo)",
+      label: "Try the Demo Now!",
     },
     secondary: {
       link: "https://github.com/kaandesu/yomuhoudai",
-      label: "GitHub Repository",
+      label: "GitHub",
     },
   },
   image: {

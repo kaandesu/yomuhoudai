@@ -7,7 +7,7 @@ const mode = useColorMode();
 </script>
 
 <template>
-  <section class="container">
+  <section class="px-6">
     <div
       class="mx-auto grid place-items-center gap-8 py-20 md:py-32 lg:max-w-screen-xl"
     >
