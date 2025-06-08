@@ -34,32 +34,34 @@
       </div>
     </div>
 
-    <section class="mt-4 flex gap-x-10 w-full items-center justify-start">
+    <section class="mt-4 flex gap-x-5 w-full items-center justify-start">
       <!-- Status Filter -->
-      <div class="w-20">
-        <select
-          id="statusFilter"
-          v-model="selectedStatus"
-          class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-zinc-800 text-sm px-3 py-2"
-        >
-          <option value="">All</option>
-          <option value="on-hold">On Hold</option>
-          <option value="plan-to-read">Planned</option>
-          <option value="ongoing">On Going</option>
-          <option value="completed">Completed</option>
-          <option value="dropped">Dropped</option>
-        </select>
-      </div>
+      <Select v-model="selectedStatus">
+        <SelectTrigger class="w-24 h-4 backdrop-blur-[3px]">
+          <SelectValue placeholder="Status" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>Status</SelectLabel>
+            <SelectItem> All </SelectItem>
+            <SelectItem value="on-hold"> On Hold </SelectItem>
+            <SelectItem value="plan-to-read"> Planned </SelectItem>
+            <SelectItem value="ongoing"> On Going </SelectItem>
+            <SelectItem value="completed"> Completed </SelectItem>
+            <SelectItem value="dropped"> Dropped </SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
       <!-- /Status Filter -->
       <new-dialog actionType="new" />
       <Button
         :disabled="loading"
-        class="h-4"
+        class="w-24 h-4 backdrop-blur-[2px] bg-transparent flex justify-between"
         variant="outline"
         @click="getBooks()"
       >
-        <Icon name="mdi:refresh" size="1.5rem" />
         {{ loading ? "Loading..." : "Refresh" }}
+        <Icon name="mdi:refresh" size="1.5rem" />
       </Button>
     </section>
     <!-- BookCards -->
