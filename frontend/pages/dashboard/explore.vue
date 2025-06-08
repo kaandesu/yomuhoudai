@@ -177,7 +177,7 @@
                       size="sm"
                       @click="addNewBook(index)"
                     >
-                      Add to Your Shelf
+                      Add to Your Library
                     </Button>
                   </CardFooter>
                 </Card>
@@ -195,7 +195,7 @@
 <script setup lang="ts">
 import { watchOnce } from "@vueuse/core";
 import { ref } from "vue";
-import type { Book } from "@/stores/library";
+import { type Book, useLibrary } from "@/stores/library";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -205,6 +205,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+
+const { books } = storeToRefs(useLibrary());
 
 const disableAddButton = ref<boolean>(false);
 const suggestions = ref<Book[] | null>(null);

@@ -4,7 +4,7 @@ const { teamList, socialIcon, title, slogan } = landing.Team;
 </script>
 
 <template>
-  <section id="team" class="px-6 py-24 sm:py-32 lg:w-[75%]">
+  <section id="team" class="ml-auto mr-auto px-6 py-24 sm:py-32 lg:w-[75%]">
     <div class="mb-8 text-center">
       <h2 class="mb-2 text-center text-lg tracking-wider text-primary">
         {{ title }}

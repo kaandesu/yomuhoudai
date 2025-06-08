@@ -10,33 +10,52 @@
           <Icon class="h-6" name="carbon:list-dropdown" />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <div class="grid gap-2 p-4">
-            <Label for="width">Pages Read:</Label>
-            <div class="flex justify-evenly items-center gap-x-2">
-              <Button
-                @click="
-                  () => {
-                    pageCount > 5 ? (pageCount -= 5) : (pageCount = 0);
-                  }
-                "
-                variant="destructive"
-                class="h-3 w-3 rounded-lg"
-              >
-                <Icon name="line-md:minus" class="w-3 h-3" />
-              </Button>
-              <Input
-                v-model="pageCount"
-                type="number"
-                default-value="0"
-                class="h-8 w-20"
-              />
-              <Button
-                @click="pageCount += 5"
-                class="h-3 w-3 rounded-lg bg-primary"
-              >
-                <Icon name="material-symbols:add" class="w-4 h-4" />
-              </Button>
+          <div class="grid gap-2 p-3 pt-1">
+            <!-- Page Count -->
+            <div>
+              <Label for="width">Pages Read:</Label>
+              <div class="flex justify-evenly items-center gap-x-2">
+                <Button
+                  @click="
+                    () => {
+                      pageCount > 5 ? (pageCount -= 5) : (pageCount = 0);
+                    }
+                  "
+                  variant="destructive"
+                  class="h-3 w-3 rounded-lg"
+                >
+                  <Icon name="line-md:minus" class="w-3 h-3" />
+                </Button>
+                <Input
+                  v-model="pageCount"
+                  type="number"
+                  default-value="0"
+                  class="h-8 w-20"
+                />
+                <Button
+                  @click="pageCount += 5"
+                  class="h-3 w-3 rounded-lg bg-primary"
+                >
+                  <Icon name="material-symbols:add" class="w-4 h-4" />
+                </Button>
+              </div>
             </div>
+            <!-- /Page Count -->
+            <!-- Status Options -->
+            <div>
+              <select
+                id="statusFilter"
+                v-model="bookStatus"
+                class="w-[85%] text-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-zinc-800 text-sm px-3 py-2"
+              >
+                <option value="ongoing">On Going</option>
+                <option value="plan-to-read">Planned</option>
+                <option value="completed">Completed</option>
+                <option value="dropped">Dropped</option>
+                <option value="on-hold">On Hold</option>
+              </select>
+            </div>
+            <!-- Status Options -->
           </div>
           <DropdownMenuItem
             @click="item.action()"
@@ -100,14 +119,20 @@
 import { Card, CardContent } from "@/components/ui/card";
 import NewDialog from "@/components/new-dialog.vue";
 import { Trash2, Eye, Edit2 } from "lucide-vue-next";
-import { useLibrary } from "@/stores/library";
+import { useLibrary, type Book } from "@/stores/library";
 
 const openEditSheet = ref<boolean>(false);
 const openViewSheet = ref<boolean>(false);
 
 const pageCount = ref<number>(0);
+const bookStatus = ref<Book["status"]>("ongoing");
 
 let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
+
+watch(bookStatus, (newVal, _) => {
+  // TODO: update status
+  console.log("changed to", newVal, book.id);
+});
 
 watch(pageCount, (newVal, _) => {
   if (debounceTimeout != null) {
