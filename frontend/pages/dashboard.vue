@@ -71,6 +71,7 @@ onMounted(async () => {
   if (books.value.length == 0) {
     createToast({
       message: "Loading your library...",
+      type: "info",
     })();
     await getBooks();
   }

@@ -91,9 +91,6 @@
             </FormItem>
           </FormField>
 
-          <!-- Continue adding all the other fields... (same as your original code) -->
-          <!-- categories, pageCount, language, publisher, etc. -->
-
           <!-- FIELD: categories -->
           <FormField name="categories" v-slot="{ componentField }">
             <FormItem>
@@ -124,32 +121,6 @@
             </FormItem>
           </FormField>
 
-          <!-- FIELD: language -->
-          <FormField name="language" v-slot="{ componentField }">
-            <FormItem>
-              <FormLabel>Language</FormLabel>
-              <FormControl>
-                <Input
-                  v-bind="componentField"
-                  placeholder="English"
-                  :disabled="isViewMode"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          </FormField>
-
-          <!-- FIELD: publisher -->
-          <FormField name="publisher" v-slot="{ componentField }">
-            <FormItem>
-              <FormLabel>Publisher</FormLabel>
-              <FormControl>
-                <Input v-bind="componentField" :disabled="isViewMode" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          </FormField>
-
           <!-- FIELD: publishedDate -->
           <FormField name="publishedDate" v-slot="{ componentField }">
             <FormItem>
@@ -174,21 +145,6 @@
                   v-bind="componentField"
                   type="number"
                   step="0.1"
-                  :disabled="isViewMode"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          </FormField>
-
-          <!-- FIELD: ratingsCount -->
-          <FormField name="ratingsCount" v-slot="{ componentField }">
-            <FormItem>
-              <FormLabel>Ratings Count</FormLabel>
-              <FormControl>
-                <Input
-                  v-bind="componentField"
-                  type="number"
                   :disabled="isViewMode"
                 />
               </FormControl>
@@ -271,11 +227,8 @@ const formSchema = toTypedSchema(
     description: z.string().optional(),
     categories: z.string().optional(),
     pageCount: z.number().optional(),
-    language: z.string().optional(),
-    publisher: z.string().optional(),
     publishedDate: z.string().optional(),
-    averageRating: z.string().optional(),
-    ratingsCount: z.string().optional(),
+    averageRating: z.number().optional(),
     status: z.string().optional(),
   }),
 );

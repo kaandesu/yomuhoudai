@@ -145,8 +145,7 @@
                       class="text-xs text-muted-foreground space-y-1 pt-2 hidden sm:block"
                     >
                       <p>
-                        <span class="font-medium">Publisher:</span>
-                        {{ suggestions[index]?.publisher || "Unknown" }} •
+                        <span class="font-medium">Published Date:</span>
                         {{ suggestions[index]?.publishedDate || "N/A" }}
                       </p>
                       <div v-if="suggestions[index]?.categories?.length">
@@ -169,9 +168,6 @@
                       <p>
                         <span class="font-medium">Rating:</span>
                         {{ suggestions[index]?.averageRating || "N/A" }}
-                        <span v-if="suggestions[index]?.ratingsCount">
-                          ({{ suggestions[index].ratingsCount }} ratings)
-                        </span>
                       </p>
                     </div>
                   </CardHeader>
@@ -250,11 +246,8 @@ const fetchBookInfo = async (bookTitle: string, author: string) => {
       description: volumeInfo.description || "No description available",
       categories: volumeInfo.categories || [],
       pageCount: volumeInfo.pageCount || "N/A",
-      language: volumeInfo.language || "Unknown",
-      publisher: volumeInfo.publisher || "Unknown Publisher",
       publishedDate: volumeInfo.publishedDate || "Unknown Date",
       averageRating: volumeInfo.averageRating || "N/A",
-      ratingsCount: volumeInfo.ratingsCount || "N/A",
     };
 
     return bookInfo;
@@ -273,11 +266,8 @@ const loadBookInfo = async () => {
       book.description = bookInfo.description;
       book.categories = bookInfo.categories;
       book.pageCount = bookInfo.pageCount;
-      book.language = bookInfo.language;
-      book.publisher = bookInfo.publisher;
       book.publishedDate = bookInfo.publishedDate;
       book.averageRating = bookInfo.averageRating;
-      book.ratingsCount = bookInfo.ratingsCount;
     }
   }
 };

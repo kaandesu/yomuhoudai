@@ -1,29 +1,12 @@
 import { h } from "vue";
 
 import {
-  ArrowDownIcon,
-  ArrowRightIcon,
-  ArrowUpIcon,
   PauseIcon,
   RocketIcon,
   TimerIcon,
   CheckIcon,
   TrashIcon,
 } from "@radix-icons/vue";
-export const labels = [
-  {
-    value: "bug",
-    label: "Bug",
-  },
-  {
-    value: "feature",
-    label: "Feature",
-  },
-  {
-    value: "documentation",
-    label: "Documentation",
-  },
-];
 
 export const statuses = [
   {
@@ -50,22 +33,5 @@ export const statuses = [
     value: "dropped",
     label: "Dropped",
     icon: h(TrashIcon),
-  },
-];
-export const priorities = [
-  {
-    value: "low",
-    label: "Low",
-    icon: h(ArrowDownIcon),
-  },
-  {
-    value: "medium",
-    label: "Medium",
-    icon: h(ArrowRightIcon),
-  },
-  {
-    value: "high",
-    label: "High",
-    icon: h(ArrowUpIcon),
   },
 ];

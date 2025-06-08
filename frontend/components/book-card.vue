@@ -1,7 +1,7 @@
 <template>
   <Card
     class="relative w-full sm:max-w-xs bg-transparent"
-    style="backdrop-filter: blur(3px)"
+    style="backdrop-filter: blur(6px)"
   >
     <!-- Buttons container -->
     <div class="absolute top-2 right-2 h-24 flex flex-col items-center gap-y-1">

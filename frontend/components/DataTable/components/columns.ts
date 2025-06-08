@@ -1,12 +1,45 @@
 import type { ColumnDef } from "@tanstack/vue-table";
 import { h } from "vue";
-
-import { statuses } from "../data/data";
+import {
+  PauseIcon,
+  RocketIcon,
+  TimerIcon,
+  CheckIcon,
+  TrashIcon,
+} from "@radix-icons/vue";
 import type { Book } from "@/stores/library";
 import DataTableColumnHeader from "./DataTableColumnHeader.vue";
 import DataTableRowActions from "./DataTableRowActions.vue";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
+
+export const statuses = [
+  {
+    value: "on-hold",
+    label: "On Hold",
+    icon: h(PauseIcon),
+  },
+  {
+    value: "plan-to-read",
+    label: "Planned",
+    icon: h(RocketIcon),
+  },
+  {
+    value: "ongoing",
+    label: "On Going",
+    icon: h(TimerIcon),
+  },
+  {
+    value: "completed",
+    label: "Completed",
+    icon: h(CheckIcon),
+  },
+  {
+    value: "dropped",
+    label: "Dropped",
+    icon: h(TrashIcon),
+  },
+];
 
 export const columns: ColumnDef<Book>[] = [
   {
@@ -137,34 +170,6 @@ export const columns: ColumnDef<Book>[] = [
     cell: ({ row }) => h("span", {}, row.getValue("pageCount") || "-"),
   },
 
-  // Language (lookup from languages list)
-  {
-    accessorKey: "language",
-    header: ({ column }) =>
-      h(DataTableColumnHeader, { column, title: "Language" }),
-    cell: ({ row }) => {
-      const lang = row.getValue("language");
-      return h("span", lang ? lang : "N/A");
-    },
-    filterFn: (row, id, value) => value.includes(row.getValue(id)),
-    enableSorting: false,
-  },
-
-  // Publisher (lookup from publishers list)
-  {
-    accessorKey: "publisher",
-    header: ({ column }) =>
-      h(DataTableColumnHeader, { column, title: "Publisher" }),
-    cell: ({ row }) => {
-      const pub = row.getValue("publisher");
-      return h("span", pub ? pub : "-");
-    },
-    filterFn: (row, id, value) => value.includes(row.getValue(id)),
-
-    enableSorting: false,
-    enableHiding: true,
-  },
-
   // Published Date
   {
     accessorKey: "publishedDate",
@@ -179,13 +184,5 @@ export const columns: ColumnDef<Book>[] = [
     header: ({ column }) =>
       h(DataTableColumnHeader, { column, title: "Avg Rating" }),
     cell: ({ row }) => h("span", {}, row.getValue("averageRating") || "-"),
-  },
-
-  // Ratings Count
-  {
-    accessorKey: "ratingsCount",
-    header: ({ column }) =>
-      h(DataTableColumnHeader, { column, title: "Ratings Count" }),
-    cell: ({ row }) => h("span", {}, row.getValue("ratingsCount") || "-"),
   },
 ];
