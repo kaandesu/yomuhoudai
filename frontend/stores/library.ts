@@ -116,21 +116,27 @@ export const useLibrary = defineStore(
       }
     };
 
+    // NOTE: after the creation it will return the created book object
+    // then we will push it to the 'books'
     const createBook = async ({
       book,
       onSuccess,
       onError,
     }: { book: Omit<Book, "id"> } & Callbacks) => {
       loading.value = true;
-      const route: Route = `/api/v1/books`;
-      const { data, error, status } = await useFetch<BookResponse>(`${route}`, {
+      const route: Route = "/api/v1/books";
+      const { data, error, status } = await useFetch<BookResponse>(route, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(book),
       });
       loading.value = false;
 
-      if (status.value === "success" && !error.value) {
+      if (
+        status.value === "success" &&
+        !error.value &&
+        data.value?.data != null
+      ) {
         createToast({
           message: "Book created successfully",
           toastOps: {
@@ -138,12 +144,16 @@ export const useLibrary = defineStore(
           },
           type: "success",
         })();
+        books.value.push(data.value.data);
         onSuccess?.(data.value?.data);
       } else {
         createToast({
           message: "Failed to create book",
           toastOps: {
-            description: error.value ?? "Unknown error",
+            description:
+              data.value && data.value.message
+                ? data.value.message
+                : (error.value?.statusMessage ?? `Unknown error`),
           },
           type: "error",
         })();
@@ -179,7 +189,10 @@ export const useLibrary = defineStore(
         createToast({
           message: `Failed to update book with id ${id}`,
           toastOps: {
-            description: error.value ?? `Error updating book with id ${id}`,
+            description:
+              data.value && data.value.message
+                ? data.value.message
+                : (error.value?.statusMessage ?? `Unknown error`),
           },
           type: "error",
         })();
@@ -208,11 +221,17 @@ export const useLibrary = defineStore(
           toastOps: { description: "" },
           type: "success",
         })();
-        await getBooks();
-        onSuccess?.();
+        // NOTE: instead of fetching immediately after
+        // since we know its 'success' we can directly remove
+        // from the local version.
+        const index = books.value.findIndex((b) => b.id === id);
+        if (index !== -1) {
+          books.value.splice(index, 1);
+        }
+        onSuccess?.(data.value);
       } else {
         createToast({
-          message: `Failed to delete book with id ${id}`,
+          message: `Failed to delete ${books.value.find((b) => b.id == id)?.title}`,
           toastOps: {
             description:
               data.value && data.value.message
