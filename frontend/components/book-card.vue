@@ -152,22 +152,6 @@ const handleDeletion = async () => {
   })();
   await deleteBook({
     id: book.id,
-    onSuccess: () =>
-      createToast({
-        message: "Successfuly removed!...",
-        toastOps: {
-          description: "A book has been removed from your library.",
-        },
-        type: "success",
-      })(),
-    onError: () =>
-      createToast({
-        message: "Error occured while removing the book",
-        toastOps: {
-          description: "Operation unsuccessful",
-        },
-        type: "error",
-      })(),
   });
 };
 

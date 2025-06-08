@@ -44,22 +44,6 @@ const handleDeletion = async () => {
   })();
   await deleteBook({
     id: parseInt(props.row.original.id),
-    onSuccess: () =>
-      createToast({
-        message: "Successful!",
-        toastOps: {
-          description: `Successfuly removed the ${props.row.original.title}.`,
-        },
-        type: "success",
-      })(),
-    onError: () =>
-      createToast({
-        message: "Error occured while removing the book",
-        toastOps: {
-          description: "Operation unsuccessful",
-        },
-        type: "error",
-      })(),
   });
 };
 </script>
