@@ -9,17 +9,20 @@ use Exception;
 
 class BookController extends Controller
 {
-    public function create()
+    private function jsonResponse($data, $message = '', $status = 200): JsonResponse
     {
-        // Not implemented
         return response()->json(
             [
-            'code' => 200,
-            'data' => [],
-            'message' => 'Create endpoint not implemented'
+            'data' => $data,
+            'message' => $message,
             ],
-            200
+            $status
         );
+    }
+
+    public function create()
+    {
+        return $this->jsonResponse([], 'Create endpoint not implemented');
     }
 
     public function store(Request $request): JsonResponse
@@ -45,23 +48,9 @@ class BookController extends Controller
 
             $book = Book::create($data);
 
-            return response()->json(
-                [
-                'code' => 201,
-                'data' => $book,
-                'message' => 'Book created successfully'
-            ],
-                201
-            );
+            return $this->jsonResponse($book, 'Book created successfully', 201);
         } catch (Exception $e) {
-            return response()->json(
-                [
-                'code' => 500,
-                'data' => [],
-                'message' => 'An error occurred while creating the book: ' . $e->getMessage()
-            ],
-                500
-            );
+            return $this->jsonResponse([], 'An error occurred while creating the book: ' . $e->getMessage(), 500);
         }
     }
 
@@ -90,22 +79,9 @@ class BookController extends Controller
 
             $book->update($data);
 
-            return response()->json(
-                [
-                'code' => 200,
-                'data' => $book,
-                'message' => 'Book updated successfully'
-                ]
-            );
+            return $this->jsonResponse($book, 'Book updated successfully');
         } catch (Exception $e) {
-            return response()->json(
-                [
-                'code' => 500,
-                'data' => [],
-                'message' => 'An error occurred while updating the book: ' . $e->getMessage()
-                ],
-                500
-            );
+            return $this->jsonResponse([], 'An error occurred while updating the book: ' . $e->getMessage(), 500);
         }
     }
 
@@ -113,54 +89,24 @@ class BookController extends Controller
     {
         try {
             $book = Book::findOrFail($id);
-
-            return response()->json(
-                [
-                'code' => 200,
-                'data' => $book,
-                'message' => 'Book retrieved successfully'
-                ]
-            );
+            return $this->jsonResponse($book, 'Book retrieved successfully');
         } catch (Exception $e) {
-            return response()->json(
-                [
-                'code' => 404,
-                'data' => [],
-                'message' => 'Book not found'
-                ],
-                404
-            );
+            return $this->jsonResponse([], 'Book not found', 404);
         }
     }
 
     public function searchTitle(Request $request): JsonResponse
     {
         $q = $request->query('q');
-
         $results = Book::where('title', 'like', "%$q%")->get();
-
-        return response()->json(
-            [
-            'code' => 200,
-            'data' => $results,
-            'message' => 'Search by title completed'
-            ]
-        );
+        return $this->jsonResponse($results, 'Search by title completed');
     }
 
     public function searchAuthor(Request $request): JsonResponse
     {
         $q = $request->query('q');
-
         $results = Book::where('author', 'like', "%$q%")->get();
-
-        return response()->json(
-            [
-            'code' => 200,
-            'data' => $results,
-            'message' => 'Search by author completed'
-            ]
-        );
+        return $this->jsonResponse($results, 'Search by author completed');
     }
 
     public function index(Request $request): JsonResponse
@@ -174,23 +120,9 @@ class BookController extends Controller
             }
 
             $books = $query->get();
-
-            return response()->json(
-                [
-                'code' => 200,
-                'data' => $books,
-                'message' => 'Books retrieved successfully'
-                ]
-            );
+            return $this->jsonResponse($books, 'Books retrieved successfully');
         } catch (Exception $e) {
-            return response()->json(
-                [
-                'code' => 500,
-                'data' => [],
-                'message' => 'An error occurred while retrieving books: ' . $e->getMessage()
-                ],
-                500
-            );
+            return $this->jsonResponse([], 'An error occurred while retrieving books: ' . $e->getMessage(), 500);
         }
     }
 
@@ -200,34 +132,14 @@ class BookController extends Controller
             $book = Book::find($id);
 
             if (!$book) {
-                return response()->json(
-                    [
-                    'code' => 404,
-                    'data' => [],
-                    'message' => 'Book not found'
-                    ],
-                    404
-                );
+                return $this->jsonResponse([], 'Book not found', 404);
             }
 
             $book->delete();
 
-            return response()->json(
-                [
-                'code' => 200,
-                'data' => [],
-                'message' => 'Book deleted successfully'
-                ]
-            );
+            return $this->jsonResponse([], 'Book deleted successfully');
         } catch (Exception $e) {
-            return response()->json(
-                [
-                'code' => 500,
-                'data' => [],
-                'message' => 'An error occurred while deleting the book: ' . $e->getMessage()
-                ],
-                500
-            );
+            return $this->jsonResponse([], 'An error occurred while deleting the book: ' . $e->getMessage(), 500);
         }
     }
 }

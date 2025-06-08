@@ -31,46 +31,52 @@ type BooksResponse = {
 };
 
 type Callbacks = {
-  onSuccess?: (...args: unknown[]) => unknown;
-  onError?: (...args: unknown[]) => unknown;
+  onSuccess?: (data?: unknown) => unknown;
+  onError?: (error?: unknown) => unknown;
 };
 
 export type Route =
-  | `/v1/books`
-  | `/v1/books/${number}`
-  | `/v1/books/search/title`
-  | `/v1/books/search/author`
-  | `/v1/books/export/csv/${string}/${string | undefined}`
-  | `/v1/books/export/xml/${string}/${string | undefined}`;
-
-const backendUrl = "http://localhost:80/api";
+  | `/api/v1/books`
+  | `/api/v1/books/${number}`
+  | `/api/v1/books/search/title`
+  | `/api/v1/books/search/author`
+  | `/api/v1/books/export/csv/${string}/${string | undefined}`
+  | `/api/v1/books/export/xml/${string}/${string | undefined}`;
 
 export const useLibrary = defineStore(
   "Library",
   () => {
     const books = ref<Book[]>([]);
-
-    const loading = ref<boolean>(false);
+    const loading = ref(false);
 
     const getBooks = async ({ onSuccess, onError }: Callbacks = {}) => {
       loading.value = true;
-      const { data } = await useFetch<BooksResponse>("/api/v1/books", {
-        server: false,
-      });
-
+      const route: Route = `/api/v1/books`;
+      const { data, error, status } = await useFetch<BooksResponse>(
+        `${route}`,
+        { method: "GET" },
+      );
       loading.value = false;
-      if (data.value != null) {
-        books.value = data.value.data;
-      }
 
-      if (
-        data.value?.code &&
-        data.value?.code >= 200 &&
-        data.value?.code < 300
-      ) {
-        if (onSuccess) onSuccess(data.value);
+      if (status.value === "success" && !error.value) {
+        books.value = data.value?.data ?? [];
+        createToast({
+          message: "Books loaded successfully",
+          toastOps: {
+            description: data.value?.message ?? "",
+          },
+          type: "success",
+        })();
+        onSuccess?.(data.value?.data);
       } else {
-        if (onError) onError(data.value);
+        createToast({
+          message: "Failed to load books",
+          toastOps: {
+            description: error.value ?? "Unknown error",
+          },
+          type: "error",
+        })();
+        onError?.(error.value ?? "Failed to fetch books");
       }
     };
 
@@ -79,24 +85,31 @@ export const useLibrary = defineStore(
       onSuccess,
       onError,
     }: { id: number } & Callbacks) => {
-      const { data, pending } = await useFetch<BookResponse>(
-        `/v1/books/${id}`,
-        {
-          method: "GET",
-          headers: {},
-        },
-      );
+      loading.value = true;
+      const route: Route = `/api/v1/books/${id}`;
+      const { data, error, status } = await useFetch<BookResponse>(`${route}`, {
+        method: "GET",
+      });
+      loading.value = false;
 
-      loading.value = pending.value;
-
-      if (
-        data.value?.code &&
-        data.value?.code >= 200 &&
-        data.value?.code < 300
-      ) {
-        if (onSuccess) onSuccess(data.value);
+      if (status.value === "success" && !error.value) {
+        createToast({
+          message: "Book loaded successfully",
+          toastOps: {
+            description: data.value?.message ?? "",
+          },
+          type: "success",
+        })();
+        onSuccess?.(data.value?.data);
       } else {
-        if (onError) onError(data.value);
+        createToast({
+          message: `Failed to load book with id ${id}`,
+          toastOps: {
+            description: error.value ?? `Error fetching book with id ${id}`,
+          },
+          type: "error",
+        })();
+        onError?.(error.value ?? `Failed to fetch book with id ${id}`);
       }
     };
 
@@ -105,27 +118,33 @@ export const useLibrary = defineStore(
       onSuccess,
       onError,
     }: { book: Omit<Book, "id"> } & Callbacks) => {
-      const { data, pending } = await useFetch<BookResponse>(
-        backendUrl + "/v1/books",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+      loading.value = true;
+      const route: Route = `/api/v1/books`;
+      const { data, error, status } = await useFetch<BookResponse>(`${route}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(book),
+      });
+      loading.value = false;
+
+      if (status.value === "success" && !error.value) {
+        createToast({
+          message: "Book created successfully",
+          toastOps: {
+            description: data.value?.message ?? "",
           },
-          body: JSON.stringify(book),
-        },
-      );
-
-      loading.value = pending.value;
-
-      if (
-        data.value?.code &&
-        data.value?.code >= 200 &&
-        data.value?.code < 300
-      ) {
-        if (onSuccess) onSuccess(data.value);
+          type: "success",
+        })();
+        onSuccess?.(data.value?.data);
       } else {
-        if (onError) onError(data.value);
+        createToast({
+          message: "Failed to create book",
+          toastOps: {
+            description: error.value ?? "Unknown error",
+          },
+          type: "error",
+        })();
+        onError?.(error.value ?? "Failed to create book");
       }
     };
 
@@ -135,27 +154,33 @@ export const useLibrary = defineStore(
       onSuccess,
       onError,
     }: { id: number; book: Partial<Omit<Book, "id">> } & Callbacks) => {
-      const { data, pending } = await useFetch<BookResponse>(
-        `/v1/books/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
+      loading.value = true;
+      const route: Route = `/api/v1/books/${id}`;
+      const { data, error, status } = await useFetch<BookResponse>(`${route}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(book),
+      });
+      loading.value = false;
+
+      if (status.value === "success" && !error.value) {
+        createToast({
+          message: "Book updated successfully",
+          toastOps: {
+            description: data.value?.message ?? "",
           },
-          body: JSON.stringify(book),
-        },
-      );
-
-      loading.value = pending.value;
-
-      if (
-        data.value?.code &&
-        data.value?.code >= 200 &&
-        data.value?.code < 300
-      ) {
-        if (onSuccess) onSuccess(data.value);
+          type: "success",
+        })();
+        onSuccess?.(data.value?.data);
       } else {
-        if (onError) onError(data.value);
+        createToast({
+          message: `Failed to update book with id ${id}`,
+          toastOps: {
+            description: error.value ?? `Error updating book with id ${id}`,
+          },
+          type: "error",
+        })();
+        onError?.(error.value ?? `Failed to update book with id ${id}`);
       }
     };
 
@@ -165,26 +190,31 @@ export const useLibrary = defineStore(
       onError,
     }: { id: number } & Callbacks) => {
       loading.value = true;
-
-      const { data } = await useFetch<{
-        code: number;
-        message?: string;
-      }>(`/api/v1/books/${id}`, {
+      const route: Route = `/api/v1/books/${id}`;
+      const { data, error, status } = await useFetch(`${route}`, {
         method: "DELETE",
-        server: false,
       });
-
       loading.value = false;
 
-      if (
-        data.value?.code &&
-        data.value?.code >= 200 &&
-        data.value?.code < 300
-      ) {
+      console.log("deleting", status.value, error.value, data.value);
+
+      if (status.value === "success" && !error.value) {
+        createToast({
+          message: "Book deleted successfully",
+          toastOps: { description: "" },
+          type: "success",
+        })();
         await getBooks();
-        if (onSuccess) onSuccess();
+        onSuccess?.();
       } else {
-        if (onError) onError(data.value?.code ?? -1, data.value?.message);
+        createToast({
+          message: `Failed to delete book with id ${id}`,
+          toastOps: {
+            description: error.value ?? `Error deleting book with id ${id}`,
+          },
+          type: "error",
+        })();
+        onError?.(error.value ?? `Failed to delete book with id ${id}`);
       }
     };
 
@@ -193,27 +223,32 @@ export const useLibrary = defineStore(
       onSuccess,
       onError,
     }: { title: string } & Callbacks) => {
-      // TODO: how do i do the search: 100% frontend or 100% backend, or is there a hybrid solution
-      const query = encodeURIComponent(title);
       loading.value = true;
-      const { data } = await useFetch<BooksResponse>(
-        `/v1/books/search/title?title=${query}`,
-        {
-          method: "GET",
-          headers: {},
-        },
+      const route: Route = `/api/v1/books/search/title`;
+      const { data, error, status } = await useFetch<BooksResponse>(
+        `${route}?q=${encodeURIComponent(title)}`,
+        { method: "GET" },
       );
-
       loading.value = false;
 
-      if (
-        data.value?.code &&
-        data.value?.code >= 200 &&
-        data.value?.code < 300
-      ) {
-        if (onSuccess) onSuccess(data.value);
+      if (status.value === "success" && !error.value) {
+        createToast({
+          message: "Books found by title",
+          toastOps: {
+            description: data.value?.message ?? "",
+          },
+          type: "success",
+        })();
+        onSuccess?.(data.value?.data);
       } else {
-        if (onError) onError(data.value);
+        createToast({
+          message: "Failed to search books by title",
+          toastOps: {
+            description: error.value ?? "Unknown error",
+          },
+          type: "error",
+        })();
+        onError?.(error.value ?? "Failed to search books by title");
       }
     };
 
@@ -222,21 +257,32 @@ export const useLibrary = defineStore(
       onSuccess,
       onError,
     }: { author: string } & Callbacks) => {
-      const query = encodeURIComponent(author);
-      const { data, pending } = await useFetch<BooksResponse>(
-        `/v1/books/search/author?author=${query}`,
-        {
-          method: "GET",
-          headers: {},
-        },
+      loading.value = true;
+      const route: Route = `/api/v1/books/search/author`;
+      const { data, error, status } = await useFetch<BooksResponse>(
+        `${route}?q=${encodeURIComponent(author)}`,
+        { method: "GET" },
       );
+      loading.value = false;
 
-      loading.value = pending.value;
-
-      if (data.value != null) {
-        if (onSuccess) onSuccess(data.value);
+      if (status.value === "success" && !error.value) {
+        createToast({
+          message: "Books found by author",
+          toastOps: {
+            description: data.value?.message ?? "",
+          },
+          type: "success",
+        })();
+        onSuccess?.(data.value?.data);
       } else {
-        if (onError) onError(data.value);
+        createToast({
+          message: "Failed to search books by author",
+          toastOps: {
+            description: error.value ?? "Unknown error",
+          },
+          type: "error",
+        })();
+        onError?.(error.value ?? "Failed to search books by author");
       }
     };
 
@@ -254,8 +300,7 @@ export const useLibrary = defineStore(
   },
   {
     persist: {
-      // TODO: uncomment
-      // paths: ["books"],
+      // paths: ['books'], // Uncomment if needed
     },
   },
 );
