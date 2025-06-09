@@ -7,22 +7,11 @@
           v-if="page.pageRef.showDatePicker"
           v-model="dateValue"
         />
-        <Alert
-          v-if="apikeys.gpt == '' && page.pageRef.enableApiAlert"
-          variant="destructive"
-          class="w-full"
-        >
-          <AlertTitle>API Key Required</AlertTitle>
-          <AlertDescription>
-            You need to enter your OpenAI API key in settings to enable this
-            feature.
-          </AlertDescription>
-        </Alert>
         <Button
           :disabled="apikeys.gpt == ''"
           v-if="page.pageRef.showAIButton"
           @click="page.pageRef.onAIclick(true)"
-          class="h-5 justify-start text-left"
+          class="h-5 justify-start text-left w-full"
           variant="default"
         >
           <label class="pointer-events-none inline-block">

@@ -3,8 +3,14 @@
     <Sheet v-model:open="open">
       <SheetTrigger as-child>
         <Button v-if="!mini" variant="default" class="h-4 bg-primary">
-          {{ actionType === "edit" ? "Edit Book" : "New Book" }}
-          <Icon name="proicons:book-add" class="ml-3" />
+          <label class="hidden md:block">
+            {{ actionType === "edit" ? "Edit Book" : "New Book" }}
+          </label>
+          <Icon
+            name="proicons:book-add"
+            size="1.5rem"
+            class="h-6 ml-0 md:ml-3"
+          />
         </Button>
         <Button v-else variant="ghost" size="sm" class="h-1/3 p-2">
           <component

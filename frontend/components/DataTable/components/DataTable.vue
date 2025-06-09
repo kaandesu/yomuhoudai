@@ -17,14 +17,14 @@ import {
 } from "@tanstack/vue-table";
 
 import { ref } from "vue";
-import type { Task } from "../data/schema";
+import type { Book } from "@/stores/library";
 import DataTablePagination from "./DataTablePagination.vue";
 import DataTableToolbar from "./DataTableToolbar.vue";
 import { valueUpdater } from "@/lib/utils";
 
 interface DataTableProps {
-  columns: ColumnDef<Task, any>[];
-  data: Task[];
+  columns: ColumnDef<Book, any>[];
+  data: Book[];
 }
 const props = defineProps<DataTableProps>();
 

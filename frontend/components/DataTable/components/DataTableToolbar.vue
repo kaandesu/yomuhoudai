@@ -30,7 +30,7 @@ const isFiltered = computed(
         :model-value="
           (table.getColumn('title')?.getFilterValue() as string) ?? ''
         "
-        class="h-8 w-[150px] lg:w-[250px]"
+        class="h-8 w-[100px] md:w-[150px] lg:w-[250px]"
         @input="table.getColumn('title')?.setFilterValue($event.target.value)"
       />
       <DataTableFacetedFilter

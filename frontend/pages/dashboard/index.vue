@@ -19,14 +19,15 @@
       <div class="flex flex-row w-full lg:w-1/2 gap-4">
         <BasicCard
           class="h-28 w-full"
-          :title="'Total Books Read'"
+          title="Total Books"
           :value="books.length"
-          :muted="'+180.1% from last month'"
+          :muted="'+100% from last month'"
           :icon="'fluent-emoji-high-contrast:books'"
         />
         <BasicCard
           class="h-28 w-full"
-          :title="'Curently Reading'"
+          title="On Going"
+          :muted="'+100% from last month'"
           :value="`${totalOngoing}`"
           :icon="'fluent-emoji-high-contrast:books'"
         />

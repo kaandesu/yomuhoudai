@@ -109,7 +109,20 @@
         v-if="!suggestions"
         class="h-1/2 space-y-4 p-0 sm:p-6 flex justify-center items-center"
       >
-        <SvgExplore class="w-1/2 h-1/2" />
+        <Alert
+          v-if="apikeys.gpt == ''"
+          variant="destructive"
+          class="w-full initialApear"
+        >
+          <AlertTitle>API Key Required</AlertTitle>
+          <AlertDescription>
+            You need to enter your OpenAI API key in settings to enable
+            "Generate Solutions" feature.
+            <br />
+            Or use "Editor's Choice" for offline suggestions.
+          </AlertDescription>
+        </Alert>
+        <SvgExplore v-else class="w-full md:w-1/2 h-1/2" />
       </section>
       <!-- Description Carousel -->
       <section v-if="suggestions" class="h-1/2 space-y-4 p-0 sm:p-6">
@@ -197,6 +210,8 @@ import { watchOnce } from "@vueuse/core";
 import { ref } from "vue";
 import { type Book, useLibrary } from "@/stores/library";
 import { Card, CardContent } from "@/components/ui/card";
+import { useStateManager } from "@/stores/state-manager";
+const { apikeys } = storeToRefs(useStateManager());
 import {
   Carousel,
   type CarouselApi,
