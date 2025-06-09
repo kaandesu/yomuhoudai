@@ -83,11 +83,11 @@
                           </label>
                           <label
                             v-if="
-                              suggestions[index].averageRating &&
-                              suggestions[index].averageRating !== 'N/A'
+                              suggestions[index].rating &&
+                              suggestions[index].rating !== 'N/A'
                             "
                           >
-                            {{ suggestions[index].averageRating }} Rating
+                            {{ suggestions[index].rating }} Rating
                           </label>
                           <label v-if="suggestions[index].publishedDate">
                             {{ suggestions[index].publishedDate.slice(0, 4) }}
@@ -167,7 +167,7 @@
                       </p>
                       <p>
                         <span class="font-medium">Rating:</span>
-                        {{ suggestions[index]?.averageRating || "N/A" }}
+                        {{ suggestions[index]?.rating || "N/A" }}
                       </p>
                     </div>
                   </CardHeader>
@@ -249,7 +249,7 @@ const fetchBookInfo = async (bookTitle: string, author: string) => {
       categories: volumeInfo.categories || [],
       pageCount: volumeInfo.pageCount || "N/A",
       publishedDate: volumeInfo.publishedDate || "Unknown Date",
-      averageRating: volumeInfo.averageRating || "N/A",
+      rating: volumeInfo.rating || "N/A",
     };
 
     return bookInfo;
@@ -269,7 +269,7 @@ const loadBookInfo = async () => {
       book.categories = bookInfo.categories;
       book.pageCount = bookInfo.pageCount;
       book.publishedDate = bookInfo.publishedDate;
-      book.averageRating = bookInfo.averageRating;
+      book.rating = bookInfo.rating;
     }
   }
 };

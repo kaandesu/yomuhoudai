@@ -136,10 +136,10 @@
             </FormItem>
           </FormField>
 
-          <!-- FIELD: averageRating -->
-          <FormField name="averageRating" v-slot="{ componentField }">
+          <!-- FIELD: Rating -->
+          <FormField name="rating" v-slot="{ componentField }">
             <FormItem>
-              <FormLabel>Average Rating</FormLabel>
+              <FormLabel>Rating</FormLabel>
               <FormControl>
                 <Input
                   v-bind="componentField"
@@ -228,7 +228,7 @@ const formSchema = toTypedSchema(
     categories: z.string().optional(),
     pageCount: z.number().optional(),
     publishedDate: z.string().optional(),
-    averageRating: z.number().optional(),
+    rating: z.number().optional(),
     status: z.string().optional(),
   }),
 );

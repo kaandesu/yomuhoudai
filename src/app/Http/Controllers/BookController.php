@@ -31,7 +31,7 @@ use Exception;
  *     @OA\Property(property="description", type="string", example="A novel about the American dream."),
  *     @OA\Property(property="pageCount", type="string", example="200"),
  *     @OA\Property(property="publishedDate", type="string", example="1925-04-10"),
- *     @OA\Property(property="averageRating", type="string", example="4.5"),
+ *     @OA\Property(property="rating", type="string", example="4.5"),
  * )
  */
 class BookController extends Controller
@@ -66,7 +66,7 @@ class BookController extends Controller
      *             @OA\Property(property="description", type="string", example="A novel about the American dream."),
      *             @OA\Property(property="pageCount", type="string", example="200"),
      *             @OA\Property(property="publishedDate", type="string", example="1925-04-10"),
-     *             @OA\Property(property="averageRating", type="string", example="4.5"),
+     *             @OA\Property(property="rating", type="string", example="4.5"),
      *         )
      *     ),
      *     @OA\Response(
@@ -104,7 +104,7 @@ class BookController extends Controller
      *             @OA\Property(property="description", type="string", example="A novel about teenage angst."),
      *             @OA\Property(property="pageCount", type="string", example="277"),
      *             @OA\Property(property="publishedDate", type="string", example="1951-07-16"),
-     *             @OA\Property(property="averageRating", type="string", example="4.2"),
+     *             @OA\Property(property="rating", type="string", example="4.2"),
      *         )
      *     ),
      *     @OA\Response(
@@ -132,7 +132,7 @@ class BookController extends Controller
                 'description' => 'nullable|string',
                 'pageCount' => 'nullable|string',
                 'publishedDate' => 'nullable|string',
-                'averageRating' => 'nullable|string',
+                'rating' => 'nullable|string',
                 ]
             );
 
@@ -168,7 +168,7 @@ class BookController extends Controller
      *             @OA\Property(property="description", type="string", example="A novel about the American dream."),
      *             @OA\Property(property="pageCount", type="string", example="200"),
      *             @OA\Property(property="publishedDate", type="string", example="1925-04-10"),
-     *             @OA\Property(property="averageRating", type="string", example="4.5"),
+     *             @OA\Property(property="rating", type="string", example="4.5"),
      *         )
      *     ),
      *     @OA\Response(
@@ -198,7 +198,7 @@ class BookController extends Controller
                 'description' => 'nullable|string',
                 'pageCount' => 'nullable|string',
                 'publishedDate' => 'nullable|string',
-                'averageRating' => 'nullable|string',
+                'rating' => 'nullable|string',
                 ]
             );
 

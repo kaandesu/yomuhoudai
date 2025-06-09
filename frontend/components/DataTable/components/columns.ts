@@ -178,11 +178,11 @@ export const columns: ColumnDef<Book>[] = [
     cell: ({ row }) => h("span", {}, row.getValue("publishedDate") || "-"),
   },
 
-  // Average Rating
+  //  Rating
   {
-    accessorKey: "averageRating",
+    accessorKey: "rating",
     header: ({ column }) =>
-      h(DataTableColumnHeader, { column, title: "Avg Rating" }),
-    cell: ({ row }) => h("span", {}, row.getValue("averageRating") || "-"),
+      h(DataTableColumnHeader, { column, title: "Rating" }),
+    cell: ({ row }) => h("span", {}, row.getValue("rating") || "-"),
   },
 ];

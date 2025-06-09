@@ -10,7 +10,7 @@ export type Book = {
   categories?: string[];
   pageCount?: string;
   publishedDate?: string;
-  averageRating?: string;
+  rating?: string;
   added?: boolean;
   status?: "completed" | "ongoing" | "on-hold" | "plan-to-read" | "dropped";
 };
