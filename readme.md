@@ -41,9 +41,9 @@ docker-compose stop \
 ### Frontend Directory Structure
 
 - [Stores](#stores)
-  - [1- useLibrary()](<#1--uselibrary()>)
-  - [2- useStateManager()](<#2--usestatemanager()>)
-  - [3- useToastManagerStore()](<#3--usetoastmanagerstore()>)
+  - [1- useLibrary](#1-uselibrary)
+  - [2- useStateManager](#2-usestatemanager)
+  - [3- useToastManagerStore](#3-usetoastmanagerstore)
 
 ```python
 frontend/
@@ -54,14 +54,14 @@ frontend/
 │   └── Landing/            # Hero, Features, etc. for home page
 ├── config/                 # Configs for various sections/pages
 │   ├── misc/               # Miscellaneous configs (i18n, Nuxt image, Tailwind, viewport)
-    │   pages/              # Page configs for app navigation and metadata, when
+│   │   pages/              # Page configs for app navigation and metadata
 │   └── landing/            # Landing page configs (benefits, features, hero, sponsors, team)
 ├── i18n/                   # Locale files (en, jp, tr, etc.)
 ├── layouts/                # Default layouts like main and with-tabs
 ├── lib/                    # Utility functions (e.g., date or string utils)
 ├── pages/                  # Nuxt file-based routing
 │   ├── dashboard/          # /dashboard routes
-│   │   ├── explore.vue     # Possibly shows book grid
+│   │   ├── explore.vue     # Book suggestions
 │   │   ├── manage.vue      # Book management
 │   │   └── settings.vue    # Settings UI
 │   └── index.vue           # Homepage
@@ -81,22 +81,18 @@ tailwind.config.js          # Tailwind v3 setup
 
 ---
 
-### Stores
+## Stores
 
-#### 1- useLibrary()
+### 1-useLibrary
 
 This Pinia store manages a collection of books with CRUD operations and search capabilities via API calls. It also handles loading states and user feedback through toast notifications.
 
----
-
-##### State
+#### State
 
 - `books: Book[]` - List of books in the library.
 - `loading: boolean` - Indicates if an API call is in progress.
 
----
-
-##### Functions
+#### Functions
 
 - **getBooks({ onSuccess?, onError? })**  
   Fetches all books from `/api/v1/books`. Updates `books` state. Shows success/error toast.
@@ -119,9 +115,7 @@ This Pinia store manages a collection of books with CRUD operations and search c
 - **searchBooksByAuthor({ author: string, onSuccess?, onError? })**  
   Searches books by author via GET `/api/v1/books/search/author?q={author}`. Shows success/error toast.
 
----
-
-###### Notes
+##### Notes
 
 - <small>Each function supports optional callbacks: `onSuccess` and `onError` for custom handling.</small>
 - <small>Uses `createToast` to notify user of success or failure.</small>
@@ -129,13 +123,11 @@ This Pinia store manages a collection of books with CRUD operations and search c
 
 ---
 
-#### 2- useStateManager()
+### 2-useStateManager
 
 This Pinia store manages app-wide UI state including navigation toggle states, API keys, page loading status, and current active page info. It also provides navigation helper functions with loading indicators.
 
----
-
-##### State
+#### State
 
 - `navState: { open: boolean; collapsed: boolean }` — Tracks navigation menu open/collapsed state.
 - `apikeys: { gpt: string }` — Stores API keys like GPT key.
@@ -144,9 +136,7 @@ This Pinia store manages app-wide UI state including navigation toggle states, A
 
 <small>Note: The store persists `navState` and `apikeys` across sessions using the localStorage.</small>
 
----
-
-##### Functions
+#### Functions
 
 - **findPage(id: string): Page \| false**  
   Finds a page by its `id` in the `pages` dictionary. Returns the page or `false` if not found.
@@ -162,13 +152,11 @@ This Pinia store manages app-wide UI state including navigation toggle states, A
 
 ---
 
-#### 3- useToastManagerStore()
+### 3-useToastManagerStore
 
 This Pinia store provides a centralized way to create various types of toast notifications using `vue-sonner`. It supports multiple toast types with customizable options.
 
----
-
-##### Functions
+#### Functions
 
 - **create({ message: string, toastOps?: ToastT, type?: ToastTypes }): Function**  
   Returns a function that triggers a toast notification with the specified message, options, and type.
