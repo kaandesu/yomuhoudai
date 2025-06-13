@@ -17,33 +17,15 @@ services:
     volumes:
       - ./src:/var/www/html
     ports:
-      - "1234:1234"
+      - "1234:80"
     command: >
       sh -c "
         composer install &&
         chmod -R 775 storage bootstrap/cache &&
         chown -R www-data:www-data storage bootstrap/cache &&
         php artisan migrate &&
-        php-fpm
+        apache2-foreground
       "
-
-  frontend:
-    image: node:20
-    container_name: yomuhoudai-frontend
-    working_dir: /app
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    ports:
-      - "3000:3000"
-    command: >
-      sh -c "
-        corepack enable &&
-        corepack prepare pnpm@latest --activate &&
-        pnpm install &&
-        pnpm dev --host
-      "
-
   mysql:
     image: mysql:8
     container_name: assignment01-mysql

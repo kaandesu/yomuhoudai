@@ -1,4 +1,10 @@
 import { image, tailwindcss, viewport, i18n } from "./config/";
+
+const isDevMode = process.env.DEV_MODE === "true";
+const apiBaseUrl = isDevMode
+  ? "http://127.0.0.1:1234"
+  : "https://laravel.yomuhoudai.club";
+
 export default defineNuxtConfig({
   ssr: false,
   pages: true,
@@ -53,17 +59,17 @@ export default defineNuxtConfig({
   routeRules: {
     "/api/**": {
       proxy: {
-        to: "http://127.0.0.1:1234/api/**",
+        to: `${apiBaseUrl}/api/**`,
       },
     },
     "/api/v1/books/**": {
       proxy: {
-        to: "http://127.0.0.1:1234/api/v1/books/**",
+        to: `${apiBaseUrl}/api/v1/books/**`,
       },
     },
     "/api/v1/**": {
       proxy: {
-        to: "http://127.0.0.1:1234/api/v1/**",
+        to: `${apiBaseUrl}/api/v1/**`,
       },
     },
   },
