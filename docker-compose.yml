@@ -1,7 +1,7 @@
 version: "3.7"
 
 services:
-  api:
+  laravel:
     build:
       dockerfile: Dockerfile
     environment:
@@ -17,13 +17,6 @@ services:
       - ./src:/var/www/html
     ports:
       - "1234:1234"
-    command: >
-      sh -c "
-        composer install &&
-        chmod -R 775 storage bootstrap/cache &&
-        chown -R www-data:www-data storage bootstrap/cache &&
-        apache2-foreground
-      "
 
   mysql:
     image: mysql:8
