@@ -38,6 +38,11 @@ type Callbacks = {
   onError?: (error?: unknown) => unknown;
 };
 
+const isDevMode = process.env.DEV_MODE === "true";
+const apiBaseUrl = isDevMode
+  ? "http://127.0.0.1:1234"
+  : "https://laravel.yomuhoudai.club";
+
 export type Route =
   | `/api/v1/books`
   | `/api/v1/books/${number}`
@@ -56,7 +61,7 @@ export const useLibrary = defineStore(
       loading.value = true;
       const route: Route = `/api/v1/books`;
       const { data, error, status } = await useFetch<BooksResponse>(
-        `${route}`,
+        apiBaseUrl + route,
         { method: "GET" },
       );
       loading.value = false;
@@ -90,9 +95,12 @@ export const useLibrary = defineStore(
     }: { id: number } & Callbacks) => {
       loading.value = true;
       const route: Route = `/api/v1/books/${id}`;
-      const { data, error, status } = await useFetch<BookResponse>(`${route}`, {
-        method: "GET",
-      });
+      const { data, error, status } = await useFetch<BookResponse>(
+        apiBaseUrl + route,
+        {
+          method: "GET",
+        },
+      );
       loading.value = false;
 
       if (status.value === "success" && !error.value) {
@@ -125,11 +133,14 @@ export const useLibrary = defineStore(
     }: { book: Omit<Book, "id"> } & Callbacks) => {
       loading.value = true;
       const route: Route = "/api/v1/books";
-      const { data, error, status } = await useFetch<BookResponse>(route, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(book),
-      });
+      const { data, error, status } = await useFetch<BookResponse>(
+        apiBaseUrl + route,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(book),
+        },
+      );
       loading.value = false;
 
       if (
@@ -169,11 +180,14 @@ export const useLibrary = defineStore(
     }: { id: number; book: Partial<Omit<Book, "id">> } & Callbacks) => {
       loading.value = true;
       const route: Route = `/api/v1/books/${id}`;
-      const { data, error, status } = await useFetch<BookResponse>(`${route}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(book),
-      });
+      const { data, error, status } = await useFetch<BookResponse>(
+        apiBaseUrl + route,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(book),
+        },
+      );
       loading.value = false;
 
       if (status.value === "success" && !error.value) {
@@ -208,7 +222,7 @@ export const useLibrary = defineStore(
       loading.value = true;
       const route: Route = `/api/v1/books/${id}`;
       const { data, error, status } = await useFetch<ApiResponseGeneric<any>>(
-        `${route}`,
+        apiBaseUrl + route,
         {
           method: "DELETE",
         },
@@ -253,7 +267,7 @@ export const useLibrary = defineStore(
       loading.value = true;
       const route: Route = `/api/v1/books/search/title`;
       const { data, error, status } = await useFetch<BooksResponse>(
-        `${route}?q=${encodeURIComponent(title)}`,
+        `${apiBaseUrl + route}?q=${encodeURIComponent(title)}`,
         { method: "GET" },
       );
       loading.value = false;
