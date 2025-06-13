@@ -136,6 +136,25 @@ class BookController extends Controller
                 ]
             );
 
+            // Check if a book with the same title and author already exists
+            $existingBook = Book::where('title', $data['title'])
+                                ->where('author', $data['author'])
+                                ->first();
+
+            if ($existingBook) {
+                return $this->jsonResponse(
+                    $existingBook,
+                    'A book with the same title and author already exists!',
+                    409
+                );
+            }
+
+            // if the status is not provided
+            // it fallbacks to 'plan-to-read'
+            if (empty($data['status'])) {
+                $data['status'] = 'plan-to-read';
+            }
+
             $book = Book::create($data);
 
             return $this->jsonResponse($book, 'Book created successfully', 201);

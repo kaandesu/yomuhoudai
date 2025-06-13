@@ -186,7 +186,7 @@
                   </CardHeader>
                   <CardFooter class="px-6 pb-6 pt-2 flex justify-center">
                     <Button
-                      :disabled="disableAddButton"
+                      :disabled="loading"
                       size="sm"
                       @click="addNewBook(index)"
                     >
@@ -221,9 +221,10 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-const { books } = storeToRefs(useLibrary());
+const { books, loading } = storeToRefs(useLibrary());
 
-const disableAddButton = ref<boolean>(false);
+const { createBook } = useLibrary();
+
 const suggestions = ref<Book[] | null>(null);
 const suggestions2 = [
   { title: "1984", author: "George Orwell" },
@@ -299,24 +300,19 @@ onMounted(() => {
 });
 
 const addNewBook = async (index: number) => {
-  // TODO: SEND THE BOOK TO THE BACK END LARAVEL
   const addedBook = suggestions.value?.[index];
   if (!addedBook || suggestions.value?.[index] == null) return;
+  const book: { title: string; author: string } = {
+    title: addedBook.title,
+    author: addedBook.author,
+  };
+  await createBook({ book });
   suggestions.value[index].added = true;
-  disableAddButton.value = true;
   setTimeout(() => {
     suggestions.value?.splice(index, 1);
 
     if (suggestions.value?.[index] != null)
       suggestions.value[index].added = false;
-    disableAddButton.value = false;
-    createToast({
-      message: "Added book #" + index,
-      toastOps: {
-        description: "Adding your new book to your profile.",
-      },
-      type: "success",
-    })();
 
     // go one back to fix some bugs
     if (emblaMainApi.value) {
@@ -360,6 +356,7 @@ defineExpose({
   onAIclick: async (askAi: boolean) => {
     // TODO: here actually get the suggestions from gpt
     if (askAi == false) {
+      // @ts-ignore
       suggestions.value = suggestions2;
     }
     createToast({
