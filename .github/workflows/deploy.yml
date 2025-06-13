@@ -3,7 +3,7 @@ name: Deploy Frontend to GitHub Pages
 on:
   push:
     branches:
-      - "production"
+      - "staging"
 
 jobs:
   build:
@@ -45,7 +45,7 @@ jobs:
         run: pnpm generate
 
       - name: Add CNAME file
-        run: echo "app.yomuhoudai.club" > frontend/.output/public/CNAME
+        run: echo "staging.yomuhoudai.club" > frontend/.output/public/CNAME
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
