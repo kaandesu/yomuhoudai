@@ -3,7 +3,7 @@ import { image, tailwindcss, viewport, i18n } from "./config/";
 const isDevMode = process.env.DEV_MODE === "true";
 const apiBaseUrl = isDevMode
   ? "http://127.0.0.1:1234"
-  : "https://laravel.yomuhoudai.club";
+  : "https://api.yomuhoudai.club";
 
 export default defineNuxtConfig({
   ssr: false,

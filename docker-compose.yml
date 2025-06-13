@@ -4,7 +4,6 @@ services:
   laravel:
     build:
       dockerfile: Dockerfile
-    container_name: assignment01-laravel
     environment:
       DB_DATABASE: laravel
       DB_HOST: mysql
@@ -17,18 +16,17 @@ services:
     volumes:
       - ./src:/var/www/html
     ports:
-      - "1234:80"
+      - "1234:1234"
     command: >
       sh -c "
         composer install &&
         chmod -R 775 storage bootstrap/cache &&
         chown -R www-data:www-data storage bootstrap/cache &&
-        php artisan migrate &&
         apache2-foreground
       "
+
   mysql:
     image: mysql:8
-    container_name: assignment01-mysql
     ports:
       - "3306:3306"
     environment:
@@ -36,3 +34,9 @@ services:
       MYSQL_PASSWORD: secret
       MYSQL_DATABASE: laravel
       MYSQL_ROOT_PASSWORD: secret
+
+  frontend:
+    build:
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "3000:80"
