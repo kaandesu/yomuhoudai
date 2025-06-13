@@ -2,8 +2,9 @@ version: "3.7"
 
 services:
   laravel:
-    image: yaraku/assignment:${COMPOSE_PROJECT_NAME}
-    container_name: ${COMPOSE_PROJECT_NAME}-laravel
+    build:
+      dockerfile: Dockerfile
+    container_name: assignment01-laravel
     environment:
       DB_DATABASE: laravel
       DB_HOST: mysql
@@ -16,7 +17,15 @@ services:
     volumes:
       - ./src:/var/www/html
     ports:
-      - "80:80"
+      - "1234:1234"
+    command: >
+      sh -c "
+        composer install &&
+        chmod -R 775 storage bootstrap/cache &&
+        chown -R www-data:www-data storage bootstrap/cache &&
+        php artisan migrate &&
+        php-fpm
+      "
 
   frontend:
     image: node:20
@@ -37,7 +46,7 @@ services:
 
   mysql:
     image: mysql:8
-    container_name: ${COMPOSE_PROJECT_NAME}-mysql
+    container_name: assignment01-mysql
     ports:
       - "3306:3306"
     environment:

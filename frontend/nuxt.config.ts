@@ -33,6 +33,9 @@ export default defineNuxtConfig({
     classSuffix: "",
   },
   vite: {
+    server: {
+      allowedHosts: true,
+    },
     base: "",
     optimizeDeps: {
       exclude: ["vee-validate"],
@@ -50,17 +53,17 @@ export default defineNuxtConfig({
   routeRules: {
     "/api/**": {
       proxy: {
-        to: "http://127.0.0.1:80/api/**",
+        to: "http://127.0.0.1:1234/api/**",
       },
     },
     "/api/v1/books/**": {
       proxy: {
-        to: "http://127.0.0.1:80/api/v1/books/**",
+        to: "http://127.0.0.1:1234/api/v1/books/**",
       },
     },
     "/api/v1/**": {
       proxy: {
-        to: "http://127.0.0.1:80/api/v1/**",
+        to: "http://127.0.0.1:1234/api/v1/**",
       },
     },
   },
