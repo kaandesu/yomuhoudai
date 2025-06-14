@@ -195,7 +195,7 @@
 
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
-import { useLibrary } from "@/stores/library";
+import { useLibrary, type BookPayload } from "@/stores/library";
 const { createBook, updateBook } = useLibrary();
 import * as z from "zod";
 
@@ -276,16 +276,39 @@ watch(open, (newval) => {
 });
 
 const onSubmit = (values: any) => {
-  const payload = {
-    ...values,
-    categories:
-      values.categories?.split(",").map((cat: string) => cat.trim()) ?? [],
-  };
-  createBook({
-    book: payload,
-    onSuccess: () => {
-      open.value = false;
-    },
+  const updatedValues: BookPayload = cleanBookPayload({
+    title: values.title,
+    author: values.author,
+    cover: values.cover,
+    currentPage: values.currentPage,
+    description: values.description,
+    categories: values.categories,
+    pageCount: values.pageCount,
+    publishedDate: values.publishedDate,
   });
+
+  if (book == undefined) return;
+
+  const BookPayload: Book = { id: book.id, ...updatedValues };
+
+  switch (actionType) {
+    case "new":
+      createBook({
+        book: BookPayload,
+        onSuccess: () => {
+          open.value = false;
+        },
+      });
+      break;
+
+    case "edit":
+      updateBook({
+        book: BookPayload,
+        onSuccess: () => {
+          open.value = false;
+        },
+      });
+      break;
+  }
 };
 </script>

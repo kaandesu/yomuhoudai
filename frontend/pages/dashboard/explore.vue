@@ -284,7 +284,7 @@ const loadBookInfo = async () => {
       book.cover = bookInfo.coverUrl;
       book.description = bookInfo.description;
       book.categories = bookInfo.categories;
-      book.pageCount = `${bookInfo.pageCount}`;
+      book.pageCount = bookInfo.pageCount;
       book.publishedDate = `${bookInfo.publishedDate}`;
       book.rating = `${bookInfo.rating}`;
     }
@@ -312,18 +312,6 @@ const addNewBook = async (index: number) => {
     suggestions.value?.[index] == null
   )
     return;
-
-  // cleaning the payload from undefined values
-  // thus causing an error on the back-end
-  function cleanBookPayload(book: Partial<BookPayload>): BookPayload {
-    const cleaned: Partial<BookPayload> = {};
-    Object.entries(book).forEach(([key, value]) => {
-      if (value !== undefined) {
-        (cleaned as any)[key] = value;
-      }
-    });
-    return cleaned as BookPayload;
-  }
 
   const book: BookPayload = cleanBookPayload({
     title: addedBook.title,

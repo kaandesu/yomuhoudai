@@ -175,11 +175,10 @@ export const useLibrary = defineStore(
     };
 
     const updateBook = async ({
-      id,
       book,
       onSuccess,
       onError,
-    }: { id: number; book: Partial<Omit<Book, "id">> } & Callbacks) => {
+    }: { book: Book } & Callbacks) => {
       const fetcher = $fetch.create({
         baseURL: apiBaseUrl,
         onResponse({ response }) {
@@ -194,23 +193,26 @@ export const useLibrary = defineStore(
         },
         onResponseError({ response }) {
           createToast({
-            message: `Failed to update book with id ${id}`,
+            message: `Failed to update book with id ${book.id}`,
             toastOps: {
               description: response._data?.message ?? "Unknown error",
             },
             type: "error",
           })();
           onError?.(
-            response._data?.message ?? `Failed to update book with id ${id}`,
+            response._data?.message ??
+              `Failed to update book with id ${book.id}`,
           );
         },
       });
 
       loading.value = true;
-      return fetcher<BookResponse>(`/api/v1/books/${id}`, {
+
+      const { id, ...payload } = book;
+      return fetcher<BookResponse>(`/api/v1/books/${book.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: book,
+        body: payload,
       }).finally(() => {
         loading.value = false;
       });
