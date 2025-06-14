@@ -13,6 +13,8 @@ services:
       APP_ENV: local
       APP_KEY: ayGbuqVXJakHHvMTZCjKqzhVqMNsHMQs
       LOG_CHANNEL: stderr
+      L5_SWAGGER_CONST_HOST: laravel.yomuhoudai.club
+      L5_SWAGGER_USE_ABSOLUTE_PATH: false
     volumes:
       - ./src:/var/www/html
     ports:
