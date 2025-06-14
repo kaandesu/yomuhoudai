@@ -2,15 +2,10 @@
 
 return [
     'api' => [
-        /*
-        |--------------------------------------------------------------------------
-        | Edit to set the api's title
-        |--------------------------------------------------------------------------
-        */
-
-        'title' => 'L5 Swagger UI',
+        'title' => 'Yomuhoudai API Documentation',
+        'host' => env('L5_SWAGGER_CONST_HOST', 'laravel.yomuhoudai.club'),
+        'schemes' => ['https'],
     ],
-
     'routes' => [
         /*
         |--------------------------------------------------------------------------
