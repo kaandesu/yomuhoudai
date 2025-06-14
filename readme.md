@@ -1,3 +1,26 @@
+<p align="center">
+  <img src="./public/logo.webp" height="150"  />
+</p>
+
+Yomuhoudai is a full-stack web app for browsing, managing, and performing CRUD operations on a book collection. It uses Laravel for the backend API, Nuxt for the frontend, and supports both local development (via Docker) and production deployment (via Coolify on a Hetzner VPS).
+
+## Table of Contents
+
+- [Requirements](#requirements)
+- [Setup](#setup)
+- [Environment Configuration](#environment-configuration)
+- [Frontend Development Setup](#frontend-development-setup)
+  - [Option 1: Using Docker Compose](#option-1-using-docker-compose)
+  - [Option 2: Local Node Environment](#option-2-local-node-environment)
+- [Deployment and CI/CD Overview](#deployment-and-cicd-overview)
+  - [GitHub Workflow for Staging Deployment](#github-workflow-for-staging-deployment)
+- [API Documentation](#api-documentation)
+- [Frontend Directory Structure](#frontend-directory-structure)
+- [Stores](#stores)
+  - [1-useLibrary](#1-uselibrary)
+  - [2-useStateManager](#2-usestatemanager)
+  - [3-useToastManagerStore](#3-usetoastmanagerstore)
+
 ## Requirements
 
 - [Docker](https://docs.docker.com/install)
@@ -6,31 +29,48 @@
 ## Setup
 
 1. Clone the repository.
-1. Start the containers by running `docker-compose up -d` in the project root.
-1. Install the composer packages by running `docker-compose exec laravel composer install`.
-1. Access the Laravel instance on `http://localhost` (If there is a "Permission denied" error, run `docker-compose exec laravel chown -R www-data storage`).
 
-Note that the changes you make to local files will be automatically reflected in the container.
-
-## Persistent database
-
-If you want to make sure that the data in the database persists even if the database container is deleted, add a file named `docker-compose.override.yml` in the project root with the following contents.
-
+```bash
+git clone https://github.com/kaandesu/yomuhoudai.git
 ```
+
+2. Start the containers by running:
+
+```bash
+docker-compose up -d
+```
+
+3. Install the Composer dependencies inside the Laravel container:
+
+```bash
+docker-compose exec laravel composer install
+```
+
+4. Run the database migrations:
+
+```bash
+docker-compose exec laravel php artisan migrate
+```
+
+Persistent database:
+
+If you want to ensure that your database data persists even if the MySQL container is removed, create a file named `docker-compose.override.yml` in the project root with the following contents:
+
+```yaml
 version: "3.7"
 
 services:
   mysql:
     volumes:
-    - mysql:/var/lib/mysql
+      - mysql:/var/lib/mysql
 
 volumes:
   mysql:
 ```
 
-Then run the following.
+Then restart the containers with:
 
-```
+```bash
 docker-compose stop \
   && docker-compose rm -f mysql \
   && docker-compose up -d
@@ -38,7 +78,116 @@ docker-compose stop \
 
 ---
 
-### Frontend Directory Structure
+### Environment Configuration
+
+The `docker-compose.yml` file includes pre-configured environment variables under the `laravel` service:
+
+```yaml
+APP_DEBUG: "false" # Set to "true" for development mode
+APP_ENV: production # Set to "local" for development environment
+```
+
+You can modify these values depending on your setup. For local development, it’s recommended to use:
+
+```yaml
+APP_DEBUG: "true"
+APP_ENV: local
+```
+
+---
+
+## Frontend Development Setup
+
+You have two options to run the frontend during development:
+
+### Option 1: Using Docker Compose
+
+Run the full stack including the frontend container with:
+
+```bash
+docker-compose up -d frontend
+```
+
+This uses the Dockerfile under `frontend/` which builds and serves the app via nginx on port `3000`.
+
+---
+
+### Option 2: Local Node Environment
+
+1. Enter frontend folder
+
+```bash
+cd frontend
+```
+
+2. Install dependencies:
+
+```bash
+pnpm install
+```
+
+3. Start the dev server:
+
+```bash
+pnpm dev
+```
+
+By default, the frontend connects to the deployed backend server.
+
+To connect to your local backend instead, run:
+
+```bash
+DEV_MODE=true pnpm dev
+```
+
+This sets the frontend to send API requests to your local Laravel backend.
+
+---
+
+## Deployment and CI/CD Overview
+
+The project is deployed on a VPS rented from Hetzner and managed via Coolify, which provides easy app deployment and management.
+
+- The backend Laravel API is hosted at:  
+  <https://laravel.yomuhoudai.club/>
+
+- The frontend app is deployed and accessible at:  
+  <https://app.yomuhoudai.club/>  
+  <https://library.yomuhoudai.club/>
+
+- Coolify management dashboard is available at:  
+  <https://cloud.yomuhoudai.club/>
+
+- Caddy is configured as a reverse proxy to handle routing and HTTPS certificates.
+
+---
+
+### GitHub Workflow for Staging Deployment
+
+There is a GitHub Actions workflow that automatically deploys the frontend to a staging environment on every push to the `staging` branch.
+
+- Staging site URL:  
+  <https://staging.yomuhoudai.club/>
+
+This ensures continuous integration and deployment for testing and preview before production releases.
+
+---
+
+## API Documentation
+
+Interactive API documentation is available via Swagger UI:
+
+🔗 [https://laravel.yomuhoudai.club/api/documentation](https://laravel.yomuhoudai.club/api/documentation)
+
+This includes all available endpoints, request/response formats.
+
+<p align="left">
+  <img src="./public/swaggerss.webp" height="300"  />
+</p>
+
+---
+
+## Frontend Directory Structure
 
 - [Stores](#stores)
   - [1- useLibrary](#1-uselibrary)
@@ -91,6 +240,7 @@ This Pinia store manages a collection of books with CRUD operations and search c
 
 - `books: Book[]` - List of books in the library.
 - `loading: boolean` - Indicates if an API call is in progress.
+- `suggestions: Book[]` - List of suggested books in the library. (Editor's Choice or by an AI(wip))
 
 #### Functions
 
@@ -103,8 +253,8 @@ This Pinia store manages a collection of books with CRUD operations and search c
 - **createBook({ book: Omit<Book, "id">, onSuccess?, onError? })**  
   Creates a new book via POST to `/api/v1/books`. Adds the created book to `books`. Shows success/error toast.
 
-- **updateBook({ id: number, book: Partial<Omit<Book, "id">>, onSuccess?, onError? })**  
-  Updates a book by `id` with partial data via PUT to `/api/v1/books/{id}`. Shows success/error toast.
+- **updateBook({ book: Book, onSuccess?, onError? })**  
+  Updates a book via PUT to `/api/v1/books/{id}`. Shows success/error toast.
 
 - **deleteBook({ id: number, onSuccess?, onError? })**  
   Deletes a book by `id` via DELETE to `/api/v1/books/{id}`. Removes book from `books` on success. Shows success/error toast.
