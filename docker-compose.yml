@@ -9,8 +9,8 @@ services:
       DB_HOST: mysql
       DB_PASSWORD: secret
       DB_USERNAME: laravel
-      APP_DEBUG: "true"
-      APP_ENV: local
+      APP_DEBUG: "false" # you can make this true for dev mode
+      APP_ENV: production # set it to local in dev mode
       APP_KEY: ayGbuqVXJakHHvMTZCjKqzhVqMNsHMQs
       LOG_CHANNEL: stderr
       L5_SWAGGER_CONST_HOST: laravel.yomuhoudai.club
