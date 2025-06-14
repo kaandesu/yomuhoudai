@@ -1,5 +1,10 @@
 <template>
-  <Form v-slot="{ handleSubmit }" keep-values :validation-schema="formSchema">
+  <Form
+    v-slot="{ handleSubmit }"
+    :key="isOpen ? 1 : 0"
+    :initial-values="defaultValues"
+    :validation-schema="formSchema"
+  >
     <Sheet v-model:open="open">
       <SheetTrigger as-child>
         <Button v-if="!mini" variant="default" class="h-4 bg-primary">
@@ -44,7 +49,6 @@
             }}
           </SheetDescription>
         </SheetHeader>
-
         <!-- All form fields go here -->
         <form
           id="addBookForm"
@@ -218,9 +222,14 @@ import {
 
 import { Eye, Edit2 } from "lucide-vue-next";
 
-const { actionType = "new", mini = false } = defineProps<{
+const {
+  actionType = "new",
+  mini = false,
+  book,
+} = defineProps<{
   actionType: "edit" | "new" | "view";
   mini?: boolean;
+  book?: Book;
 }>();
 
 const open = defineModel<boolean>();
@@ -235,9 +244,35 @@ const formSchema = toTypedSchema(
     pageCount: z.number().optional(),
     publishedDate: z.string().optional(),
     rating: z.number().optional(),
-    status: z.string().optional(),
+    status: z
+      .enum(["completed", "ongoing", "on-hold", "plan-to-read", "dropped"])
+      .optional(),
   }),
 );
+
+// Transform the book prop into default form values
+const defaultValues = computed(() => {
+  if (!book || actionType === "new") return {};
+
+  return {
+    title: book.title || "",
+    author: book.author || "",
+    description: book.description || "",
+    categories: (book.categories || []).join(", "),
+    pageCount: book.pageCount ? Number(book.pageCount) : undefined,
+    publishedDate: book.publishedDate || "",
+    rating: book.rating ? Number(book.rating) : undefined,
+    status: book.status || "plan-to-read",
+  };
+});
+
+// NOTE: changing this value to trigger re-render
+// using the key field on the form
+// so that the initial-values are persistent
+const isOpen = ref<boolean>(false);
+watch(open, (newval) => {
+  isOpen.value = newval != undefined ? newval : false;
+});
 
 function onSubmit(values: any) {
   createToast({
