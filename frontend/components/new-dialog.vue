@@ -2,6 +2,7 @@
   <Form
     v-slot="{ handleSubmit }"
     :key="isOpen ? 1 : 0"
+    keep-values
     :initial-values="defaultValues"
     :validation-schema="formSchema"
   >
@@ -185,9 +186,7 @@
         </form>
 
         <SheetFooter v-if="!isViewMode" class="mt-4">
-          <SheetClose as-child>
-            <Button type="submit" form="addBookForm">Save Book</Button>
-          </SheetClose>
+          <Button type="submit" form="addBookForm">Save Book</Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
@@ -196,6 +195,8 @@
 
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
+import { useLibrary } from "@/stores/library";
+const { createBook, updateBook } = useLibrary();
 import * as z from "zod";
 
 import {
@@ -274,14 +275,17 @@ watch(open, (newval) => {
   isOpen.value = newval != undefined ? newval : false;
 });
 
-function onSubmit(values: any) {
-  createToast({
-    message: "Book Submitted!",
-    toastOps: {
-      description: "Books based on your interests.",
+const onSubmit = (values: any) => {
+  const payload = {
+    ...values,
+    categories:
+      values.categories?.split(",").map((cat: string) => cat.trim()) ?? [],
+  };
+  createBook({
+    book: payload,
+    onSuccess: () => {
+      open.value = false;
     },
-    type: "info",
-  })();
-  open.value = false;
-}
+  });
+};
 </script>

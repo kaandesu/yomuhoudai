@@ -130,7 +130,7 @@ export const useLibrary = defineStore(
       });
     };
 
-    const createBook = ({
+    const createBook = async ({
       book,
       onSuccess,
       onError,
@@ -174,7 +174,7 @@ export const useLibrary = defineStore(
       });
     };
 
-    const updateBook = ({
+    const updateBook = async ({
       id,
       book,
       onSuccess,
@@ -216,7 +216,7 @@ export const useLibrary = defineStore(
       });
     };
 
-    const deleteBook = ({
+    const deleteBook = async ({
       id,
       onSuccess,
       onError,
@@ -258,7 +258,7 @@ export const useLibrary = defineStore(
       });
     };
 
-    const searchBooksByTitle = ({
+    const searchBooksByTitle = async ({
       title,
       onSuccess,
       onError,
@@ -298,7 +298,7 @@ export const useLibrary = defineStore(
       });
     };
 
-    const searchBooksByAuthor = ({
+    const searchBooksByAuthor = async ({
       author,
       onSuccess,
       onError,

@@ -21,10 +21,12 @@
               class="transition-all duration-500"
               style="backdrop-filter: blur(6px)"
               :style="
-                suggestions == null ? `animation-delay: ${index * 150}ms` : ''
+                suggestions.length < 1
+                  ? `animation-delay: ${index * 150}ms`
+                  : ''
               "
               :class="[
-                { initialApear: suggestions == null },
+                { initialApear: suggestions.length < 1 },
                 {
                   wiggle: suggestions?.[index]?.cover != null,
                 },
@@ -106,8 +108,8 @@
       </Carousel>
 
       <section
-        v-if="!suggestions"
-        class="h-1/2 space-y-4 p-0 sm:p-6 flex justify-center items-center"
+        v-if="suggestions.length < 1"
+        class="h-1/2 space-y-4 p-0 sm:p-6 flex justify-center items-center flex-col"
       >
         <Alert
           v-if="apikeys.gpt == ''"
@@ -122,10 +124,10 @@
             Or use "Editor's Choice" for offline suggestions.
           </AlertDescription>
         </Alert>
-        <SvgExplore v-else class="w-full md:w-1/2 h-1/2" />
+        <SvgExplore class="w-full md:w-2/5 h-2/5" />
       </section>
       <!-- Description Carousel -->
-      <section v-if="suggestions" class="h-1/2 space-y-4 p-0 sm:p-6">
+      <section v-if="suggestions.length > 1" class="h-1/2 space-y-4 p-0 sm:p-6">
         <Carousel
           class="relative max-w-md"
           @init-api="(val) => (emblaMainApi = val)"
@@ -335,7 +337,7 @@ const addNewBook = async (index: number) => {
   });
   await createBook({
     book,
-    onSuccess: (newBook) => {
+    onSuccess: () => {
       if (suggestions.value == null) return;
       suggestions.value[index].added = true;
       setTimeout(() => {
