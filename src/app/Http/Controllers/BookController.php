@@ -215,7 +215,7 @@ class BookController extends Controller
                 'currentPage' => 'nullable|string',
                 'cover' => 'nullable|string',
                 'description' => 'nullable|string',
-                'pageCount' => 'nullable|string',
+                'pageCount' => 'nullable|integer',
                 'publishedDate' => 'nullable|string',
                 'rating' => 'nullable|string',
                 ]
