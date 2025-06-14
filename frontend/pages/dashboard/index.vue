@@ -59,7 +59,7 @@
         :disabled="loading"
         class="w-24 h-4 backdrop-blur-[2px] bg-transparent flex justify-between"
         variant="outline"
-        @click="getBooks()"
+        @click="handleRefresh()"
       >
         {{ loading ? "Loading..." : "Refresh" }}
         <Icon name="mdi:refresh" size="1.5rem" />
@@ -83,6 +83,10 @@ import { useLibrary } from "@/stores/library";
 const { books, loading } = storeToRefs(useLibrary());
 const { getBooks } = useLibrary();
 const colorMode = useColorMode();
+
+const handleRefresh = async () => {
+  await useAsyncData(() => getBooks());
+};
 
 /* Info Cards */
 const totalOngoing = computed(() => {

@@ -7,7 +7,7 @@
     <div class="absolute top-2 right-2 h-24 flex flex-col items-center gap-y-1">
       <DropdownMenu>
         <DropdownMenuTrigger class="p-2 hover:bg-primary/10 rounded-xl">
-          <Icon class="h-6" name="carbon:list-dropdown" />
+          <Icon class="h-5 w-5" name="fluent:options-16-regular" />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <div class="grid gap-2 p-3 pt-1">

@@ -57,13 +57,11 @@ const dateValue = ref<DateRange>({
 });
 
 onMounted(async () => {
-  if (books.value.length == 0) {
-    createToast({
-      message: "Loading your library...",
-      type: "info",
-    })();
-    await getBooks();
-  }
+  createToast({
+    message: "Loading your library...",
+    type: "info",
+  })();
+  await getBooks();
 });
 
 definePageMeta({

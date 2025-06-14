@@ -208,7 +208,7 @@
 <script setup lang="ts">
 import { watchOnce } from "@vueuse/core";
 import { ref } from "vue";
-import { type Book, useLibrary } from "@/stores/library";
+import { type Book, type BookPayload, useLibrary } from "@/stores/library";
 import { Card, CardContent } from "@/components/ui/card";
 import { useStateManager } from "@/stores/state-manager";
 const { apikeys } = storeToRefs(useStateManager());
@@ -221,11 +221,10 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-const { books, loading } = storeToRefs(useLibrary());
+const { loading, books, suggestions } = storeToRefs(useLibrary());
 
 const { createBook } = useLibrary();
 
-const suggestions = ref<Book[] | null>(null);
 const suggestions2 = [
   { title: "1984", author: "George Orwell" },
   { title: "Brave New World", author: "Aldous Huxley" },
@@ -283,9 +282,9 @@ const loadBookInfo = async () => {
       book.cover = bookInfo.coverUrl;
       book.description = bookInfo.description;
       book.categories = bookInfo.categories;
-      book.pageCount = bookInfo.pageCount;
-      book.publishedDate = bookInfo.publishedDate;
-      book.rating = bookInfo.rating;
+      book.pageCount = `${bookInfo.pageCount}`;
+      book.publishedDate = `${bookInfo.publishedDate}`;
+      book.rating = `${bookInfo.rating}`;
     }
   }
 };
@@ -293,7 +292,11 @@ const loadBookInfo = async () => {
 onMounted(() => {
   // TODO: when its persisted we don't need to fetch again
   // only when we click the generate button
-  if (suggestions.value != null && suggestions.value[0].cover == undefined) {
+  if (
+    suggestions.value != null &&
+    suggestions.value[0] != undefined &&
+    suggestions.value[0].cover == undefined
+  ) {
     console.log("load book covers");
     loadBookInfo();
   }
@@ -301,25 +304,54 @@ onMounted(() => {
 
 const addNewBook = async (index: number) => {
   const addedBook = suggestions.value?.[index];
-  if (!addedBook || suggestions.value?.[index] == null) return;
-  const book: { title: string; author: string } = {
+  if (
+    !addedBook ||
+    suggestions.value == null ||
+    suggestions.value?.[index] == null
+  )
+    return;
+
+  // cleaning the payload from undefined values
+  // thus causing an error on the back-end
+  function cleanBookPayload(book: Partial<BookPayload>): BookPayload {
+    const cleaned: Partial<BookPayload> = {};
+    Object.entries(book).forEach(([key, value]) => {
+      if (value !== undefined) {
+        (cleaned as any)[key] = value;
+      }
+    });
+    return cleaned as BookPayload;
+  }
+
+  const book: BookPayload = cleanBookPayload({
     title: addedBook.title,
     author: addedBook.author,
-  };
-  await createBook({ book });
-  suggestions.value[index].added = true;
-  setTimeout(() => {
-    suggestions.value?.splice(index, 1);
+    cover: addedBook.cover,
+    currentPage: addedBook.currentPage,
+    description: addedBook.description,
+    categories: addedBook.categories,
+    pageCount: addedBook.pageCount,
+    publishedDate: addedBook.publishedDate,
+  });
+  await createBook({
+    book,
+    onSuccess: (newBook) => {
+      if (suggestions.value == null) return;
+      suggestions.value[index].added = true;
+      setTimeout(() => {
+        suggestions.value?.splice(index, 1);
 
-    if (suggestions.value?.[index] != null)
-      suggestions.value[index].added = false;
+        if (suggestions.value?.[index] != null)
+          suggestions.value[index].added = false;
 
-    // go one back to fix some bugs
-    if (emblaMainApi.value) {
-      const newIndex = selectedIndex.value - 1;
-      emblaMainApi.value.scrollTo(newIndex >= 0 ? newIndex : 0, true);
-    }
-  }, 600);
+        // go one back to fix some bugs
+        if (emblaMainApi.value) {
+          const newIndex = selectedIndex.value - 1;
+          emblaMainApi.value.scrollTo(newIndex >= 0 ? newIndex : 0, true);
+        }
+      }, 600);
+    },
+  });
 };
 
 const emblaMainApi = ref<CarouselApi>();

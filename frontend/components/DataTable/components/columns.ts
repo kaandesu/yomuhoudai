@@ -112,20 +112,6 @@ export const columns: ColumnDef<Book>[] = [
     enableSorting: false,
   },
 
-  // Description
-  {
-    accessorKey: "description",
-    header: ({ column }) =>
-      h(DataTableColumnHeader, { column, title: "Description" }),
-    cell: ({ row }) =>
-      h(
-        "span",
-        { class: "max-w-[400px] truncate" },
-        row.getValue("description") || "-",
-      ),
-    enableSorting: false,
-  },
-
   // Categories (array of strings)
   {
     accessorKey: "categories",
