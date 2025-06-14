@@ -81,8 +81,8 @@
                                         "example": "A novel about the American dream."
                                     },
                                     "pageCount": {
-                                        "type": "string",
-                                        "example": "200"
+                                        "type": "integer",
+                                        "example": 200
                                     },
                                     "publishedDate": {
                                         "type": "string",
@@ -164,8 +164,8 @@
                                         "example": "A novel about teenage angst."
                                     },
                                     "pageCount": {
-                                        "type": "string",
-                                        "example": "277"
+                                        "type": "integer",
+                                        "example": 277
                                     },
                                     "publishedDate": {
                                         "type": "string",
@@ -286,8 +286,8 @@
                                         "example": "A novel about the American dream."
                                     },
                                     "pageCount": {
-                                        "type": "string",
-                                        "example": "200"
+                                        "type": "integer",
+                                        "example": 200
                                     },
                                     "publishedDate": {
                                         "type": "string",
@@ -460,8 +460,8 @@
                         "example": "A novel about the American dream."
                     },
                     "pageCount": {
-                        "type": "string",
-                        "example": "200"
+                        "type": "integer",
+                        "example": 200
                     },
                     "publishedDate": {
                         "type": "string",

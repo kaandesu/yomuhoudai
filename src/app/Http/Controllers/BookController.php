@@ -29,7 +29,7 @@ use Exception;
  *     @OA\Property(property="currentPage", type="string", example="100"),
  *     @OA\Property(property="cover", type="string", example="url_to_cover_image"),
  *     @OA\Property(property="description", type="string", example="A novel about the American dream."),
- *     @OA\Property(property="pageCount", type="string", example="200"),
+ *     @OA\Property(property="pageCount", type="integer", example=200),
  *     @OA\Property(property="publishedDate", type="string", example="1925-04-10"),
  *     @OA\Property(property="rating", type="string", example="4.5"),
  * )
@@ -64,7 +64,7 @@ class BookController extends Controller
      *             @OA\Property(property="currentPage", type="string", example="100"),
      *             @OA\Property(property="cover", type="string", example="url_to_cover_image"),
      *             @OA\Property(property="description", type="string", example="A novel about the American dream."),
-     *             @OA\Property(property="pageCount", type="string", example="200"),
+     *             @OA\Property(property="pageCount", type="integer", example=200),
      *             @OA\Property(property="publishedDate", type="string", example="1925-04-10"),
      *             @OA\Property(property="rating", type="string", example="4.5"),
      *         )
@@ -102,7 +102,7 @@ class BookController extends Controller
      *             @OA\Property(property="currentPage", type="string", example="150"),
      *             @OA\Property(property="cover", type="string", example="url_to_cover_image"),
      *             @OA\Property(property="description", type="string", example="A novel about teenage angst."),
-     *             @OA\Property(property="pageCount", type="string", example="277"),
+     *             @OA\Property(property="pageCount", type="integer", example=277),
      *             @OA\Property(property="publishedDate", type="string", example="1951-07-16"),
      *             @OA\Property(property="rating", type="string", example="4.2"),
      *         )
@@ -130,7 +130,7 @@ class BookController extends Controller
                 'currentPage' => 'nullable|string',
                 'cover' => 'nullable|string',
                 'description' => 'nullable|string',
-                'pageCount' => 'nullable|string',
+                'pageCount' => 'nullable|integer',
                 'publishedDate' => 'nullable|string',
                 'rating' => 'nullable|string',
                 ]
@@ -185,7 +185,7 @@ class BookController extends Controller
      *             @OA\Property(property="currentPage", type="string", example="200"),
      *             @OA\Property(property="cover", type="string", example="url_to_cover_image"),
      *             @OA\Property(property="description", type="string", example="A novel about the American dream."),
-     *             @OA\Property(property="pageCount", type="string", example="200"),
+     *             @OA\Property(property="pageCount", type="integer", example=200),
      *             @OA\Property(property="publishedDate", type="string", example="1925-04-10"),
      *             @OA\Property(property="rating", type="string", example="4.5"),
      *         )
