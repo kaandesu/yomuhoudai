@@ -210,7 +210,7 @@ class BookController extends Controller
                 [
                 'title' => 'sometimes|required|string',
                 'author' => 'sometimes|required|string',
-                'status' => 'nullable|required|in:completed,ongoing,on-hold,plan-to-read,dropped',
+                'status' => 'nullable|in:completed,ongoing,on-hold,plan-to-read,dropped',
                 'categories' => 'nullable|array',
                 'currentPage' => 'nullable|string',
                 'cover' => 'nullable|string',
