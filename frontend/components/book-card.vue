@@ -1,6 +1,6 @@
 <template>
   <Card
-    class="relative w-full sm:max-w-xs bg-transparent"
+    class="relative w-full bg-transparent"
     style="backdrop-filter: blur(6px)"
   >
     <!-- Buttons container -->
@@ -129,21 +129,33 @@ const bookStatus = ref<Book["status"]>("ongoing");
 
 let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
 
-watch(bookStatus, (newVal, _) => {
-  // TODO: update status
-  console.log("changed to", newVal, book.id);
+const { book } = defineProps<{
+  book: {
+    id: number;
+    title: string;
+    author: string;
+    cover?: string;
+    status?: string;
+    categories?: string[];
+  };
+}>();
+
+const placeholder = "https://placehold.co/80x120?text=No+Cover";
+
+watch(bookStatus, async (newVal, _) => {
+  await updateBook({
+    book: { ...book, status: newVal },
+  });
 });
 
-watch(currentPage, (newVal, _) => {
+watch(currentPage, async (newVal, _) => {
   if (debounceTimeout != null) {
     clearTimeout(debounceTimeout);
   }
   debounceTimeout = setTimeout(async () => {
-    // TODO: submit page read
     await updateBook({
-      book: { currentPage: newVal, ...book } as Book,
+      book: { ...book, currentPage: newVal } as Book,
     });
-    console.log("submit", { currentPage: newVal, ...book });
   }, 1000);
 });
 
@@ -180,17 +192,4 @@ const handleDeletion = async () => {
     id: book.id,
   });
 };
-
-const { book } = defineProps<{
-  book: {
-    id: number;
-    title: string;
-    author: string;
-    cover?: string;
-    status?: string;
-    categories?: string[];
-  };
-}>();
-
-const placeholder = "https://placehold.co/80x120?text=No+Cover";
 </script>

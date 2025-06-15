@@ -185,7 +185,9 @@
         </form>
 
         <SheetFooter v-if="!isViewMode" class="mt-4">
-          <Button type="submit" form="addBookForm">Save Book</Button>
+          <Button :disabled="loading" type="submit" form="addBookForm"
+            >Save Book</Button
+          >
         </SheetFooter>
       </SheetContent>
     </Sheet>
@@ -195,7 +197,7 @@
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
 import { useLibrary, type BookPayload } from "@/stores/library";
-const { createBook, updateBook } = useLibrary();
+const { createBook, updateBook, loading } = useLibrary();
 import * as z from "zod";
 
 import { Eye, Edit2 } from "lucide-vue-next";

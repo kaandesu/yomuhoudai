@@ -90,7 +90,7 @@ const iconDict = {
 .icon {
   width: 4rem;
   height: 4rem;
-  opacity: 0.2;
+  opacity: 0.25;
   transition: all 1s ease-in-out;
   animation-duration: 10s;
   animation-iteration-count: infinite;
