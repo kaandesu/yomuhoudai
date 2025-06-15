@@ -52,7 +52,7 @@ class BookController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/books",
+     *     path="/api/v1/books",
      *     tags={"Books"},
      *     summary="Create a new book",
      *     description="Creates a new book record in the database",
@@ -90,7 +90,7 @@ class BookController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/books/store",
+     *     path="/api/v1/books/store",
      *     tags={"Books"},
      *     summary="Store a new book",
      *     description="Stores a newly created book",
@@ -168,7 +168,7 @@ class BookController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/books/{id}",
+     *     path="/api/v1/books/{id}",
      *     tags={"Books"},
      *     summary="Update a book",
      *     description="Updates a book record",
@@ -234,7 +234,7 @@ class BookController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/books/{id}",
+     *     path="/api/v1/books/{id}",
      *     tags={"Books"},
      *     summary="Get a book by ID",
      *     description="Retrieve a book by its unique ID",
@@ -267,7 +267,7 @@ class BookController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/books/searchTitle",
+     *     path="/api/v1/books/searchTitle",
      *     tags={"Books"},
      *     summary="Search books by title",
      *     description="Search for books using a partial title match",
@@ -293,7 +293,7 @@ class BookController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/books/searchAuthor",
+     *     path="/api/v1/books/searchAuthor",
      *     tags={"Books"},
      *     summary="Search books by author",
      *     description="Search for books using a partial author match",
@@ -319,7 +319,7 @@ class BookController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/books",
+     *     path="/api/v1/books",
      *     tags={"Books"},
      *     summary="Get all books",
      *     description="Retrieve a list of all books",
@@ -349,7 +349,7 @@ class BookController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/books/{id}",
+     *     path="/api/v1/books/{id}",
      *     tags={"Books"},
      *     summary="Delete a book",
      *     description="Deletes a book by its ID",
@@ -388,35 +388,36 @@ class BookController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/books/export",
+     *     path="/api/v1/books/export",
      *     tags={"Books"},
      *     summary="Export books data",
-     *     description="Export filtered books as CSV or XML based on query string parameters",
+     *     description="Export book data in CSV or XML format. Returns a downloadable file.",
      *     @OA\Parameter(
      *         name="type",
      *         in="query",
-     *         required=true,
-     *         @OA\Schema(type="string", enum={"titles", "authors", "titles_and_authors", "all"})
+     *         required=false,
+     *         description="Fields to export (titles, authors, titles_and_authors)",
+     *         @OA\Schema(type="string", enum={"titles", "authors", "titles_and_authors"}, default="titles_and_authors")
      *     ),
      *     @OA\Parameter(
      *         name="format",
      *         in="query",
-     *         required=true,
-     *         @OA\Schema(type="string", enum={"csv", "xml"})
+     *         required=false,
+     *         description="Export format (csv or xml)",
+     *         @OA\Schema(type="string", enum={"csv", "xml"}, default="csv")
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Exported data"
+     *         description="Exported file (CSV or XML)"
      *     ),
      *     @OA\Response(
-     *         response=400,
-     *         description="Invalid type or format"
+     *         response=500,
+     *         description="Export failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Export failed: No books found.")
+     *         )
      *     )
-     *     @OA\Response(
-     *          response=404,
-     *          description="No books match the export query"
-     *      )
-     *
+     * )
      */
     public function export(Request $request)
     {

@@ -9,14 +9,14 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/api/books": {
+        "/api/v1/books": {
             "get": {
                 "tags": [
                     "Books"
                 ],
                 "summary": "Get all books",
                 "description": "Retrieve a list of all books",
-                "operationId": "a9d13283dfab262e97af3c914d51b7a8",
+                "operationId": "8e67fc126a51598255c56d362d50466e",
                 "responses": {
                     "200": {
                         "description": "Successful response",
@@ -39,7 +39,7 @@
                 ],
                 "summary": "Create a new book",
                 "description": "Creates a new book record in the database",
-                "operationId": "ee195f5779f5c36648b4fa1eefa4e7ee",
+                "operationId": "8ceaae4304444ed201b0f8fd0e21d4b5",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -115,14 +115,14 @@
                 }
             }
         },
-        "/api/books/store": {
+        "/api/v1/books/store": {
             "post": {
                 "tags": [
                     "Books"
                 ],
                 "summary": "Store a new book",
                 "description": "Stores a newly created book",
-                "operationId": "4f6ddb28b9f8f2143526c16ff6f30494",
+                "operationId": "952942ab3c7741da1c4afc99418688b5",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -198,14 +198,14 @@
                 }
             }
         },
-        "/api/books/{id}": {
+        "/api/v1/books/{id}": {
             "get": {
                 "tags": [
                     "Books"
                 ],
                 "summary": "Get a book by ID",
                 "description": "Retrieve a book by its unique ID",
-                "operationId": "2fdd668eb661591758aff4c56ca9b66a",
+                "operationId": "22b313962ebfb68fe2f323a96dc9e91e",
                 "parameters": [
                     {
                         "name": "id",
@@ -238,7 +238,7 @@
                 ],
                 "summary": "Update a book",
                 "description": "Updates a book record",
-                "operationId": "f5ca658c501a803d68655af0365e3802",
+                "operationId": "471e8ddd754c8f9e34e69f64d1b53eaa",
                 "parameters": [
                     {
                         "name": "id",
@@ -325,7 +325,7 @@
                 ],
                 "summary": "Delete a book",
                 "description": "Deletes a book by its ID",
-                "operationId": "1a9c26667c32b8ed5e5770d7a1cc9d5c",
+                "operationId": "e3e33d11e322f13055b10ead759d294c",
                 "parameters": [
                     {
                         "name": "id",
@@ -346,14 +346,14 @@
                 }
             }
         },
-        "/api/books/searchTitle": {
+        "/api/v1/books/searchTitle": {
             "get": {
                 "tags": [
                     "Books"
                 ],
                 "summary": "Search books by title",
                 "description": "Search for books using a partial title match",
-                "operationId": "bec820b8ba0bf46915f1540100b02ea3",
+                "operationId": "8c8adc98afe56b488d5c94c5b84de0a0",
                 "parameters": [
                     {
                         "name": "q",
@@ -381,14 +381,14 @@
                 }
             }
         },
-        "/api/books/searchAuthor": {
+        "/api/v1/books/searchAuthor": {
             "get": {
                 "tags": [
                     "Books"
                 ],
                 "summary": "Search books by author",
                 "description": "Search for books using a partial author match",
-                "operationId": "cf1fd79da8edeb81848e9bfad584f81d",
+                "operationId": "8b1f45a5fee8ebad22f0a6ae0b9e3ee5",
                 "parameters": [
                     {
                         "name": "q",
@@ -409,6 +409,68 @@
                                     "items": {
                                         "$ref": "#/components/schemas/Book"
                                     }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/books/export": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Export books data",
+                "description": "Export book data in CSV or XML format. Returns a downloadable file.",
+                "operationId": "ac31985f2825022a731d229dbcd2b913",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Fields to export (titles, authors, titles_and_authors)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "titles_and_authors",
+                            "enum": [
+                                "titles",
+                                "authors",
+                                "titles_and_authors"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "description": "Export format (csv or xml)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "csv",
+                            "enum": [
+                                "csv",
+                                "xml"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Exported file (CSV or XML)"
+                    },
+                    "500": {
+                        "description": "Export failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Export failed: No books found."
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
