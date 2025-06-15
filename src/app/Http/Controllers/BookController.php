@@ -420,8 +420,8 @@ class BookController extends Controller
      */
     public function export(Request $request)
     {
-        $type = $request->query('type', 'all');    // default to 'all'
-        $format = $request->query('format', 'csv'); // default to 'csv'
+        $type = $request->query('type', 'titles_and_authors');
+        $format = $request->query('format', 'csv');
 
         try {
             $service = new BookExportService(); // Make sure this class exists and is imported

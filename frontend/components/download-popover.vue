@@ -92,7 +92,6 @@ const optionFields = {
     { label: "Titles and Authors", value: "titles_and_authors" },
     { label: "Titles only", value: "titles" },
     { label: "Authors only", value: "authors" },
-    { label: "All fields", value: "all" },
   ],
   format: [
     { label: "CSV", value: "csv" },
@@ -102,7 +101,7 @@ const optionFields = {
 
 const formSchema = toTypedSchema(
   z.object({
-    type: z.enum(["titles and authors", "titles", "authors", "all"], {
+    type: z.enum(["titles and authors", "titles", "authors"], {
       required_error: "You need to select a field type",
     }),
     format: z.enum(["csv", "xml"], {

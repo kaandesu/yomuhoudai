@@ -33,11 +33,6 @@ class BookExportService
                 return ['author'];
             case 'titles_and_authors':
                 return ['title', 'author'];
-            case 'all':
-                return [
-                    'id', 'title', 'author', 'status', 'categories', 'currentPage',
-                    'cover', 'description', 'pageCount', 'publishedDate', 'rating'
-                ];
             default:
                 throw new \InvalidArgumentException("Invalid type: $type");
         }
