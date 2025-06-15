@@ -98,10 +98,10 @@ const totalOngoing = computed(() => {
 
 /* Filter-by-status */
 const selectedStatus = ref("");
-const filteredBooks = computed(() => {
+const filteredBooks = computed<Book[]>(() => {
   if (!selectedStatus.value) return books.value;
   return books.value.filter(
-    (book: any) => book.status === selectedStatus.value,
+    (book: Book) => book.status === selectedStatus.value,
   );
 });
 /* /Filter-by-status */

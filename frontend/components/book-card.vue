@@ -127,17 +127,15 @@ const openViewSheet = ref<boolean>(false);
 const currentPage = ref<number>(0);
 const bookStatus = ref<Book["status"]>("ongoing");
 
+onMounted(() => {
+  currentPage.value = book.pageCount ?? 0;
+  bookStatus.value = book.status ?? "plan-to-read";
+});
+
 let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
 
 const { book } = defineProps<{
-  book: {
-    id: number;
-    title: string;
-    author: string;
-    cover?: string;
-    status?: string;
-    categories?: string[];
-  };
+  book: Book;
 }>();
 
 const placeholder = "https://placehold.co/80x120?text=No+Cover";
