@@ -1,5 +1,3 @@
-// cleaning the payload from undefined values
-// thus causing an error on the back-end
 export default function cleanBookPayload(
   book: Partial<BookPayload>,
 ): BookPayload {
@@ -8,10 +6,13 @@ export default function cleanBookPayload(
   Object.entries(book).forEach(([key, value]) => {
     if (value !== undefined) {
       if (key === "categories") {
-        if (Array.isArray(value)) {
+        if (typeof value === "string") {
+          cleaned.categories = value
+            .split(",")
+            .map((cat) => cat.trim())
+            .filter((cat) => cat.length > 0);
+        } else if (Array.isArray(value)) {
           cleaned.categories = value;
-        } else if (typeof value === "string") {
-          cleaned.categories = [value];
         }
       } else {
         (cleaned as any)[key] = value;
