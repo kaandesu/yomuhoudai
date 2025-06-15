@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
+use App\Services\BookExportService;
 use Exception;
 
 /**
@@ -385,8 +386,39 @@ class BookController extends Controller
         }
     }
 
-
-    public function export(Request $request)
+    /**
+     * @OA\Get(
+     *     path="/api/books/export",
+     *     tags={"Books"},
+     *     summary="Export books data",
+     *     description="Export filtered books as CSV or XML based on query string parameters",
+     *     @OA\Parameter(
+     *         name="type",
+     *         in="query",
+     *         required=true,
+     *         @OA\Schema(type="string", enum={"titles", "authors", "titles_and_authors", "all"})
+     *     ),
+     *     @OA\Parameter(
+     *         name="format",
+     *         in="query",
+     *         required=true,
+     *         @OA\Schema(type="string", enum={"csv", "xml"})
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Exported data"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid type or format"
+     *     )
+     *     @OA\Response(
+     *          response=404,
+     *          description="No books match the export query"
+     *      )
+     *
+     */
+    public function export(Request $request, BookExportService $exportService)
     {
         $type = $request->query('type');
         $format = $request->query('format');
@@ -394,16 +426,15 @@ class BookController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-            'type' => 'required|in:titles,authors,titles_and_authors,all',
-            'format' => 'required|in:xml,csv',
+                'type' => 'required|in:titles,authors,titles_and_authors,all',
+                'format' => 'required|in:xml,csv',
             ]
         );
 
         if ($validator->fails()) {
-            return $this->jsonResponse([], 'Invalid export parameters', 422);
+            return $this->jsonResponse([], 'Invalid export parameters', 400);
         }
 
-        // Determine selected fields
         switch ($type) {
             case 'titles':
                 $fields = ['title'];
@@ -415,23 +446,23 @@ class BookController extends Controller
                 $fields = ['title', 'author'];
                 break;
             case 'all':
-            default:
                 $fields = [
                     'id', 'title', 'author', 'status', 'categories', 'currentPage',
                     'cover', 'description', 'pageCount', 'publishedDate', 'rating'
                 ];
                 break;
+            default:
+                return $this->jsonResponse([], 'Invalid type', 400);
         }
 
-        // Fetch data
-        $books = Book::all($fields)->toArray();
+        $books = Book::select($fields)->get()->toArray();
 
-        if ($format === 'csv') {
-            return $this->exportCsv($books, $fields);
-        } elseif ($format === 'xml') {
-            return $this->exportXml($books);
+        if (empty($books)) {
+            return $this->jsonResponse([], 'No books match the export query', 404);
         }
 
-        return $this->jsonResponse([], 'Unsupported format', 400);
+        return $format === 'csv'
+            ? $exportService->toCsv($books, $fields)
+            : $exportService->toXml($books);
     }
 }
