@@ -124,8 +124,8 @@ const { deleteBook, updateBook } = useLibrary();
 const openEditSheet = ref<boolean>(false);
 const openViewSheet = ref<boolean>(false);
 
-const currentPage = ref<number>(0);
-const bookStatus = ref<Book["status"]>("ongoing");
+const currentPage = ref<number>(-1);
+const bookStatus = ref<Book["status"] | undefined>(undefined);
 
 onMounted(() => {
   currentPage.value = book.currentPage ?? 0;
@@ -140,13 +140,21 @@ const { book } = defineProps<{
 
 const placeholder = "https://placehold.co/80x120?text=No+Cover";
 
-watch(bookStatus, async (newVal, _) => {
+watch(bookStatus, async (newVal, oldVal) => {
+  // on the initial load it was calling update book
+  // this if statement prevents that
+  console.log("oohno", oldVal, "new", newVal);
+  if (oldVal == undefined) return;
+  console.log("will update for no reason");
   await updateBook({
     book: { ...book, status: newVal },
   });
 });
 
-watch(currentPage, async (newVal, _) => {
+watch(currentPage, async (newVal, oldVal) => {
+  // on the initial load it was calling update book
+  // this if statement prevents that
+  if (oldVal == -1) return;
   if (debounceTimeout != null) {
     clearTimeout(debounceTimeout);
   }
