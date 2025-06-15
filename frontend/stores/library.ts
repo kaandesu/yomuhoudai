@@ -15,7 +15,7 @@ export type Book = {
   status?: "completed" | "ongoing" | "on-hold" | "plan-to-read" | "dropped";
 };
 
-export type BookPayload = Omit<Book, "rating" | "added" | "id" | "status">;
+export type BookPayload = Omit<Book, "added" | "id">;
 
 interface BookResponse {
   code: number;
@@ -91,7 +91,7 @@ export const useLibrary = defineStore(
       });
     };
 
-    const getBookById = ({
+    const getBookById = async ({
       id,
       onSuccess,
       onError,
@@ -182,6 +182,15 @@ export const useLibrary = defineStore(
       const fetcher = $fetch.create({
         baseURL: apiBaseUrl,
         onResponse({ response }) {
+          if (response._data.data != undefined) {
+            console.log("books then", books.value);
+            const updatedBook = response._data.data as Book;
+            const index = books.value.findIndex((b) => b.id === updatedBook.id);
+            if (index !== -1) {
+              books.value[index] = { ...books.value[index], ...updatedBook };
+            }
+            console.log("books now... feel old yet?", books.value);
+          }
           createToast({
             message: "Book updated successfully",
             toastOps: {

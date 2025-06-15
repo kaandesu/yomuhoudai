@@ -116,8 +116,6 @@
 </template>
 
 <script setup lang="ts">
-import { Card, CardContent } from "@/components/ui/card";
-import NewDialog from "@/components/new-dialog.vue";
 import { Trash2, Eye, Edit2 } from "lucide-vue-next";
 import { useLibrary, type Book } from "@/stores/library";
 

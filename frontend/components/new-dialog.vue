@@ -152,12 +152,7 @@
             <FormItem>
               <FormLabel>Rating</FormLabel>
               <FormControl>
-                <Input
-                  v-bind="componentField"
-                  type="number"
-                  step="0.1"
-                  :disabled="isViewMode"
-                />
+                <Input v-bind="componentField" :disabled="isViewMode" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -244,7 +239,7 @@ const formSchema = toTypedSchema(
     categories: z.string().optional(),
     pageCount: z.number().optional(),
     publishedDate: z.string().optional(),
-    rating: z.number().optional(),
+    rating: z.string().optional(),
     status: z
       .enum(["completed", "ongoing", "on-hold", "plan-to-read", "dropped"])
       .optional(),
@@ -262,7 +257,7 @@ const defaultValues = computed(() => {
     categories: (book.categories || []).join(", "),
     pageCount: book.pageCount ? Number(book.pageCount) : undefined,
     publishedDate: book.publishedDate || "",
-    rating: book.rating ? Number(book.rating) : undefined,
+    rating: book.rating ? book.rating : "0",
     status: book.status || "plan-to-read",
   };
 });
@@ -280,6 +275,8 @@ const onSubmit = (values: any) => {
     title: values.title,
     author: values.author,
     cover: values.cover,
+    status: values.status,
+    rating: values.rating ?? "0",
     currentPage: values.currentPage,
     description: values.description,
     categories: values.categories,

@@ -1,38 +1,69 @@
 <template>
   <DropdownMenu>
-    <DropdownMenuTrigger as-child>
-      <Button
-        variant="ghost"
-        class="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
-      >
-        <Icon name="mdi-light:dots-horizontal" class="h-4 w-4" />
-        <span class="sr-only">Open menu</span>
-      </Button>
+    <DropdownMenuTrigger class="p-2 hover:bg-primary/10 rounded-xl">
+      <Icon class="h-5 w-5" name="fluent:options-16-regular" />
     </DropdownMenuTrigger>
-    <DropdownMenuContent align="end" class="w-[160px]">
-      <DropdownMenuItem>Edit</DropdownMenuItem>
-      <DropdownMenuSeparator />
-      <DropdownMenuItem>
-        <label> Download </label>
-      </DropdownMenuItem>
-      <DropdownMenuSeparator />
-      <DropdownMenuItem @click="handleDeletion()" class="text-destructive">
-        Delete
+    <DropdownMenuContent>
+      <DropdownMenuItem
+        @click="item.action()"
+        :class="item.class"
+        v-for="(item, i) in dropDownOptions"
+        :key="i"
+      >
+        {{ item.label }}
+        <component :is="item.icon" class="size-4 ml-auto" />
       </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
+  <NewDialog
+    class="hidden"
+    v-model="openEditSheet"
+    actionType="edit"
+    :book="props.row.original"
+  />
+
+  <NewDialog
+    class="hidden"
+    v-model="openViewSheet"
+    actionType="view"
+    :book="props.row.original"
+  />
 </template>
 
 <script setup lang="ts">
 import type { Row } from "@tanstack/vue-table";
-import { useLibrary } from "@/stores/library";
-import type { Task } from "../data/schema";
+import { Trash2, Eye, Edit2 } from "lucide-vue-next";
+import { useLibrary, type Book } from "@/stores/library";
+
+const openEditSheet = ref<boolean>(false);
+const openViewSheet = ref<boolean>(false);
 
 interface DataTableRowActionsProps {
-  row: Row<Task>;
+  row: Row<any>;
 }
 const props = defineProps<DataTableRowActionsProps>();
 const { deleteBook } = useLibrary();
+
+const dropDownOptions = [
+  {
+    label: "View",
+    class: "",
+    icon: Eye,
+    action: () => (openViewSheet.value = true),
+  },
+  {
+    label: "Edit",
+    class: "",
+    icon: Edit2,
+    action: () => (openEditSheet.value = true),
+  },
+  {
+    label: "Delete",
+    class: "text-red-600 hover:bg-red-100 dark:hover:bg-red-900",
+    icon: Trash2,
+    action: () => handleDeletion(),
+  },
+];
 
 const handleDeletion = async () => {
   createToast({
