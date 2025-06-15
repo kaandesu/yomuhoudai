@@ -51,18 +51,7 @@ const isFiltered = computed(
       </Button>
     </div>
     <section class="flex gap-x-2 items-center">
-      <Button
-        class="h-4 bg-secondary justify-start text-left"
-        variant="secondary"
-      >
-        <label class="pointer-events-none hidden md:inline-block">
-          Download
-        </label>
-        <Icon
-          name="material-symbols:download-2-outline-rounded"
-          class="pointer-events-none ml-0 h-6 w-6 md:ml-2 md:h-4 md:w-4"
-        />
-      </Button>
+      <DownloadPopover />
       <NewDialog />
       <DataTableViewOptions :table="table" />
     </section>
