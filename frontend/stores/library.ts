@@ -5,12 +5,12 @@ export type Book = {
   title: string;
   author: string;
   cover?: string;
-  currentPage?: string;
+  currentPage?: number;
   description?: string;
   categories?: string[];
-  pageCount?: string;
+  pageCount?: number;
   publishedDate?: string;
-  rating?: string;
+  rating?: number;
   added?: boolean;
   status?: "completed" | "ongoing" | "on-hold" | "plan-to-read" | "dropped";
 };

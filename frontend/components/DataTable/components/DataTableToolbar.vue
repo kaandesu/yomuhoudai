@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { Table } from "@tanstack/vue-table";
 import { computed } from "vue";
-import type { Task } from "../data/schema";
 
 import { statuses } from "./columns";
 import DataTableFacetedFilter from "./DataTableFacetedFilter.vue";
@@ -10,7 +9,7 @@ import DataTableViewOptions from "./DataTableViewOptions.vue";
 import { Cross2Icon } from "@radix-icons/vue";
 
 interface DataTableToolbarProps {
-  table: Table<Task>;
+  table: Table<any>;
 }
 
 const props = defineProps<DataTableToolbarProps>();

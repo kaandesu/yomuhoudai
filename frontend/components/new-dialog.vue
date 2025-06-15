@@ -152,7 +152,11 @@
             <FormItem>
               <FormLabel>Rating</FormLabel>
               <FormControl>
-                <Input v-bind="componentField" :disabled="isViewMode" />
+                <Input
+                  type="number"
+                  v-bind="componentField"
+                  :disabled="isViewMode"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -193,28 +197,6 @@ import { toTypedSchema } from "@vee-validate/zod";
 import { useLibrary, type BookPayload } from "@/stores/library";
 const { createBook, updateBook } = useLibrary();
 import * as z from "zod";
-
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
 
 import { Eye, Edit2 } from "lucide-vue-next";
 

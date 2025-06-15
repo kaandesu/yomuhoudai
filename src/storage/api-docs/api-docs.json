@@ -69,8 +69,8 @@
                                         }
                                     },
                                     "currentPage": {
-                                        "type": "string",
-                                        "example": "100"
+                                        "type": "integer",
+                                        "example": 100
                                     },
                                     "cover": {
                                         "type": "string",
@@ -89,8 +89,8 @@
                                         "example": "1925-04-10"
                                     },
                                     "rating": {
-                                        "type": "string",
-                                        "example": "4.5"
+                                        "type": "integer",
+                                        "example": 8
                                     }
                                 },
                                 "type": "object"
@@ -172,8 +172,8 @@
                                         "example": "1951-07-16"
                                     },
                                     "rating": {
-                                        "type": "string",
-                                        "example": "4.2"
+                                        "type": "integer",
+                                        "example": 9
                                     }
                                 },
                                 "type": "object"
@@ -274,8 +274,8 @@
                                         }
                                     },
                                     "currentPage": {
-                                        "type": "string",
-                                        "example": "200"
+                                        "type": "integer",
+                                        "example": 200
                                     },
                                     "cover": {
                                         "type": "string",
@@ -294,8 +294,8 @@
                                         "example": "1925-04-10"
                                     },
                                     "rating": {
-                                        "type": "string",
-                                        "example": "4.5"
+                                        "type": "integer",
+                                        "example": 5
                                     }
                                 },
                                 "type": "object"
@@ -448,8 +448,8 @@
                         }
                     },
                     "currentPage": {
-                        "type": "string",
-                        "example": "100"
+                        "type": "integer",
+                        "example": 100
                     },
                     "cover": {
                         "type": "string",
@@ -468,8 +468,8 @@
                         "example": "1925-04-10"
                     },
                     "rating": {
-                        "type": "string",
-                        "example": "4.5"
+                        "type": "integer",
+                        "example": 4
                     }
                 },
                 "type": "object"

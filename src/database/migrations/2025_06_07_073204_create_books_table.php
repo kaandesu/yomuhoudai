@@ -19,13 +19,13 @@ class CreateBooksTable extends Migration
                 $table->bigIncrements('id');
                 $table->string('title');
                 $table->string('author');
-                $table->string('currentPage')->nullable();
+                $table->integer('currentPage')->nullable();
                 $table->string('cover')->nullable();
                 $table->text('description')->nullable();
                 $table->json('categories')->nullable();
                 $table->integer('pageCount')->nullable();
                 $table->string('publishedDate')->nullable();
-                $table->string('rating')->nullable();
+                $table->integer('rating')->nullable();
                 $table->enum('status', ['completed', 'ongoing', 'on-hold', 'plan-to-read', 'dropped'])->nullable();
                 $table->timestamps();
             }

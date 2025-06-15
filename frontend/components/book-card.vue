@@ -18,7 +18,7 @@
                 <Button
                   @click="
                     () => {
-                      pageCount > 5 ? (pageCount -= 5) : (pageCount = 0);
+                      currentPage > 5 ? (currentPage -= 5) : (currentPage = 0);
                     }
                   "
                   variant="destructive"
@@ -27,13 +27,13 @@
                   <Icon name="line-md:minus" class="w-3 h-3" />
                 </Button>
                 <Input
-                  v-model="pageCount"
+                  v-model="currentPage"
                   type="number"
                   default-value="0"
                   class="h-8 w-20"
                 />
                 <Button
-                  @click="pageCount += 5"
+                  @click="currentPage += 5"
                   class="h-3 w-3 rounded-lg bg-primary"
                 >
                   <Icon name="material-symbols:add" class="w-4 h-4" />
@@ -119,10 +119,12 @@
 import { Trash2, Eye, Edit2 } from "lucide-vue-next";
 import { useLibrary, type Book } from "@/stores/library";
 
+const { deleteBook, updateBook } = useLibrary();
+
 const openEditSheet = ref<boolean>(false);
 const openViewSheet = ref<boolean>(false);
 
-const pageCount = ref<number>(0);
+const currentPage = ref<number>(0);
 const bookStatus = ref<Book["status"]>("ongoing");
 
 let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -132,13 +134,16 @@ watch(bookStatus, (newVal, _) => {
   console.log("changed to", newVal, book.id);
 });
 
-watch(pageCount, (newVal, _) => {
+watch(currentPage, (newVal, _) => {
   if (debounceTimeout != null) {
     clearTimeout(debounceTimeout);
   }
   debounceTimeout = setTimeout(async () => {
     // TODO: submit page read
-    console.log("submit", newVal, book.id);
+    await updateBook({
+      book: { currentPage: newVal, ...book } as Book,
+    });
+    console.log("submit", { currentPage: newVal, ...book });
   }, 1000);
 });
 
@@ -162,8 +167,6 @@ const dropDownOptions = [
     action: () => handleDeletion(),
   },
 ];
-
-const { deleteBook } = useLibrary();
 
 const handleDeletion = async () => {
   createToast({

@@ -86,7 +86,7 @@
                           <label
                             v-if="
                               suggestions[index].rating &&
-                              suggestions[index].rating !== 'N/A'
+                              suggestions[index].rating !== 0
                             "
                           >
                             {{ suggestions[index].rating }} Rating
@@ -210,7 +210,7 @@
 <script setup lang="ts">
 import { watchOnce } from "@vueuse/core";
 import { ref } from "vue";
-import { type Book, type BookPayload, useLibrary } from "@/stores/library";
+import { type BookPayload, useLibrary } from "@/stores/library";
 import { Card, CardContent } from "@/components/ui/card";
 import { useStateManager } from "@/stores/state-manager";
 const { apikeys } = storeToRefs(useStateManager());
@@ -223,7 +223,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-const { loading, books, suggestions } = storeToRefs(useLibrary());
+const { loading, suggestions } = storeToRefs(useLibrary());
 
 const { createBook } = useLibrary();
 
@@ -264,9 +264,9 @@ const fetchBookInfo = async (bookTitle: string, author: string) => {
       coverUrl: volumeInfo.imageLinks?.thumbnail || "",
       description: volumeInfo.description || "No description available",
       categories: volumeInfo.categories || [],
-      pageCount: volumeInfo.pageCount || "N/A",
+      pageCount: volumeInfo.pageCount,
       publishedDate: volumeInfo.publishedDate || "Unknown Date",
-      rating: volumeInfo.rating || "N/A",
+      rating: volumeInfo.rating,
     };
 
     return bookInfo;
@@ -286,7 +286,7 @@ const loadBookInfo = async () => {
       book.categories = bookInfo.categories;
       book.pageCount = bookInfo.pageCount;
       book.publishedDate = `${bookInfo.publishedDate}`;
-      book.rating = `${bookInfo.rating}`;
+      book.rating = bookInfo.rating;
     }
   }
 };

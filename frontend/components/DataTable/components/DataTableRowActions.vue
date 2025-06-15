@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import type { Row } from "@tanstack/vue-table";
 import { Trash2, Eye, Edit2 } from "lucide-vue-next";
-import { useLibrary, type Book } from "@/stores/library";
+import { useLibrary } from "@/stores/library";
 
 const openEditSheet = ref<boolean>(false);
 const openViewSheet = ref<boolean>(false);

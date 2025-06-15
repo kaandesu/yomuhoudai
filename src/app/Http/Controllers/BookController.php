@@ -26,12 +26,12 @@ use Exception;
  *     @OA\Property(property="author", type="string", example="F. Scott Fitzgerald"),
  *     @OA\Property(property="status", type="string", example="completed"),
  *     @OA\Property(property="categories", type="array", @OA\Items(type="string")),
- *     @OA\Property(property="currentPage", type="string", example="100"),
+ *     @OA\Property(property="currentPage", type="integer", example=100),
  *     @OA\Property(property="cover", type="string", example="url_to_cover_image"),
  *     @OA\Property(property="description", type="string", example="A novel about the American dream."),
  *     @OA\Property(property="pageCount", type="integer", example=200),
  *     @OA\Property(property="publishedDate", type="string", example="1925-04-10"),
- *     @OA\Property(property="rating", type="string", example="4.5"),
+ *     @OA\Property(property="rating", type="integer", example=4),
  * )
  */
 class BookController extends Controller
@@ -61,12 +61,12 @@ class BookController extends Controller
      *             @OA\Property(property="author", type="string", example="F. Scott Fitzgerald"),
      *             @OA\Property(property="status", type="string", example="completed"),
      *             @OA\Property(property="categories", type="array", @OA\Items(type="string")),
-     *             @OA\Property(property="currentPage", type="string", example="100"),
+     *             @OA\Property(property="currentPage", type="integer", example=100),
      *             @OA\Property(property="cover", type="string", example="url_to_cover_image"),
      *             @OA\Property(property="description", type="string", example="A novel about the American dream."),
      *             @OA\Property(property="pageCount", type="integer", example=200),
      *             @OA\Property(property="publishedDate", type="string", example="1925-04-10"),
-     *             @OA\Property(property="rating", type="string", example="4.5"),
+     *             @OA\Property(property="rating", type="integer", example=8),
      *         )
      *     ),
      *     @OA\Response(
@@ -104,7 +104,7 @@ class BookController extends Controller
      *             @OA\Property(property="description", type="string", example="A novel about teenage angst."),
      *             @OA\Property(property="pageCount", type="integer", example=277),
      *             @OA\Property(property="publishedDate", type="string", example="1951-07-16"),
-     *             @OA\Property(property="rating", type="string", example="4.2"),
+     *             @OA\Property(property="rating", type="integer", example=9),
      *         )
      *     ),
      *     @OA\Response(
@@ -121,39 +121,39 @@ class BookController extends Controller
     public function store(Request $request): JsonResponse
     {
         try {
-            $data = $request->validate(
+            $validated = $request->validate(
                 [
                 'title' => 'required|string',
                 'author' => 'required|string',
                 'status' => 'nullable|in:completed,ongoing,on-hold,plan-to-read,dropped',
                 'categories' => 'nullable|array',
-                'currentPage' => 'nullable|string',
+                'currentPage' => 'nullable|integer',
                 'cover' => 'nullable|string',
                 'description' => 'nullable|string',
                 'pageCount' => 'nullable|integer',
                 'publishedDate' => 'nullable|string',
-                'rating' => 'nullable|string',
+                'rating' => 'nullable|integer',
                 ]
             );
 
-            // Check if a book with the same title and author already exists
-            $existingBook = Book::where('title', $data['title'])
-                                ->where('author', $data['author'])
-                                ->first();
+            // Check if book already exists
+            $exists = Book::where('title', $validated['title'])
+                          ->where('author', $validated['author'])
+                          ->first();
 
-            if ($existingBook) {
-                return $this->jsonResponse(
-                    $existingBook,
-                    'A book with the same title and author already exists!',
-                    409
-                );
+            if ($exists) {
+                return $this->jsonResponse($exists, 'A book with the same title and author already exists!', 409);
             }
 
-            // if the status is not provided
-            // it fallbacks to 'plan-to-read'
-            if (empty($data['status'])) {
-                $data['status'] = 'plan-to-read';
-            }
+            // Set defaults
+            $defaults = [
+                'status' => 'plan-to-read',
+                'pageCount' => 0,
+                'currentPage' => 0,
+                'rating' => 0,
+            ];
+
+            $data = array_merge($defaults, $validated);
 
             $book = Book::create($data);
 
@@ -182,12 +182,12 @@ class BookController extends Controller
      *             @OA\Property(property="author", type="string", example="F. Scott Fitzgerald"),
      *             @OA\Property(property="status", type="string", example="completed"),
      *             @OA\Property(property="categories", type="array", @OA\Items(type="string")),
-     *             @OA\Property(property="currentPage", type="string", example="200"),
+     *             @OA\Property(property="currentPage", type="integer", example=200),
      *             @OA\Property(property="cover", type="string", example="url_to_cover_image"),
      *             @OA\Property(property="description", type="string", example="A novel about the American dream."),
      *             @OA\Property(property="pageCount", type="integer", example=200),
      *             @OA\Property(property="publishedDate", type="string", example="1925-04-10"),
-     *             @OA\Property(property="rating", type="string", example="4.5"),
+     *             @OA\Property(property="rating", type="integer", example=5),
      *         )
      *     ),
      *     @OA\Response(
@@ -212,12 +212,12 @@ class BookController extends Controller
                 'author' => 'sometimes|required|string',
                 'status' => 'nullable|in:completed,ongoing,on-hold,plan-to-read,dropped',
                 'categories' => 'nullable|array',
-                'currentPage' => 'nullable|string',
+                'currentPage' => 'nullable|integer',
                 'cover' => 'nullable|string',
                 'description' => 'nullable|string',
                 'pageCount' => 'nullable|integer',
                 'publishedDate' => 'nullable|string',
-                'rating' => 'nullable|string',
+                'rating' => 'nullable|integer',
                 ]
             );
 

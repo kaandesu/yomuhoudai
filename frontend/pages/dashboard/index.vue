@@ -55,6 +55,7 @@
       </Select>
       <!-- /Status Filter -->
       <new-dialog actionType="new" />
+      <DownloadPopover />
       <Button
         :disabled="loading"
         class="w-24 h-4 backdrop-blur-[2px] bg-transparent flex justify-between"
