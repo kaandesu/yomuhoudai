@@ -418,50 +418,28 @@ class BookController extends Controller
      *      )
      *
      */
-public function export(Request $request, BookExportService $exportService)
-{
-    $type = $request->query('type');
-    $format = $request->query('format');
+    public function export(Request $request)
+    {
+        $type = $request->query('type', 'all');    // default to 'all'
+        $format = $request->query('format', 'csv'); // default to 'csv'
 
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'type' => 'required|in:titles,authors,titles_and_authors,all',
-                'format' => 'required|in:xml,csv',
-            ]
-        );
+        try {
+            $service = new BookExportService(); // Make sure this class exists and is imported
+            $exportData = $service->export($type, $format);
 
-    if ($validator->fails()) {
-        return $this->jsonResponse([], 'Invalid export parameters', 400);
+            $filename = "books_export." . $format;
+
+            return Response::make(
+                $exportData,
+                200,
+                [
+                    'Content-Type' => $format === 'csv' ? 'text/csv' : 'application/xml',
+                    'Content-Disposition' => "attachment; filename=\"$filename\"",
+                ]
+            );
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Export failed: ' . $e->getMessage()], 500);
+        }
     }
 
-    switch ($type) {
-        case 'titles':
-            $fields = ['title'];
-            break;
-        case 'authors':
-            $fields = ['author'];
-            break;
-        case 'titles_and_authors':
-            $fields = ['title', 'author'];
-            break;
-        case 'all':
-            $fields = [
-                'id', 'title', 'author', 'status', 'categories', 'currentPage',
-                'cover', 'description', 'pageCount', 'publishedDate', 'rating'
-            ];
-            break;
-        default:
-            return $this->jsonResponse([], 'Invalid type', 400);
-    }
-
-    $books = Book::select($fields)->get()->toArray();
-
-    if (empty($books)) {
-        return $this->jsonResponse([], 'No books match the export query', 404);
-    }
-
-    return $format === 'csv'
-        ? $exportService->toCsv($books, $fields)
-        : $exportService->toXml($books);
 }

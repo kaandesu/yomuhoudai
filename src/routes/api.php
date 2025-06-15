@@ -13,6 +13,7 @@ Route::middleware('auth:api')->get(
 Route::prefix('v1')->
     group(
         function () {
+            Route::get('/books/export', 'BookController@export');
             Route::get('/books', 'BookController@index');
             Route::get('/books/{id}', 'BookController@show');
             Route::post('/books', 'BookController@store');
@@ -21,8 +22,6 @@ Route::prefix('v1')->
 
             Route::get('/books/search/title', 'BookController@searchTitle');
             Route::get('/books/search/author', 'BookController@searchAuthor');
-
-            Route::get('/books/export', 'BookController@export');
         }
     );
 

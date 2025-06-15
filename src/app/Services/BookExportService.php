@@ -2,35 +2,69 @@
 
 namespace App\Services;
 
+use App\Book;
+use Illuminate\Support\Str;
 use DOMDocument;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use InvalidArgumentException;
 
 class BookExportService
 {
-    public function toCsv(array $data, array $fields): StreamedResponse
+    public function export(string $type, string $format): string
     {
-        $filename = 'books_export.csv';
+        $fields = $this->_determineFields($type);
 
-        $response = new StreamedResponse(
-            function () use ($data, $fields) {
-                $handle = fopen('php://output', 'w');
-                fputcsv($handle, $fields);
+        $books = Book::select($fields)->get();
 
-                foreach ($data as $row) {
-                    fputcsv($handle, array_map(fn ($field) => $row[$field] ?? '', $fields));
-                }
+        if ($books->isEmpty()) {
+            throw new InvalidArgumentException('No books found for export.');
+        }
 
-                fclose($handle);
-            }
-        );
-
-        $response->headers->set('Content-Type', 'text/csv');
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$filename.'"');
-
-        return $response;
+        return $format === 'csv'
+            ? $this->_toCsv($books, $fields)
+            : $this->_toXml($books, $fields);
     }
 
-    public function toXml(array $data): StreamedResponse
+    private function _determineFields(string $type): array
+    {
+        switch ($type) {
+            case 'titles':
+                return ['title'];
+            case 'authors':
+                return ['author'];
+            case 'titles_and_authors':
+                return ['title', 'author'];
+            case 'all':
+                return [
+                    'id', 'title', 'author', 'status', 'categories', 'currentPage',
+                    'cover', 'description', 'pageCount', 'publishedDate', 'rating'
+                ];
+            default:
+                throw new \InvalidArgumentException("Invalid type: $type");
+        }
+    }
+
+    private function _toCsv($books, array $fields): string
+    {
+        $handle = fopen('php://temp', 'r+');
+
+        fputcsv($handle, $fields);
+
+        foreach ($books as $book) {
+            $row = [];
+            foreach ($fields as $field) {
+                $row[] = $book->$field;
+            }
+            fputcsv($handle, $row);
+        }
+
+        rewind($handle);
+        $csv = stream_get_contents($handle);
+        fclose($handle);
+
+        return $csv;
+    }
+
+    private function _toXml($books, array $fields): string
     {
         $doc = new DOMDocument('1.0', 'UTF-8');
         $doc->formatOutput = true;
@@ -38,23 +72,18 @@ class BookExportService
         $root = $doc->createElement('books');
         $doc->appendChild($root);
 
-        foreach ($data as $book) {
+        foreach ($books as $book) {
             $bookElement = $doc->createElement('book');
-            foreach ($book as $key => $value) {
-                $bookElement->appendChild($doc->createElement($key, htmlspecialchars((string) $value)));
+
+            foreach ($fields as $field) {
+                $value = htmlspecialchars((string) $book->$field);
+                $child = $doc->createElement($field, $value);
+                $bookElement->appendChild($child);
             }
+
             $root->appendChild($bookElement);
         }
 
-        $response = new StreamedResponse(
-            function () use ($doc) {
-                echo $doc->saveXML();
-            }
-        );
-
-        $response->headers->set('Content-Type', 'text/xml');
-        $response->headers->set('Content-Disposition', 'attachment; filename="books_export.xml"');
-
-        return $response;
+        return $doc->saveXML();
     }
 }
