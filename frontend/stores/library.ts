@@ -17,6 +17,11 @@ export type Book = {
 
 export type BookPayload = Omit<Book, "added" | "id">;
 
+interface ExportPayload {
+  type: "titles_and_authors" | "titles" | "authors";
+  format: "csv" | "xml";
+}
+
 interface BookResponse {
   code: number;
   data: Book | null;
@@ -183,13 +188,11 @@ export const useLibrary = defineStore(
         baseURL: apiBaseUrl,
         onResponse({ response }) {
           if (response._data.data != undefined) {
-            console.log("books then", books.value);
             const updatedBook = response._data.data as Book;
             const index = books.value.findIndex((b) => b.id === updatedBook.id);
             if (index !== -1) {
               books.value[index] = { ...books.value[index], ...updatedBook };
             }
-            console.log("books now... feel old yet?", books.value);
           }
           createToast({
             message: "Book updated successfully",
@@ -265,6 +268,57 @@ export const useLibrary = defineStore(
       return fetcher<ApiResponseGeneric<any>>(`/api/v1/books/${id}`, {
         method: "DELETE",
       }).finally(() => {
+        loading.value = false;
+      });
+    };
+
+    const downloadBooks = async ({
+      type,
+      format,
+      onSuccess,
+      onError,
+    }: ExportPayload & Callbacks) => {
+      const fetcher = $fetch.create({
+        baseURL: apiBaseUrl,
+        responseType: "blob",
+        onResponse({ response }) {
+          const blob = response._data;
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", `books.${format}`);
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          window.URL.revokeObjectURL(url);
+
+          createToast({
+            message: "Downloaded successfully!",
+            toastOps: { description: "" },
+            type: "success",
+          })();
+          onSuccess?.(blob);
+        },
+        onResponseError({ response }) {
+          createToast({
+            message: `Failed to download books`,
+            toastOps: {
+              description: response._data?.message ?? "Unknown error",
+            },
+            type: "error",
+          })();
+          onError?.(response._data?.message ?? `Failed to export`);
+        },
+      });
+
+      loading.value = true;
+
+      return fetcher<ApiResponseGeneric<any>>(
+        `/api/v1/books/export?type=${type}&format=${format}`,
+        {
+          method: "GET",
+        },
+      ).finally(() => {
         loading.value = false;
       });
     };
@@ -357,8 +411,9 @@ export const useLibrary = defineStore(
       createBook,
       updateBook,
       deleteBook,
-      searchBooksByTitle,
       suggestions,
+      downloadBooks,
+      searchBooksByTitle,
       searchBooksByAuthor,
     };
   },

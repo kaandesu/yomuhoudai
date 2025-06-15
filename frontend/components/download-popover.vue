@@ -85,7 +85,7 @@ import {
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useLibrary } from "@/stores/library";
-// TODO add the export functions here
+const { downloadBooks } = useLibrary();
 
 const optionFields = {
   type: [
@@ -101,7 +101,7 @@ const optionFields = {
 
 const formSchema = toTypedSchema(
   z.object({
-    type: z.enum(["titles and authors", "titles", "authors"], {
+    type: z.enum(["titles_and_authors", "titles", "authors"], {
       required_error: "You need to select a field type",
     }),
     format: z.enum(["csv", "xml"], {
@@ -113,12 +113,13 @@ const formSchema = toTypedSchema(
 const { handleSubmit } = useForm({
   validationSchema: formSchema,
   initialValues: {
-    type: "titles and authors",
+    type: "titles_and_authors",
     format: "csv",
   },
 });
 
-const onSubmit = handleSubmit((values) => {
+const onSubmit = handleSubmit(async (values) => {
+  await downloadBooks({ type: values.type, format: values.format });
   console.log("submitted", values);
 });
 </script>
