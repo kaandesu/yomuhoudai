@@ -224,6 +224,7 @@ types/                      # common ts types
 utils/                      # General-purpose reusable utilities
 ├── create-toast.ts         #  Helper function that uses the toastManagerStore
 ├── find-page-by-id.ts      # Finds and returns a page object by its unique ID.
+├── clean-book-payload.ts   # Formats the book payload compliant to the backend schema
 nuxt.config.ts              # Nuxt setup (modules, i18n, tailwind, etc.)
 tailwind.config.js          # Tailwind v3 setup
 ```
