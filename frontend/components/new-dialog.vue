@@ -287,27 +287,20 @@ const onSubmit = (values: any) => {
     publishedDate: values.publishedDate,
   });
 
-  if (book == undefined) return;
-
-  const BookPayload: Book = { id: book.id, ...updatedValues };
-
-  switch (actionType) {
-    case "edit":
-      updateBook({
-        book: BookPayload,
-        onSuccess: () => {
-          open.value = false;
-        },
-      });
-      break;
-    default:
-      createBook({
-        book: BookPayload,
-        onSuccess: () => {
-          open.value = false;
-        },
-      });
-      break;
+  if (actionType == "edit") {
+    updateBook({
+      book: { id: book?.id ?? -1, ...updatedValues },
+      onSuccess: () => {
+        open.value = false;
+      },
+    });
+  } else {
+    createBook({
+      book: updatedValues,
+      onSuccess: () => {
+        open.value = false;
+      },
+    });
   }
 };
 </script>
