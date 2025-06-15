@@ -292,17 +292,16 @@ const onSubmit = (values: any) => {
   const BookPayload: Book = { id: book.id, ...updatedValues };
 
   switch (actionType) {
-    case "new":
-      createBook({
+    case "edit":
+      updateBook({
         book: BookPayload,
         onSuccess: () => {
           open.value = false;
         },
       });
       break;
-
-    case "edit":
-      updateBook({
+    default:
+      createBook({
         book: BookPayload,
         onSuccess: () => {
           open.value = false;
