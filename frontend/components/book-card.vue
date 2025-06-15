@@ -4,7 +4,7 @@
     style="backdrop-filter: blur(6px)"
   >
     <!-- Buttons container -->
-    <div class="absolute top-2 right-2 h-24 flex flex-col items-center gap-y-1">
+    <div class="absolute bottom-2 right-2 flex flex-col items-center gap-y-1">
       <DropdownMenu>
         <DropdownMenuTrigger class="p-2 hover:bg-primary/10 rounded-xl">
           <Icon class="h-5 w-5" name="fluent:options-16-regular" />

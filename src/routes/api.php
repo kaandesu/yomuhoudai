@@ -22,9 +22,7 @@ Route::prefix('v1')->
             Route::get('/books/search/title', 'BookController@searchTitle');
             Route::get('/books/search/author', 'BookController@searchAuthor');
 
-            // TODO: Uncomment when implemented
-            // Route::get('/books/export/csv/{type}/{search?}', 'BookController@exportToCSV');
-            // Route::get('/books/export/xml/{type}/{search?}', 'BookController@exportToXML');
+            Route::get('/books/export', [BookController::class, 'export']);
         }
     );
 

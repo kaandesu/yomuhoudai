@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Book;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 use Exception;
 
 /**
@@ -381,5 +383,56 @@ class BookController extends Controller
         } catch (Exception $e) {
             return $this->jsonResponse([], 'An error occurred while deleting the book: ' . $e->getMessage(), 500);
         }
+    }
+
+
+    public function export(Request $request)
+    {
+        $type = $request->query('type');
+        $format = $request->query('format');
+
+        // Validate parameters
+        $validator = Validator::make(
+            $request->all(),
+            [
+            'type' => 'required|in:titles,authors,titles and authors,all',
+            'format' => 'required|in:xml,csv',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return $this->jsonResponse([], 'Invalid export parameters', 422);
+        }
+
+        // Determine selected fields
+        switch ($type) {
+            case 'titles':
+                $fields = ['title'];
+                break;
+            case 'authors':
+                $fields = ['author'];
+                break;
+            case 'titles and authors':
+                $fields = ['title', 'author'];
+                break;
+            case 'all':
+            default:
+                $fields = [
+                    'id', 'title', 'author', 'status', 'categories', 'currentPage',
+                    'cover', 'description', 'pageCount', 'publishedDate', 'rating'
+                ];
+                break;
+        }
+
+        // Fetch data
+        $books = Book::all($fields)->toArray();
+
+        if ($format === 'csv') {
+            return $this->exportCsv($books, $fields);
+        } elseif ($format === 'xml') {
+            return $this->exportXml($books);
+        }
+
+        return $this->jsonResponse([], 'Unsupported format', 400);
     }
 }
