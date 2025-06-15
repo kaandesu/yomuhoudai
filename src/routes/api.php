@@ -22,7 +22,7 @@ Route::prefix('v1')->
             Route::get('/books/search/title', 'BookController@searchTitle');
             Route::get('/books/search/author', 'BookController@searchAuthor');
 
-            Route::get('/books/export', [BookController::class, 'export']);
+            Route::get('/books/export', 'BookController@export');
         }
     );
 

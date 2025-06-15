@@ -391,11 +391,10 @@ class BookController extends Controller
         $type = $request->query('type');
         $format = $request->query('format');
 
-        // Validate parameters
         $validator = Validator::make(
             $request->all(),
             [
-            'type' => 'required|in:titles,authors,titles and authors,all',
+            'type' => 'required|in:titles,authors,titles_and_authors,all',
             'format' => 'required|in:xml,csv',
             ]
         );
@@ -412,7 +411,7 @@ class BookController extends Controller
             case 'authors':
                 $fields = ['author'];
                 break;
-            case 'titles and authors':
+            case 'titles_and_authors':
                 $fields = ['title', 'author'];
                 break;
             case 'all':

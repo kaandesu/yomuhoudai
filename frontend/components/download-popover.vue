@@ -89,7 +89,7 @@ import { useLibrary } from "@/stores/library";
 
 const optionFields = {
   type: [
-    { label: "Titles and Authors", value: "titles and authors" },
+    { label: "Titles and Authors", value: "titles_and_authors" },
     { label: "Titles only", value: "titles" },
     { label: "Authors only", value: "authors" },
     { label: "All fields", value: "all" },
