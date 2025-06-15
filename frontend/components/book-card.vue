@@ -128,7 +128,7 @@ const currentPage = ref<number>(0);
 const bookStatus = ref<Book["status"]>("ongoing");
 
 onMounted(() => {
-  currentPage.value = book.pageCount ?? 0;
+  currentPage.value = book.currentPage ?? 0;
   bookStatus.value = book.status ?? "plan-to-read";
 });
 
