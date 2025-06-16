@@ -63,6 +63,8 @@ export const useLibrary = defineStore(
   () => {
     const books = ref<Book[]>([]);
     const suggestions = ref<Book[]>([]);
+    // Search page results are stored here
+    const searchResults = ref<Book[]>([]);
     const loading = ref(false);
 
     const getBooks = () => {
@@ -406,6 +408,7 @@ export const useLibrary = defineStore(
     return {
       loading,
       books,
+      searchResults,
       getBooks,
       getBookById,
       createBook,
