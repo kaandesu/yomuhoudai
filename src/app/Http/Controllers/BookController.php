@@ -287,7 +287,13 @@ class BookController extends Controller
     public function searchTitle(Request $request): JsonResponse
     {
         $q = $request->query('q');
-        $results = Book::where('title', 'like', "%$q%")->get();
+        $perPage = $request->query('per_page', 10);
+
+        $results = Book::where('title', 'like', "%$q%")
+            ->sortable()
+            ->paginate($perPage)
+            ->appends($request->query());
+
         return $this->jsonResponse($results, 'Search by title completed');
     }
 
@@ -313,7 +319,13 @@ class BookController extends Controller
     public function searchAuthor(Request $request): JsonResponse
     {
         $q = $request->query('q');
-        $results = Book::where('author', 'like', "%$q%")->get();
+        $perPage = $request->query('per_page', 10);
+
+        $results = Book::where('author', 'like', "%$q%")
+            ->sortable()
+            ->paginate($perPage)
+            ->appends($request->query());
+
         return $this->jsonResponse($results, 'Search by author completed');
     }
 
