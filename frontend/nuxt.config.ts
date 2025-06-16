@@ -6,6 +6,11 @@ const apiBaseUrl = isDevMode
   : "https://laravel.yomuhoudai.club";
 
 export default defineNuxtConfig({
+  runtimeConfig: {
+    public: {
+      devMode: "false",
+    },
+  },
   ssr: false,
   pages: true,
   modules: [
@@ -65,6 +70,21 @@ export default defineNuxtConfig({
     "/api/v1/books/**": {
       proxy: {
         to: `${apiBaseUrl}/api/v1/books/**`,
+      },
+    },
+    "/api/v1/books/export/**": {
+      proxy: {
+        to: `${apiBaseUrl}/api/v1/books/export/**`,
+      },
+    },
+    "/api/v1/books/search/title/**": {
+      proxy: {
+        to: `${apiBaseUrl}/api/v1/books/search/title/**`,
+      },
+    },
+    "/api/v1/books/search/author/**": {
+      proxy: {
+        to: `${apiBaseUrl}/api/v1/books/search/author/**`,
       },
     },
     "/api/v1/**": {

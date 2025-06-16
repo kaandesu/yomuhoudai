@@ -137,10 +137,11 @@ By default, the frontend connects to the deployed backend server.
 To connect to your local backend instead, run:
 
 ```bash
-DEV_MODE=true pnpm dev
+NUXT_PUBLIC_DEV_MODE=true pnpm dev
 ```
 
-This sets the frontend to send API requests to your local Laravel backend.
+This sets the frontend to send API requests to your local Laravel backend. You can change the default behaviour
+through [runtimeConfig](https://nuxt.com/docs/guide/going-further/runtime-config) located in nuxt.config.ts.
 
 ---
 

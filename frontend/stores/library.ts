@@ -45,11 +45,11 @@ type Callbacks = {
   onError?: (error?: any) => any;
 };
 
-const isDevMode = process.env.DEV_MODE === "true";
+const config = useRuntimeConfig();
+const isDevMode = config.public.devMode;
 const apiBaseUrl = isDevMode
   ? "http://127.0.0.1:1234"
   : "https://laravel.yomuhoudai.club";
-
 export type Route =
   | `/api/v1/books`
   | `/api/v1/books/${number}`
