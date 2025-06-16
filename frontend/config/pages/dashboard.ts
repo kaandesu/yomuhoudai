@@ -1,5 +1,6 @@
 import { Explore } from "./Explore";
 import { Settings } from "./settings";
+import { Search } from "./search";
 import { Manage } from "./manage";
 import type { Page } from "~/types/config";
 export const Dashboard = ref<Page>({
@@ -11,5 +12,5 @@ export const Dashboard = ref<Page>({
   isCollapsed: true,
   tourDesc: "Access your main overview and key metrics.",
   desc: "Access your main overview and key metrics.",
-  tabs: [Manage.value, Explore.value, Settings.value],
+  tabs: [Manage.value, Search.value, Explore.value, Settings.value],
 });
