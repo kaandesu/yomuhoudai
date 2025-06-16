@@ -1,18 +1,36 @@
 <template>
   <section class="h-full w-full">
-    <div v-auto-animate class="pt-6">
+    <div v-auto-animate class="pt-6" v-if="tabs && !loadingPage">
       <Tabs
-        v-if="tabs != undefined && !loadingPage"
         :default-value="tabs[0].uid"
-        :modelValue="currentPageInfo.uid"
+        :model-value="currentPageInfo.uid"
         class="space-y-4"
       >
+        <!-- on sm use dropdown to select the page -->
+        <div class="flex items-center gap-4 sm:hidden">
+          <select
+            id="pageSelect"
+            v-model="selectedUid"
+            @change="handleTabTrigger(selectedTab?.href ?? '#')"
+            class="rounded-md border px-3 py-1.5 text-lg"
+          >
+            <option v-for="tab in tabs" :key="tab.uid" :value="tab.uid">
+              {{ tab.title }}
+            </option>
+          </select>
+          <div class="ml-auto flex items-center gap-x-4">
+            <slot name="bar" />
+          </div>
+        </div>
+
+        <!-- on md+ use the tabs to select the page -->
         <section
-          class="flex flex-col items-start justify-between space-y-4 md:flex-row md:items-center md:space-y-0"
+          class="hidden sm:flex flex-col items-start justify-between space-y-4 md:flex-row md:items-center md:space-y-0"
         >
           <TabsList>
             <TabsTrigger
               v-for="tab in tabs"
+              :key="tab.uid"
               :value="tab.uid"
               @click="handleTabTrigger(tab.href ?? '#')"
             >
@@ -24,7 +42,7 @@
                 size="18"
                 v-if="tab.icon"
                 :name="tab.icon"
-              ></Icon>
+              />
             </TabsTrigger>
           </TabsList>
           <div class="ml-0 flex items-center gap-x-4 md:ml-4">
@@ -41,6 +59,7 @@
 import { useStateManager } from "@/stores/state-manager";
 import type { Page } from "@/types/config";
 const { currentPageInfo, loadingPage } = storeToRefs(useStateManager());
+const selectedUid = ref(currentPageInfo.value.uid);
 const handleTabTrigger = async (href: string) => {
   await navigateTo(href);
 };
@@ -51,4 +70,8 @@ const tabs = computed<Page[] | undefined>(() => {
     ? [parent, ...(parent.tabs ?? [])]
     : [currentPageInfo.value, ...(currentPageInfo.value.tabs ?? [])];
 });
+
+const selectedTab = computed(() =>
+  tabs.value?.find((tab) => tab.uid === selectedUid.value),
+);
 </script>

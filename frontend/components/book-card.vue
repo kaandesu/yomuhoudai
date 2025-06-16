@@ -143,9 +143,7 @@ const placeholder = "https://placehold.co/80x120?text=No+Cover";
 watch(bookStatus, async (newVal, oldVal) => {
   // on the initial load it was calling update book
   // this if statement prevents that
-  console.log("oohno", oldVal, "new", newVal);
   if (oldVal == undefined) return;
-  console.log("will update for no reason");
   await updateBook({
     book: { ...book, status: newVal },
   });
