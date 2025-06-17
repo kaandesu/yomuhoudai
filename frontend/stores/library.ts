@@ -58,6 +58,14 @@ export type Route =
   | `/api/v1/books/export/csv/${string}/${string | undefined}`
   | `/api/v1/books/export/xml/${string}/${string | undefined}`;
 
+type SearchData = {
+  total: number;
+  perPage: number;
+  currentPage: number;
+  lastPage: number;
+  query: string;
+};
+
 export const useLibrary = defineStore(
   "Library",
   () => {
@@ -65,7 +73,31 @@ export const useLibrary = defineStore(
     const suggestions = ref<Book[]>([]);
     // Search page results are stored here
     const searchResults = ref<Book[]>([]);
+    const searchQuery = ref<string>("");
+    const searchData = ref<SearchData>({
+      total: 0,
+      perPage: 5,
+      currentPage: 1,
+      lastPage: 0,
+      query: "",
+    });
     const loading = ref(false);
+
+    const updateSearchData = (pagination: {
+      total: number;
+      per_page: number;
+      current_page: number;
+      last_page: number;
+      query: string;
+    }) => {
+      searchData.value = {
+        total: pagination.total,
+        perPage: pagination.per_page,
+        currentPage: pagination.current_page,
+        lastPage: pagination.last_page,
+        query: pagination.query,
+      };
+    };
 
     const getBooks = () => {
       const fetcher = $fetch.create({
@@ -248,6 +280,8 @@ export const useLibrary = defineStore(
 
           const index = books.value.findIndex((b) => b.id === id);
           if (index !== -1) books.value.splice(index, 1);
+          const index2 = searchResults.value.findIndex((b) => b.id === id);
+          if (index2 !== -1) searchResults.value.splice(index2, 1);
           onSuccess?.(response._data);
         },
         onResponseError({ response }) {
@@ -325,85 +359,58 @@ export const useLibrary = defineStore(
       });
     };
 
-    const searchBooksByTitle = async ({
-      title,
-      onSuccess,
-      onError,
-    }: { title: string } & Callbacks) => {
-      const fetcher = $fetch.create({
-        baseURL: apiBaseUrl,
-        onResponse({ response }) {
-          createToast({
-            message: "Books found by title",
-            toastOps: {
-              description: response._data?.message ?? "",
-            },
-            type: "success",
-          })();
-          onSuccess?.(response._data?.data);
-        },
-        onResponseError({ response }) {
-          createToast({
-            message: "Failed to search books by title",
-            toastOps: {
-              description: response._data?.message ?? "Unknown error",
-            },
-            type: "error",
-          })();
-          onError?.(response._data?.message ?? "Search failed");
-        },
-      });
+    // Helper function to define the searchBooksByAuthor and searchBooksByTitle
+    const searchBooksBy =
+      (field: "author" | "title") =>
+      async ({
+        page = 1,
+        onSuccess,
+        onError,
+      }: {
+        page?: number;
+      } & Callbacks) => {
+        const input = searchQuery.value;
+        const query = input ?? searchData.value.query ?? "";
 
-      loading.value = true;
-      return fetcher<BooksResponse>(
-        `/api/v1/books/search/title?q=${encodeURIComponent(title)}`,
-        {
-          method: "GET",
-        },
-      ).finally(() => {
-        loading.value = false;
-      });
-    };
+        const fetcher = $fetch.create({
+          baseURL: apiBaseUrl,
+          onResponse({ response }) {
+            const result = response._data.data;
+            searchResults.value = result.data ?? [];
+            updateSearchData({
+              total: result.total,
+              per_page: result.per_page,
+              current_page: result.current_page,
+              last_page: result.last_page,
+              query: input ?? "",
+            });
 
-    const searchBooksByAuthor = async ({
-      author,
-      onSuccess,
-      onError,
-    }: { author: string } & Callbacks) => {
-      const fetcher = $fetch.create({
-        baseURL: apiBaseUrl,
-        onResponse({ response }) {
-          createToast({
-            message: "Books found by author",
-            toastOps: {
-              description: response._data?.message ?? "",
-            },
-            type: "success",
-          })();
-          onSuccess?.(response._data?.data);
-        },
-        onResponseError({ response }) {
-          createToast({
-            message: "Failed to search books by author",
-            toastOps: {
-              description: response._data?.message ?? "Unknown error",
-            },
-            type: "error",
-          })();
-          onError?.(response._data?.message ?? "Search failed");
-        },
-      });
+            if (searchResults.value.length > 0) onSuccess?.(result);
+          },
+          onResponseError({ response }) {
+            createToast({
+              message: "Failed to search books by title",
+              toastOps: {
+                description: response._data?.message ?? "Unknown error",
+                position: "top-right",
+              },
+              type: "error",
+            })();
+            onError?.(response._data?.message ?? "Search failed");
+          },
+        });
 
-      loading.value = true;
-      return fetcher<BooksResponse>(
-        `/api/v1/books/search/author?q=${encodeURIComponent(author)}`,
-        {
-          method: "GET",
-        },
-      ).finally(() => {
-        loading.value = false;
-      });
-    };
+        loading.value = true;
+        return fetcher<BooksResponse>(
+          `/api/v1/books/search/${field}?q=${encodeURIComponent(query)}&page=${page}${searchData.value.perPage >= 5 ? `&per_page=${searchData.value.perPage}` : ``}`,
+          { method: "GET" },
+        ).finally(() => {
+          loading.value = false;
+        });
+      };
+
+    const searchBooksByTitle = searchBooksBy("title");
+    const searchBooksByAuthor = searchBooksBy("title");
 
     return {
       loading,
@@ -418,6 +425,8 @@ export const useLibrary = defineStore(
       downloadBooks,
       searchBooksByTitle,
       searchBooksByAuthor,
+      searchData,
+      searchQuery,
     };
   },
   {
