@@ -130,45 +130,6 @@ export const useLibrary = defineStore(
       });
     };
 
-    const getBookById = async ({
-      id,
-      onSuccess,
-      onError,
-    }: { id: number } & Callbacks) => {
-      const fetcher = $fetch.create({
-        baseURL: apiBaseUrl,
-        onResponse({ response }) {
-          createToast({
-            message: "Book loaded successfully",
-            toastOps: {
-              description: response._data?.message ?? "",
-            },
-            type: "success",
-          })();
-          onSuccess?.(response._data?.data);
-        },
-        onResponseError({ response }) {
-          createToast({
-            message: `Failed to load book with id ${id}`,
-            toastOps: {
-              description: response._data?.message ?? "Unknown error",
-            },
-            type: "error",
-          })();
-          onError?.(
-            response._data?.message ?? `Error loading book with id ${id}`,
-          );
-        },
-      });
-
-      loading.value = true;
-      return fetcher<BookResponse>(`/api/v1/books/${id}`, {
-        method: "GET",
-      }).finally(() => {
-        loading.value = false;
-      });
-    };
-
     const createBook = async ({
       book,
       onSuccess,
@@ -417,7 +378,6 @@ export const useLibrary = defineStore(
       books,
       searchResults,
       getBooks,
-      getBookById,
       createBook,
       updateBook,
       deleteBook,
