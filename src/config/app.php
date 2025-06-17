@@ -165,6 +165,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Kyslik\ColumnSortable\ColumnSortableServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -176,7 +177,6 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         L5Swagger\L5SwaggerServiceProvider::class,
-        Kyslik\ColumnSortable\ColumnSortable\ColumnSortableServiceProvider::class,
     ],
 
     /*
