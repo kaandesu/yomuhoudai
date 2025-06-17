@@ -1,7 +1,10 @@
 <template>
   <main class="h-full w-full pt-5">
     <IconBg page="Dashboard" />
-    <div class="flex flex-col lg:flex-row gap-4">
+    <div
+      v-if="featurePreview.heatmap"
+      class="flex flex-col lg:flex-row gap-4 justify-stretch items-stretch"
+    >
       <calendar-heatmap
         class="w-full lg:w-1/2"
         :values="heatMapData"
@@ -16,12 +19,12 @@
       />
 
       <!-- InfoCards -->
-      <div class="flex flex-row w-full lg:w-1/2 gap-4">
+      <div class="flex flex-col sm:flex-row w-full lg:w-1/2 gap-4">
         <BasicCard
           class="h-28 w-full"
-          title="Total Books"
-          :value="books.length"
-          :muted="'+100% from last month'"
+          title="In Total"
+          :value="overviewPaginationData.total ?? books.length"
+          :muted="'Ahead of the yearly goal 🎉!'"
           :icon="'fluent-emoji-high-contrast:books'"
         />
         <BasicCard
@@ -31,6 +34,13 @@
           :value="`${totalOngoing}`"
           :icon="'fluent-emoji-high-contrast:books'"
         />
+        <BasicCard
+          class="h-28 w-full"
+          title="Completed"
+          :muted="'+100% from last month'"
+          :value="`${totalCompleted}`"
+          :icon="'fluent-emoji-high-contrast:books'"
+        />
         <!-- /InfoCards -->
       </div>
     </div>
@@ -38,8 +48,8 @@
     <section class="mt-4 flex gap-x-5 w-full items-center justify-start">
       <!-- Status Filter -->
       <Select v-model="selectedStatus">
-        <SelectTrigger class="w-24 h-4 backdrop-blur-[3px]">
-          <SelectValue placeholder="Status" />
+        <SelectTrigger class="w-30 h-4 backdrop-blur-[3px]">
+          <SelectValue placeholder="Filter by Status" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
@@ -58,20 +68,49 @@
       <DownloadPopover />
       <Button
         :disabled="loading"
-        class="w-24 h-4 backdrop-blur-[2px] bg-transparent flex justify-between rounded-md"
+        class="w-18 sm:w-24 h-4 backdrop-blur-[2px] bg-transparent flex justify-between rounded-md"
+        variant="outline"
+        @click="getBooks()"
+      >
+        <span class="hidden sm:inline-block">
+          {{ loading ? "Loading..." : "Load All" }}
+        </span>
+        <Icon name="solar:cloud-download-linear" size="1.5rem" />
+      </Button>
+      <Button
+        :disabled="loading"
+        class="w-18 sm:w-24 h-4 backdrop-blur-[2px] bg-transparent flex justify-between rounded-md"
         variant="outline"
         @click="handleRefresh()"
       >
-        {{ loading ? "Loading..." : "Refresh" }}
+        <span class="hidden sm:inline-block">
+          {{ loading ? "Loading..." : "Refresh" }}
+        </span>
         <Icon name="mdi:refresh" size="1.5rem" />
       </Button>
     </section>
     <!-- BookCards -->
     <div
-      class="mt-4 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+      class="mt-4 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 pb-4"
       v-auto-animate
     >
       <book-card v-for="book in filteredBooks" :key="book.title" :book="book" />
+
+      <div
+        v-if="books.length > 0"
+        class="w-full h-[7.5rem] flex justify-center items-center flex-col gap-y-2"
+      >
+        {{ books.length }}/{{ overviewPaginationData.total }}
+        <Button
+          :disabled="loading || overviewPaginationData.total == books.length"
+          class="w-24 h-4 backdrop-blur-[4px] bg-transparent flex justify-between rounded-md"
+          variant="outline"
+          @click="handleLoadMore()"
+        >
+          {{ loading ? "Loading..." : "Load More" }}
+          <Icon class="ml-3" name="ep:more" size="1.5rem" />
+        </Button>
+      </div>
     </div>
     <!-- /BookCards -->
   </main>
@@ -81,18 +120,31 @@
 import { CalendarHeatmap } from "vue3-calendar-heatmap";
 import "vue3-calendar-heatmap/dist/style.css";
 import { useLibrary } from "@/stores/library";
-const { books, loading } = storeToRefs(useLibrary());
-const { getBooks } = useLibrary();
+import { useStateManager } from "@/stores/state-manager";
+const { featurePreview } = storeToRefs(useStateManager());
+const { books, loading, overviewPaginationData } = storeToRefs(useLibrary());
+const { getBooks, getBooksPaginated } = useLibrary();
 const colorMode = useColorMode();
 
 const handleRefresh = async () => {
-  await useAsyncData(() => getBooks());
+  await useAsyncData(() => getBooksPaginated({ page: 1 }));
+};
+
+const handleLoadMore = async () => {
+  await getBooksPaginated({
+    page: overviewPaginationData.value.currentPage + 1,
+  });
 };
 
 /* Info Cards */
 const totalOngoing = computed(() => {
   let temp = books.value;
   return temp.filter((b: any) => b.status == "ongoing").length;
+});
+
+const totalCompleted = computed(() => {
+  let temp = books.value;
+  return temp.filter((b: any) => b.status == "completed").length;
 });
 /* /Info Cards */
 

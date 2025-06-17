@@ -16,6 +16,11 @@ export const useStateManager = defineStore(
 
     const loadingPage = ref<boolean>(false);
 
+    const featurePreview = ref<{ aiSuggestions: boolean; heatmap: boolean }>({
+      aiSuggestions: true,
+      heatmap: true,
+    });
+
     const currentPageInfo = ref<Page>({ uid: "" });
 
     const findPage = (id: string): Page | false => {
@@ -57,6 +62,7 @@ export const useStateManager = defineStore(
       navigatePage,
       navState,
       navigatePageById,
+      featurePreview,
       loadingPage,
       apikeys,
     };

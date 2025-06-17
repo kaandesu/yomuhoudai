@@ -9,7 +9,7 @@
         />
         <Button
           :disabled="apikeys.gpt == ''"
-          v-if="page.pageRef.showAIButton"
+          v-if="page.pageRef.showAIButton && featurePreview.aiSuggestions"
           @click="page.pageRef.onAIclick(true)"
           class="h-5 justify-start text-left w-full"
           variant="default"
@@ -46,9 +46,9 @@
 import type { DateRange } from "radix-vue";
 import { useStateManager } from "@/stores/state-manager";
 import { useLibrary } from "@/stores/library";
-const { apikeys } = storeToRefs(useStateManager());
+const { apikeys, featurePreview } = storeToRefs(useStateManager());
 const { books } = storeToRefs(useLibrary());
-const { getBooks } = useLibrary();
+const { getBooksPaginated } = useLibrary();
 
 const page = ref<{ pageRef: null | any | undefined }>();
 const dateValue = ref<DateRange>({
@@ -61,7 +61,7 @@ onMounted(async () => {
     message: "Loading your library...",
     type: "info",
   })();
-  await getBooks();
+  if (books.value.length == 0) await getBooksPaginated({ page: 1 });
 });
 
 definePageMeta({

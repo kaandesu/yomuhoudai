@@ -112,14 +112,14 @@
         class="h-1/2 space-y-4 p-0 sm:p-6 flex justify-center items-center flex-col"
       >
         <Alert
-          v-if="apikeys.gpt == ''"
+          v-if="apikeys.gpt == '' && featurePreview.aiSuggestions"
           variant="destructive"
           class="w-full initialApear"
         >
           <AlertTitle>API Key Required</AlertTitle>
           <AlertDescription>
             You need to enter your OpenAI API key in settings to enable
-            "Generate Solutions" feature.
+            "Generate Suggestions" feature.
             <br />
             Or use "Editor's Choice" for offline suggestions.
           </AlertDescription>
@@ -213,7 +213,7 @@ import { ref } from "vue";
 import { type BookPayload, useLibrary } from "@/stores/library";
 import { Card, CardContent } from "@/components/ui/card";
 import { useStateManager } from "@/stores/state-manager";
-const { apikeys } = storeToRefs(useStateManager());
+const { apikeys, featurePreview } = storeToRefs(useStateManager());
 import {
   Carousel,
   type CarouselApi,
