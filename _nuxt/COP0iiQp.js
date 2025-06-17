@@ -1,0 +1,1 @@
+function s(o){const i={};return Object.entries(o).forEach(([t,e])=>{e!==void 0&&(t==="categories"?typeof e=="string"?i.categories=e.split(",").map(r=>r.trim()).filter(r=>r.length>0):Array.isArray(e)&&(i.categories=e):i[t]=e)}),i}export{s as c};
