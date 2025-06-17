@@ -176,6 +176,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         L5Swagger\L5SwaggerServiceProvider::class,
+        Kyslik\ColumnSortable\ColumnSortable\ColumnSortableServiceProvider::class,
     ],
 
     /*
