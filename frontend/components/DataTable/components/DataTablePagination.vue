@@ -16,10 +16,7 @@ interface DataTablePaginationProps {
 const { table } = defineProps<DataTablePaginationProps>();
 
 const canGetNextPage = computed<boolean>(() => {
-  return (
-    table.getState().pagination.pageIndex + 1 <
-    Math.ceil(searchData.value.total / table.getState().pagination.pageSize)
-  );
+  return searchData.value.currentPage < searchData.value.lastPage;
 });
 
 watch(
@@ -81,7 +78,7 @@ const handlePageChange = async (index: number) => {
         class="flex w-[100px] items-center justify-center text-sm font-medium"
       >
         Page {{ searchData.currentPage }} of
-        {{ Math.ceil(searchData.total / table.getState().pagination.pageSize) }}
+        {{ searchData.lastPage }}
       </div>
       <div class="flex items-center space-x-2">
         <Button

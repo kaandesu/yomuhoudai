@@ -371,7 +371,7 @@ export const useLibrary = defineStore(
       };
 
     const searchBooksByTitle = searchBooksBy("title");
-    const searchBooksByAuthor = searchBooksBy("title");
+    const searchBooksByAuthor = searchBooksBy("author");
 
     return {
       loading,
