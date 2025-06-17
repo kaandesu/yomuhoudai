@@ -1,10 +1,5 @@
 import { image, tailwindcss, viewport, i18n } from "./config/";
 
-const isDevMode = process.env.DEV_MODE === "true";
-const apiBaseUrl = isDevMode
-  ? "http://127.0.0.1:1234"
-  : "https://laravel.yomuhoudai.club";
-
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
@@ -61,36 +56,4 @@ export default defineNuxtConfig({
   css: ["shepherd.js/dist/css/shepherd.css", "~/assets/css/main.css"],
   devtools: { enabled: false },
   compatibilityDate: "2025-06-06",
-  routeRules: {
-    "/api/**": {
-      proxy: {
-        to: `${apiBaseUrl}/api/**`,
-      },
-    },
-    "/api/v1/books/**": {
-      proxy: {
-        to: `${apiBaseUrl}/api/v1/books/**`,
-      },
-    },
-    "/api/v1/books/export/**": {
-      proxy: {
-        to: `${apiBaseUrl}/api/v1/books/export/**`,
-      },
-    },
-    "/api/v1/books/search/title/**": {
-      proxy: {
-        to: `${apiBaseUrl}/api/v1/books/search/title/**`,
-      },
-    },
-    "/api/v1/books/search/author/**": {
-      proxy: {
-        to: `${apiBaseUrl}/api/v1/books/search/author/**`,
-      },
-    },
-    "/api/v1/**": {
-      proxy: {
-        to: `${apiBaseUrl}/api/v1/**`,
-      },
-    },
-  },
 });

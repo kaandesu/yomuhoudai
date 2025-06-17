@@ -45,11 +45,6 @@ type Callbacks = {
   onError?: (error?: any) => any;
 };
 
-const config = useRuntimeConfig();
-const isDevMode = config.public.devMode;
-const apiBaseUrl = isDevMode
-  ? "http://127.0.0.1:1234"
-  : "https://laravel.yomuhoudai.club";
 export type Route =
   | `/api/v1/books`
   | `/api/v1/books/${number}`
@@ -71,6 +66,12 @@ type OverviewPaginationData = Omit<SearchData, "query">;
 export const useLibrary = defineStore(
   "Library",
   () => {
+    const config = useRuntimeConfig();
+    const isDevMode = config.public.devMode !== "false";
+    const apiBaseUrl = isDevMode
+      ? "http://127.0.0.1:1234"
+      : "https://laravel.yomuhoudai.club";
+
     const books = ref<Book[]>([]);
     const suggestions = ref<Book[]>([]);
     // Search page results are stored here
@@ -189,13 +190,6 @@ export const useLibrary = defineStore(
             lastPage: result.last_page,
           };
 
-          console.log(
-            "eski current",
-            currentPageIndex,
-            "yeni page",
-            overviewPaginationData.value.currentPage,
-          );
-
           if (currentPageIndex < overviewPaginationData.value.currentPage) {
             for (let i = 0; i < newBooks.length; i++) {
               books.value.push(newBooks[i]);
@@ -301,8 +295,6 @@ export const useLibrary = defineStore(
           if (index !== -1) books.value.splice(index, 1);
           const index2 = searchResults.value.findIndex((b) => b.id === id);
           if (index2 !== -1) searchResults.value.splice(index2, 1);
-          // FIXME: this is a hack, also when added a new book it doensT wokk
-          // fix it for real pleasEEEEEE on the paginaiton side
           overviewPaginationData.value.total -= 1;
           onSuccess?.(response._data);
         },
