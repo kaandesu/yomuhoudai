@@ -8,7 +8,11 @@
   >
     <Sheet v-model:open="open">
       <SheetTrigger as-child>
-        <Button v-if="!mini" variant="default" class="h-4 bg-primary">
+        <Button
+          v-if="!mini"
+          variant="default"
+          class="h-4 bg-primary rounded-md"
+        >
           <label class="hidden md:block">
             {{ actionType === "edit" ? "Edit Book" : "New Book" }}
           </label>

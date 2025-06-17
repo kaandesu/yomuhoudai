@@ -151,6 +151,10 @@ The project is deployed on a VPS rented from Hetzner and managed via Coolify, wh
 
 - The backend Laravel API is hosted at:  
   <https://laravel.yomuhoudai.club/>
+  <https://api.yomuhoudai.club/>
+
+- The backend staging deployment is hosted at:  
+  <https://api-staging.yomuhoudai.club/>
 
 - The frontend app is deployed and accessible at:  
   <https://app.yomuhoudai.club/>  

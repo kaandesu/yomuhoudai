@@ -46,28 +46,6 @@ export const columns: ColumnDef<Book>[] = [
     id: "actions",
     cell: ({ row }) => h(DataTableRowActions, { row }),
   },
-  {
-    id: "select",
-    header: ({ table }) =>
-      h(Checkbox, {
-        checked:
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate"),
-        "onUpdate:checked": (value) => table.toggleAllPageRowsSelected(!!value),
-        ariaLabel: "Select all",
-        class: "translate-y-0.5",
-      }),
-    cell: ({ row }) =>
-      h(Checkbox, {
-        checked: row.getIsSelected(),
-        "onUpdate:checked": (value) => row.toggleSelected(!!value),
-        ariaLabel: "Select row",
-        class: "translate-y-0.5",
-      }),
-    enableSorting: false,
-    enableHiding: false,
-  },
-
   // Title
   {
     accessorKey: "title",

@@ -1,10 +1,7 @@
 <template>
   <Popover>
     <PopoverTrigger as-child>
-      <Button
-        class="h-4 bg-secondary justify-start text-left"
-        variant="secondary"
-      >
+      <Button class="h-4 justify-start text-left rounded-md" variant="outline">
         <label class="pointer-events-none hidden md:inline-block">
           Download
         </label>
@@ -120,6 +117,5 @@ const { handleSubmit } = useForm({
 
 const onSubmit = handleSubmit(async (values) => {
   await downloadBooks({ type: values.type, format: values.format });
-  console.log("submitted", values);
 });
 </script>

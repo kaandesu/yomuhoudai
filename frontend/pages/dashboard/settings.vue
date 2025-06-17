@@ -1,5 +1,6 @@
 <template>
   <main class="box-border h-full w-full pt-0">
+    <IconBg page="Settings" />
     <Separator class="my-5"></Separator>
     <div class="grid w-full max-w-sm items-center gap-1.5">
       <Label class="mt-0" for="openaiapi">OpenAI API KEY</Label>
