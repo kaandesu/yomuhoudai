@@ -2,11 +2,10 @@
 import type { Column } from "@tanstack/vue-table";
 import type { Component } from "vue";
 import { computed } from "vue";
-import type { Task } from "../data/schema";
 import { PlusCircledIcon, CheckIcon } from "@radix-icons/vue";
 
 interface DataTableFacetedFilter {
-  column?: Column<Task, any>;
+  column?: Column<any, any>;
   title?: string;
   options: {
     label: string;
@@ -48,7 +47,7 @@ const selectedValues = computed(
 
             <template v-else>
               <Badge
-                v-for="option in options.filter((option) =>
+                v-for="option in props.options.filter((option: any) =>
                   selectedValues.has(option.value),
                 )"
                 :key="option.value"

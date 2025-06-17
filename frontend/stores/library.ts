@@ -66,6 +66,8 @@ type SearchData = {
   query: string;
 };
 
+type OverviewPaginationData = Omit<SearchData, "query">;
+
 export const useLibrary = defineStore(
   "Library",
   () => {
@@ -81,23 +83,14 @@ export const useLibrary = defineStore(
       lastPage: 0,
       query: "",
     });
-    const loading = ref(false);
+    const overviewPaginationData = ref<OverviewPaginationData>({
+      total: 0,
+      perPage: 3,
+      currentPage: 1,
+      lastPage: 0,
+    });
 
-    const updateSearchData = (pagination: {
-      total: number;
-      per_page: number;
-      current_page: number;
-      last_page: number;
-      query: string;
-    }) => {
-      searchData.value = {
-        total: pagination.total,
-        perPage: pagination.per_page,
-        currentPage: pagination.current_page,
-        lastPage: pagination.last_page,
-        query: pagination.query,
-      };
-    };
+    const loading = ref(false);
 
     const getBooks = () => {
       const fetcher = $fetch.create({
@@ -149,6 +142,7 @@ export const useLibrary = defineStore(
           const newBook = response._data?.data;
           if (newBook) {
             books.value.push(newBook);
+            overviewPaginationData.value.total += 1;
             onSuccess?.(newBook);
           }
         },
@@ -170,6 +164,70 @@ export const useLibrary = defineStore(
         headers: { "Content-Type": "application/json" },
         body: book,
       }).finally(() => {
+        loading.value = false;
+      });
+    };
+
+    const getBooksPaginated = async ({
+      page = 1,
+      onSuccess,
+      onError,
+    }: {
+      page?: number;
+    } & Callbacks) => {
+      const fetcher = $fetch.create({
+        baseURL: apiBaseUrl,
+        onResponse({ response }) {
+          const result = response._data.data;
+          const newBooks = result.data ?? [];
+          const currentPageIndex = overviewPaginationData.value.currentPage;
+
+          overviewPaginationData.value = {
+            total: result.total,
+            perPage: result.per_page,
+            currentPage: result.current_page,
+            lastPage: result.last_page,
+          };
+
+          console.log(
+            "eski current",
+            currentPageIndex,
+            "yeni page",
+            overviewPaginationData.value.currentPage,
+          );
+
+          if (currentPageIndex < overviewPaginationData.value.currentPage) {
+            for (let i = 0; i < newBooks.length; i++) {
+              books.value.push(newBooks[i]);
+            }
+          }
+
+          if (overviewPaginationData.value.currentPage == 1) {
+            books.value = newBooks;
+          }
+
+          if (newBooks.length > 0) {
+            onSuccess?.(result);
+          }
+        },
+        onResponseError({ response }) {
+          createToast({
+            message: "Failed to fetch the new books",
+            toastOps: {
+              description: response._data?.message ?? "Unknown error",
+              position: "top-right",
+            },
+            type: "error",
+          })();
+          onError?.(response._data?.message ?? "Unknown error");
+        },
+      });
+
+      loading.value = true;
+      return fetcher<BooksResponse>(
+        `/api/v1/books/search/title?q=%20&page=${page}&per_page=${overviewPaginationData.value.perPage}`,
+        { method: "GET" },
+      ).finally(() => {
         loading.value = false;
       });
     };
@@ -243,6 +301,9 @@ export const useLibrary = defineStore(
           if (index !== -1) books.value.splice(index, 1);
           const index2 = searchResults.value.findIndex((b) => b.id === id);
           if (index2 !== -1) searchResults.value.splice(index2, 1);
+          // FIXME: this is a hack, also when added a new book it doensT wokk
+          // fix it for real pleasEEEEEE on the paginaiton side
+          overviewPaginationData.value.total -= 1;
           onSuccess?.(response._data);
         },
         onResponseError({ response }) {
@@ -338,13 +399,14 @@ export const useLibrary = defineStore(
           onResponse({ response }) {
             const result = response._data.data;
             searchResults.value = result.data ?? [];
-            updateSearchData({
+
+            searchData.value = {
               total: result.total,
-              per_page: result.per_page,
-              current_page: result.current_page,
-              last_page: result.last_page,
+              perPage: result.per_page,
+              currentPage: result.current_page,
+              lastPage: result.last_page,
               query: input ?? "",
-            });
+            };
 
             if (searchResults.value.length > 0) onSuccess?.(result);
           },
@@ -377,6 +439,8 @@ export const useLibrary = defineStore(
       loading,
       books,
       searchResults,
+      getBooksPaginated,
+      overviewPaginationData,
       getBooks,
       createBook,
       updateBook,
