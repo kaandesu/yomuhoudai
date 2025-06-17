@@ -1,5 +1,5 @@
 <template>
-  <div class="icon-wrapper">
+  <div class="icon-wrapper opacity-25 dark:opacity-10">
     <section class="icon-background">
       <div v-for="row in rowCount" :key="'row-' + row" class="icon-row">
         <Icon
@@ -90,7 +90,6 @@ const iconDict = {
 .icon {
   width: 4rem;
   height: 4rem;
-  opacity: 0.25;
   transition: all 1s ease-in-out;
   animation-duration: 10s;
   animation-iteration-count: infinite;
