@@ -227,7 +227,7 @@ const formSchema = toTypedSchema(
     categories: z.string().optional(),
     pageCount: z.number().optional(),
     publishedDate: z.string().optional(),
-    rating: z.string().optional(),
+    rating: z.number().optional(),
     status: z
       .enum(["completed", "ongoing", "on-hold", "plan-to-read", "dropped"])
       .optional(),
@@ -245,7 +245,7 @@ const defaultValues = computed(() => {
     categories: (book.categories || []).join(", "),
     pageCount: book.pageCount ? Number(book.pageCount) : undefined,
     publishedDate: book.publishedDate || "",
-    rating: book.rating ? book.rating : "0",
+    rating: book.rating ? book.rating : 0,
     status: book.status || "plan-to-read",
   };
 });
