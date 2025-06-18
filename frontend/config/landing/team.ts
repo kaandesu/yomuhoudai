@@ -15,7 +15,7 @@ interface TeamProps {
 
 export const team = {
   title: "Team",
-  slogan: "The Dream Team",
+  slogan: "Meet The Team",
   teamList: [
     {
       imageUrl:

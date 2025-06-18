@@ -3,19 +3,20 @@ export const hero = {
     label: "Beta",
     value: "Yomuhoudai is live!",
   },
-  slogan: ["Track your", "reading", "effortlessly"],
+  slogan: ["Effortless", "Book", "Tracking"],
   desc: `
-    Yomuhoudai is your personal reading companion — track books, log your progress,
-    and discover your next great read. Built for book lovers, by book lovers.
+    Meet Yomuhoudai — your smart reading companion that helps you track books,
+    monitor your progress, and find your next favorite read, all in one place.
+    Designed by readers, for readers.
   `,
   button: {
     primary: {
       link: "/dashboard",
-      label: "Try the Demo Now!",
+      label: "Go to Demo!",
     },
     secondary: {
       link: "https://github.com/kaandesu/yomuhoudai",
-      label: "GitHub",
+      label: "Explore on GitHub",
     },
   },
   image: {

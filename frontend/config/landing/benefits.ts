@@ -1,10 +1,10 @@
 import {
   Sparkle,
-  Tag,
+  FileSearch2,
   Paintbrush,
   Blocks,
   LineChart,
-  Wallet,
+  CloudDownload,
 } from "lucide-vue-next";
 
 interface BenefitsProps {
@@ -14,44 +14,44 @@ interface BenefitsProps {
 }
 
 export const benefits = {
-  title: "Benefits",
-  slogan: "Your Shortcut to Success",
+  title: "Why Yomuhoudai?",
+  slogan: "Your Reading Companion, Simplified",
   desc: `
-    Yomuhoudai helps you stay organized, motivated, and on top of your reading goals.
-    Whether you’re a casual reader or a bookworm, these benefits make your reading journey smoother and more enjoyable.
+    Yomuhoudai helps you effortlessly organize, track, and manage your reading.
+    Search your books, track your current page, filter lists, and download your collection anytime.
   `,
   benefitList: [
     {
       icon: "blocks",
-      title: "Stay Organized",
+      title: "Organize Your Books",
       description:
-        "Easily track all your books in one place, so you never lose sight of your reading progress or upcoming titles.",
+        "Keep all your books and reading statuses organized in one place for easy access and updates.",
     },
     {
       icon: "lineChart",
       title: "Track Your Progress",
       description:
-        "Visualize your reading habits and milestones with simple stats to keep yourself motivated and consistent.",
+        "Log your current page to always know where you left off and keep your reading on track.",
     },
     {
-      icon: "wallet",
-      title: "Save Time",
+      icon: "fileSearch2",
+      title: "Search & Filter",
       description:
-        "Quickly add books and manage your lists with a clean, user-friendly interface that saves you time and hassle.",
+        "Quickly find any book with search and filter options that help you manage your reading list effectively.",
     },
     {
-      icon: "sparkle",
-      title: "Discover New Books",
+      icon: "cloudDownload",
+      title: "Download Your List",
       description:
-        "Get inspired with personalized recommendations and discover new authors and genres tailored to your taste.",
+        "Export your reading collection to keep backups or share your progress with friends.",
     },
   ] as BenefitsProps[],
   iconMap: {
     sparkle: Sparkle,
-    tag: Tag,
+    fileSearch2: FileSearch2,
     paintbrush: Paintbrush,
     blocks: Blocks,
     lineChart: LineChart,
-    wallet: Wallet,
+    cloudDownload: CloudDownload,
   } as Record<string, HTMLElement>,
 };
