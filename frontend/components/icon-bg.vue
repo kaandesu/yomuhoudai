@@ -1,5 +1,5 @@
 <template>
-  <div class="icon-wrapper opacity-25 dark:opacity-10">
+  <div class="icon-wrapper opacity-25 dark:opacity-20">
     <section class="icon-background">
       <div v-for="row in rowCount" :key="'row-' + row" class="icon-row">
         <Icon

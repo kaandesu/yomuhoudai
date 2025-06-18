@@ -2,7 +2,10 @@
   <main class="box-border h-full w-full pt-0">
     <IconBg page="Settings" />
     <Separator class="my-5"></Separator>
-    <div class="grid w-full max-w-lg items-center gap-1.5">
+    <div
+      class="grid h-full w-full max-w-lg items-center gap-1.5"
+      style="backdrop-filter: blur(6px)"
+    >
       <Label class="mt-0" for="openaiapi">OpenAI API KEY</Label>
       <Input
         id="openaiapi"

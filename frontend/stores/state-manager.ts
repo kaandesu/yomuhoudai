@@ -17,7 +17,7 @@ export const useStateManager = defineStore(
     const loadingPage = ref<boolean>(false);
 
     const featurePreview = ref<{ aiSuggestions: boolean; heatmap: boolean }>({
-      aiSuggestions: true,
+      aiSuggestions: false,
       heatmap: true,
     });
 
