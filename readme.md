@@ -3,11 +3,16 @@
 </p>
 
 Yomuhoudai is a full-stack web app for browsing, managing, and performing CRUD operations on a book collection. It uses Laravel for the backend API, Nuxt for the frontend, and supports both local development (via Docker) and production deployment (via Coolify on a Hetzner VPS).
+<br />
+
+Live demo: <https://app.yomuhoudai.club/dashboard> <br>
+From landing page: <https://library.yomuhoudai.club>
 
 ## Table of Contents
 
 - [Requirements](#requirements)
 - [Setup](#setup)
+- [Quick visual tour](#quick-visual-tour-of-what-yomuhoudai-can-do)
 - [Running Unit Tests](#running-unit-tests)
 - [Environment Configuration](#environment-configuration)
 - [Frontend Development Setup](#frontend-development-setup)
@@ -78,6 +83,59 @@ docker-compose stop \
 ```
 
 ---
+
+## Quick visual tour of what Yomuhoudai can do
+
+<table>
+  <tr>
+    <td style="width: 50%; vertical-align: top;">
+      <h3>Card Operations</h3>
+      <p>Update reading progress, change status, and manage books with quick actions.</p>
+      <img src="./public/card-operations.gif" width="100%" />
+    </td>
+    <td style="width: 50%; vertical-align: top;">
+      <h3>Explore Page</h3>
+      <p>Discover recommended books and add them to your library with one click.</p>
+      <img src="./public/explore.gif" width="100%" />
+    </td>
+  </tr>
+  <tr>
+    <td style="width: 50%; vertical-align: top;">
+      <h3>Search Page</h3>
+      <p>Search by title or author, sort results, paginate, and download them as needed.</p>
+      <img src="./public/search-page.gif" width="100%" />
+    </td>
+    <td style="width: 50%; vertical-align: top;">
+      <h3>Pagination & Filtering</h3>
+      <p>Paginate and filter books by status on the overview page.</p>
+      <img src="./public/overview-pagination-filtering.gif" width="100%" />
+    </td>
+  </tr>
+  <tr>
+    <td style="width: 50%; vertical-align: top;">
+      <h3>Add New Book</h3>
+      <p>Seamlessly create new book entries with a simple form UI.</p>
+      <img src="./public/new-book.gif" width="100%" />
+    </td>
+    <td style="width: 50%; vertical-align: top;">
+      <h3>Responsive Design</h3>
+      <p>Fully responsive interface optimized for mobile, tablet, and desktop.</p>
+      <img src="./public/responsive.gif" width="100%" />
+    </td>
+  </tr>
+  <tr>
+    <td style="width: 50%; vertical-align: top;">
+      <h3>Feature Preview</h3>
+      <p>Enable or disable early-access features from the settings panel.</p>
+      <img src="./public/feature-preview.gif" width="100%" />
+    </td>
+    <td style="width: 50%;">
+      <h3>Dark Mode</h3>
+      <p>Syncs with system settings or toggle manually for comfort.</p>
+      <img src="./public/dark-mode.gif" width="100%" />
+    </td>
+  </tr>
+</table>
 
 ### Environment Configuration
 
