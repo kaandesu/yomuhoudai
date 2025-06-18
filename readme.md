@@ -143,6 +143,9 @@ NUXT_PUBLIC_DEV_MODE=true pnpm dev
 This sets the frontend to send API requests to your local Laravel backend. You can change the default behaviour
 through [runtimeConfig](https://nuxt.com/docs/guide/going-further/runtime-config) located in nuxt.config.ts.
 
+<br/>
+<small>Note: In order have a clear testing setup, it is advised to clear the local storage under the "Application" tab in the developer console every once in a while.</small>
+
 ---
 
 ## Deployment and CI/CD Overview
@@ -190,14 +193,15 @@ This includes all available endpoints, request/response formats.
   <img src="./public/swaggerss.webp" height="300"  />
 </p>
 
+To generate new docs after making changes you can use:
+
+```bash
+php artisan l5-swagger:generate
+```
+
 ---
 
 ## Frontend Directory Structure
-
-- [Stores](#stores)
-  - [1- useLibrary](#1-uselibrary)
-  - [2- useStateManager](#2-usestatemanager)
-  - [3- useToastManagerStore](#3-usetoastmanagerstore)
 
 ```python
 frontend/
@@ -215,10 +219,11 @@ frontend/
 ├── lib/                    # Utility functions (e.g., date or string utils)
 ├── pages/                  # Nuxt file-based routing
 │   ├── dashboard/          # /dashboard routes
-│   │   ├── explore.vue     # Book suggestions
-│   │   ├── manage.vue      # Book management
-│   │   └── settings.vue    # Settings UI
-│   └── index.vue           # Homepage
+│   │   ├── index.vue       # Overview page
+│   │   ├── explore.vue     # Book recommendations
+│   │   ├── search.vue      # Book search & management
+│   │   └── settings.vue    # Settings page
+│   └── index.vue           # landing page entry
 ├── public/                 # Static assets like images, favicon
 ├── server/                 # Server runtime configs
 stores/
@@ -240,71 +245,86 @@ tailwind.config.js          # Tailwind v3 setup
 
 ### 1-useLibrary
 
-This Pinia store manages a collection of books with CRUD operations and search capabilities via API calls. It also handles loading states and user feedback through toast notifications.
+This Pinia store manages a collection of books with CRUD operations, search, pagination, export, and user feedback via toast notifications.
 
 #### State
 
-- `books: Book[]` - List of books in the library.
-- `loading: boolean` - Indicates if an API call is in progress.
-- `suggestions: Book[]` - List of suggested books in the library. (Editor's Choice or by an AI(wip))
+- `books: Book[]` – List of all books in the library.
+- `loading: boolean` – Indicates if an API request is in progress.
+- `suggestions: Book[]` – List of suggested books (Editor's Choice or AI-based).
+- `searchResults: Book[]` – Books returned by a search.
+- `searchQuery: string` – Query input for search.
+- `searchData: SearchData` – Metadata for search pagination.
+- `overviewPaginationData: OverviewPaginationData` – Metadata for general pagination.
 
 #### Functions
 
 - **getBooks({ onSuccess?, onError? })**  
-  Fetches all books from `/api/v1/books`. Updates `books` state. Shows success/error toast.
+  Fetches all books from `/api/v1/books`. Updates `books`. Shows a toast on success/failure.
 
-- **getBookById({ id: number, onSuccess?, onError? })**  
-  Fetches a single book by `id` from `/api/v1/books/{id}`. Shows success/error toast.
+- **getBooksPaginated({ page?, onSuccess?, onError? })**  
+  Loads books page by page using `/api/v1/books/search/title`. Updates `books` and `overviewPaginationData`.
 
-- **createBook({ book: Omit<Book, "id">, onSuccess?, onError? })**  
-  Creates a new book via POST to `/api/v1/books`. Adds the created book to `books`. Shows success/error toast.
+- **createBook({ book, onSuccess?, onError? })**  
+  Creates a book via `POST /api/v1/books`. Adds it to `books` and updates pagination total. Triggers success/error toast.
 
-- **updateBook({ book: Book, onSuccess?, onError? })**  
-  Updates a book via PUT to `/api/v1/books/{id}`. Shows success/error toast.
+- **updateBook({ book, onSuccess?, onError? })**  
+  Updates a book via `PUT /api/v1/books/{id}`. Merges the updated info in `books`. Triggers success/error toast.
 
-- **deleteBook({ id: number, onSuccess?, onError? })**  
-  Deletes a book by `id` via DELETE to `/api/v1/books/{id}`. Removes book from `books` on success. Shows success/error toast.
+- **deleteBook({ id, onSuccess?, onError? })**  
+  Deletes a book using `DELETE /api/v1/books/{id}`. Removes it from both `books` and `searchResults`. Updates pagination total. Triggers a toast.
 
-- **searchBooksByTitle({ title: string, onSuccess?, onError? })**  
-  Searches books by title via GET `/api/v1/books/search/title?q={title}`. Shows success/error toast.
+- **downloadBooks({ type, format, onSuccess?, onError? })**  
+  Exports books as file using `/api/v1/books/export`. Automatically downloads the result as `.csv` or `.xml`. Triggers a toast.
 
-- **searchBooksByAuthor({ author: string, onSuccess?, onError? })**  
-  Searches books by author via GET `/api/v1/books/search/author?q={author}`. Shows success/error toast.
+- **searchBooksByTitle({ page?, onSuccess?, onError? })**  
+  Searches by title using `GET /api/v1/books/search/title?q=...`. Stores results in `searchResults`.
 
-##### Notes
+- **searchBooksByAuthor({ page?, onSuccess?, onError? })**  
+  Searches by author using `GET /api/v1/books/search/author?q=...`. Stores results in `searchResults`.
 
-- <small>Each function supports optional callbacks: `onSuccess` and `onError` for custom handling.</small>
-- <small>Uses `createToast` to notify user of success or failure.</small>
-- <small> Manages `loading` state during API requests.</small>
+#### Notes
+
+- <small>All API calls are made using `$fetch.create` with centralized `onResponse` and `onResponseError` handlers. As useFetch can only be used in script setup context.</small>
+- <small>Functions support optional `onSuccess` and `onError` callbacks.</small>
+- <small>`loading` flag is toggled for all network operations to show spinners or disable UI components.</small>
+- <small>Pagination info for general and search views are stored separately.</small>
 
 ---
 
 ### 2-useStateManager
 
-This Pinia store manages app-wide UI state including navigation toggle states, API keys, page loading status, and current active page info. It also provides navigation helper functions with loading indicators.
+This Pinia store manages global UI state, such as navigation toggle, API keys, loading indicators, and active page metadata. It also provides helper functions for dynamic page navigation and feature toggling.
 
 #### State
 
-- `navState: { open: boolean; collapsed: boolean }` — Tracks navigation menu open/collapsed state.
-- `apikeys: { gpt: string }` — Stores API keys like GPT key.
-- `loadingPage: boolean` — Indicates if a page navigation is in progress.
-- `currentPageInfo: Page` — Holds metadata of the current active page.
+- `navState: { open: boolean; collapsed: boolean }` – Tracks sidebar menu's open/collapsed status.
+- `apikeys: { gpt: string }` – Stores API keys such as GPT key.
+- `loadingPage: boolean` – Indicates when a route navigation is in progress.
+- `currentPageInfo: Page` – Metadata about the current active page.
+- `featurePreview: { aiSuggestions: boolean; heatmap: boolean }` – Flags for enabling preview features.
 
-<small>Note: The store persists `navState` and `apikeys` across sessions using the localStorage.</small>
+<small>Note: `navState` and `apikeys` are persisted in `localStorage` for consistent UI state across sessions.</small>
 
 #### Functions
 
 - **findPage(id: string): Page \| false**  
-  Finds a page by its `id` in the `pages` dictionary. Returns the page or `false` if not found.
+  Looks up a page by its UID in the `pages` object. Returns the `Page` if found, else `false`.
 
 - **updateActivePage(id: string): Page**  
-  Updates `currentPageInfo` to the page matching the given `id` or defaults to `{ uid: id }` if not found. Returns the updated page.
+  Updates `currentPageInfo` to the matching page. If no match is found, sets a fallback `{ uid: id }`. Returns the new page info.
 
 - **navigatePage(page: Page): Promise<void>**  
-  Sets loading state, updates active page, then navigates to `page.href`. Clears loading state after navigation.
+  Starts loading animation, sets the active page, then uses `navigateTo(page.href)` to navigate. Loading stops once complete.
 
 - **navigatePageById(id: string): Promise<void>**  
-  Finds a page by `id`, navigates to its href, and manages loading state.
+  Shorthand for navigating using a page's UID. Internally resolves the page and calls `navigateTo`.
+
+#### Notes
+
+- <small>Page metadata comes from a central `pages` object (external).</small>
+- <small>`featurePreview` allows toggling experimental features like AI Suggestions or Heatmaps.</small>
+- <small>Used by layout or navigation components to control transitions and active page state across the app.</small>
 
 ---
 
