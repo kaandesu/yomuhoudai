@@ -33,6 +33,103 @@ class BookControllerTest extends TestCase
         $this->assertDatabaseHas('books', ['title' => 'Brave New World']);
     }
 
+    public function test_can_create_book_with_japanese_characters()
+    {
+        $response = $this->postJson('/api/v1/books', [
+            'title' => '吾輩は猫である',
+            'author' => '夏目漱石',
+        ]);
+
+        $response->assertStatus(201)
+                 ->assertJsonFragment(['title' => '吾輩は猫である']);
+    }
+
+    public function test_can_create_book_with_emojis()
+    {
+        $response = $this->postJson('/api/v1/books', [
+            'title' => '🌟 Star Book 📚',
+            'author' => 'John ✍️',
+        ]);
+
+        $response->assertStatus(201)
+                 ->assertJsonFragment(['title' => '🌟 Star Book 📚']);
+    }
+
+    public function test_cannot_create_book_with_extremely_long_title()
+    {
+        $longTitle = str_repeat('A', 1001);
+
+        $response = $this->postJson('/api/v1/books', [
+            'title' => $longTitle,
+            'author' => 'Some Author',
+        ]);
+
+        $response->assertStatus(500);
+    }
+
+    public function test_can_create_book_with_special_symbols()
+    {
+        $response = $this->postJson('/api/v1/books', [
+            'title' => '@#$%^&*()_+{}|:"?~`',
+            'author' => 'Symbol Author',
+        ]);
+
+        $response->assertStatus(201)
+                 ->assertJsonFragment(['title' => '@#$%^&*()_+{}|:"?~`']);
+    }
+
+    public function test_rejects_html_or_js_injection()
+    {
+        $payload = [
+            'title' => '<script>alert("XSS")</script>',
+            'author' => '<b>Malicious Author</b>',
+        ];
+
+        $response = $this->postJson('/api/v1/books', $payload);
+
+        $response->assertStatus(500);
+    }
+
+    public function test_rejects_negative_page_count()
+    {
+        $response = $this->postJson('/api/v1/books', [
+            'title' => 'Bad Pages',
+            'author' => 'Author',
+            'pageCount' => -50,
+        ]);
+
+        $response->assertStatus(500);
+    }
+
+    public function test_can_store_book_with_zero_width_space()
+    {
+        $title = "Invisible\u{200B}Book";
+
+        $response = $this->postJson('/api/v1/books', [
+            'title' => $title,
+            'author' => 'Author',
+        ]);
+
+        $response->assertStatus(201)
+                 ->assertJsonFragment(['title' => $title]);
+    }
+
+    public function test_can_store_book_with_nullables()
+    {
+        $payload = [
+            'title' => 'Valid Book',
+            'author' => 'Author',
+            'description' => null,
+            'cover' => '',
+            'pageCount' => null,
+        ];
+
+        $response = $this->postJson('/api/v1/books', $payload);
+
+        $response->assertStatus(201)
+                 ->assertJsonFragment(['title' => 'Valid Book']);
+    }
+
     public function test_store_duplicate_book_returns_409()
     {
         Book::create([
@@ -220,7 +317,6 @@ class BookControllerTest extends TestCase
 
     public function test_search_author_pagination_and_sorting()
     {
-        // Create 10 books with authors zero-padded: Author 01, Author 02, ..., Author 10
         for ($i = 1; $i <= 10; $i++) {
             $num = str_pad($i, 2, '0', STR_PAD_LEFT);
             Book::create(['title' => "Book $num", 'author' => "Author $num"]);
