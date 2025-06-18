@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Services\BookExportService;
 use Exception;
+use App\Rules\NoHtml;
 
 /**
  * @OA\Info(
@@ -126,17 +127,17 @@ class BookController extends Controller
         try {
             $validated = $request->validate(
                 [
-                'title' => 'required|string',
-                'author' => 'required|string',
-                'status' => 'nullable|in:completed,ongoing,on-hold,plan-to-read,dropped',
+                'title' => ['required', 'string', new NoHtml()],
+                'author' => ['required', 'string', new NoHtml()],
+                'status' => ['nullable', 'in:completed,ongoing,on-hold,plan-to-read,dropped'],
                 'categories' => 'nullable|array',
-                'currentPage' => 'nullable|integer',
-                'cover' => 'nullable|string',
-                'description' => 'nullable|string',
-                'pageCount' => 'nullable|integer',
-                'publishedDate' => 'nullable|string',
-                'rating' => 'nullable|integer',
-                ]
+                'currentPage' => ['nullable', 'integer'],
+                'cover' => ['nullable', 'string', new NoHtml()],
+                'description' => ['nullable', 'string', new NoHtml()],
+                'pageCount' => ['nullable', 'integer', 'min:0'],
+                'publishedDate' => ['nullable', 'string', new NoHtml()],
+                'rating' => ['nullable', 'integer'],
+            ]
             );
 
             // Check if book already exists
@@ -211,17 +212,17 @@ class BookController extends Controller
 
             $data = $request->validate(
                 [
-                'title' => 'sometimes|required|string',
-                'author' => 'sometimes|required|string',
-                'status' => 'nullable|in:completed,ongoing,on-hold,plan-to-read,dropped',
+                'title' => ['sometimes', 'required', 'string', new NoHtml()],
+                'author' => ['sometimes', 'required', 'string', new NoHtml()],
+                'status' => ['nullable', 'in:completed,ongoing,on-hold,plan-to-read,dropped'],
                 'categories' => 'nullable|array',
-                'currentPage' => 'nullable|integer',
-                'cover' => 'nullable|string',
-                'description' => 'nullable|string',
-                'pageCount' => 'nullable|integer',
-                'publishedDate' => 'nullable|string',
-                'rating' => 'nullable|integer',
-                ]
+                'currentPage' => ['nullable', 'integer'],
+                'cover' => ['nullable', 'string', new NoHtml()],
+                'description' => ['nullable', 'string', new NoHtml()],
+                'pageCount' => ['nullable', 'integer', 'min:0'],
+                'publishedDate' => ['nullable', 'string', new NoHtml()],
+                'rating' => ['nullable', 'integer'],
+            ]
             );
 
             $book->update($data);
