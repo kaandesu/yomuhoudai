@@ -7,8 +7,8 @@ import {
   DoubleArrowRightIcon,
 } from "@radix-icons/vue";
 import { useLibrary } from "@/stores/library";
-const { searchBooksByTitle } = useLibrary();
-const { searchData } = storeToRefs(useLibrary());
+const { searchBooksBy } = useLibrary();
+const { searchData, searchFieldTab } = storeToRefs(useLibrary());
 
 interface DataTablePaginationProps {
   table: Table<any>;
@@ -26,7 +26,7 @@ watch(
     searchData.value.currentPage = 1;
     setTimeout(
       async () =>
-        await searchBooksByTitle({
+        await searchBooksBy(searchFieldTab.value)({
           page: searchData.value.currentPage,
         }),
       500,
@@ -39,7 +39,7 @@ const canGetPrevPage = computed<boolean>(() => {
 });
 
 const handlePageChange = async (index: number) => {
-  await searchBooksByTitle({
+  await searchBooksBy(searchFieldTab.value)({
     page: index,
   });
 };

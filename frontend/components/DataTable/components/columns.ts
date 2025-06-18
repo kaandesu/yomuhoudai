@@ -58,6 +58,7 @@ export const columns: ColumnDef<Book>[] = [
         row.getValue("title"),
       ),
     enableHiding: false,
+    enableSorting: false,
   },
 
   // Author
@@ -71,6 +72,8 @@ export const columns: ColumnDef<Book>[] = [
         { class: "max-w-[250px] truncate" },
         row.getValue("author") || "-",
       ),
+    enableHiding: false,
+    enableSorting: false,
   },
 
   // Cover image
@@ -125,6 +128,7 @@ export const columns: ColumnDef<Book>[] = [
       ]);
     },
     filterFn: (row, id, value) => value.includes(row.getValue(id)),
+    enableSorting: false,
   },
   // Page Count
   {
@@ -132,6 +136,7 @@ export const columns: ColumnDef<Book>[] = [
     header: ({ column }) =>
       h(DataTableColumnHeader, { column, title: "Pages" }),
     cell: ({ row }) => h("span", {}, row.getValue("pageCount") || "-"),
+    enableSorting: false,
   },
 
   // Published Date
@@ -140,6 +145,7 @@ export const columns: ColumnDef<Book>[] = [
     header: ({ column }) =>
       h(DataTableColumnHeader, { column, title: "Published" }),
     cell: ({ row }) => h("span", {}, row.getValue("publishedDate") || "-"),
+    enableSorting: false,
   },
 
   //  Rating
@@ -148,5 +154,6 @@ export const columns: ColumnDef<Book>[] = [
     header: ({ column }) =>
       h(DataTableColumnHeader, { column, title: "Rating" }),
     cell: ({ row }) => h("span", {}, row.getValue("rating") || "-"),
+    enableSorting: false,
   },
 ];

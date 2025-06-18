@@ -22,7 +22,7 @@
       <section class="w-full h-12 flex justify-start items-center">
         <Tabs
           default-value="title"
-          v-model="activeTab"
+          v-model="searchFieldTab"
           class="-ml-4 w-[400px] flex justify-center items-center gap-6"
         >
           <TabsContent value="title">
@@ -69,6 +69,31 @@
             <TabsTrigger value="author"> Author </TabsTrigger>
           </TabsList>
         </Tabs>
+        <Separator orientation="vertical" class="h-4" />
+        <Tabs
+          default-value="title"
+          v-model="searchSortTab"
+          class="ml-2 flex justify-center items-center gap-6"
+        >
+          <TabsList class="grid grid-cols-2">
+            <TabsTrigger value="asc">
+              <span class="hidden md:inline-block"> Ascending </span>
+              <Icon
+                class="ml-0 md:ml-3"
+                size="1rem"
+                name="gravity-ui:bars-ascending-align-left-arrow-down"
+              />
+            </TabsTrigger>
+            <TabsTrigger value="desc">
+              <span class="hidden md:inline-block"> Descending </span>
+              <Icon
+                class="ml-0 md:ml-3"
+                size="1rem"
+                name="gravity-ui:bars-descending-align-left-arrow-down"
+              />
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </section>
     </div>
     <section class="flex gap-x-2 items-center">
@@ -89,8 +114,9 @@ import DataTableViewOptions from "./DataTableViewOptions.vue";
 import { Cross2Icon } from "@radix-icons/vue";
 
 import { useLibrary } from "@/stores/library";
-const { searchQuery } = storeToRefs(useLibrary());
-const { searchBooksByAuthor, searchBooksByTitle } = useLibrary();
+const { searchQuery, searchSortTab, searchFieldTab } =
+  storeToRefs(useLibrary());
+const { searchBooksBy } = useLibrary();
 
 interface DataTableToolbarProps {
   table: Table<any>;
@@ -98,33 +124,32 @@ interface DataTableToolbarProps {
 
 const props = defineProps<DataTableToolbarProps>();
 
+watch([searchSortTab, searchFieldTab], async () => {
+  await search();
+});
+
 const { table } = props;
 
 const isFiltered = computed(
   () => props.table.getState().columnFilters.length > 0,
 );
 
-const activeTab = ref<"title" | "author">("title");
-
 let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
 
 onMounted(async () => {
-  if (searchQuery.value.length == 0) await searchBooksByTitle({});
+  if (searchQuery.value.length == 0) await searchBooksBy("title")({});
 });
+
+const search = async () => {
+  await searchBooksBy(searchFieldTab.value)({});
+};
 
 watch(searchQuery, async () => {
   if (debounceTimeout != null) {
     clearTimeout(debounceTimeout);
   }
   debounceTimeout = setTimeout(async () => {
-    switch (activeTab.value) {
-      case "author":
-        await searchBooksByAuthor({});
-        break;
-      case "title":
-        await searchBooksByTitle({});
-        break;
-    }
+    await search();
   }, 500);
 });
 </script>

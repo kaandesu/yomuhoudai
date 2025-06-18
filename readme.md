@@ -277,11 +277,8 @@ This Pinia store manages a collection of books with CRUD operations, search, pag
 - **downloadBooks({ type, format, onSuccess?, onError? })**  
   Exports books as file using `/api/v1/books/export`. Automatically downloads the result as `.csv` or `.xml`. Triggers a toast.
 
-- **searchBooksByTitle({ page?, onSuccess?, onError? })**  
-  Searches by title using `GET /api/v1/books/search/title?q=...`. Stores results in `searchResults`.
-
-- **searchBooksByAuthor({ page?, onSuccess?, onError? })**  
-  Searches by author using `GET /api/v1/books/search/author?q=...`. Stores results in `searchResults`.
+- **searchBooksBy(field)({ page?, onSuccess?, onError? })**  
+  Searches books by the given `field` (`"title"` or `"author"`) using `GET /api/v1/books/search/{field}?q=...`, with support for pagination and sorting; stores results in `searchResults`.
 
 #### Notes
 

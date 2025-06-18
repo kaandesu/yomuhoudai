@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import type { Column } from "@tanstack/vue-table";
-import type { Task } from "../data/schema";
 
 interface DataTableColumnHeaderProps {
-  column: Column<Task, any>;
+  column: Column<any, any>;
   title: string;
 }
 
@@ -56,7 +55,10 @@ export default {
           Desc
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem @click="column.toggleVisibility(false)">
+        <DropdownMenuItem
+          v-if="column.getCanHide()"
+          @click="column.toggleVisibility(false)"
+        >
           <Icon
             name="radix-icons:eye-none"
             class="mr-2 h-3.5 w-3.5 text-muted-foreground/70"

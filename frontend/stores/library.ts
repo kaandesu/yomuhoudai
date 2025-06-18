@@ -61,7 +61,7 @@ type SearchData = {
   query: string;
 };
 
-type OverviewPaginationData = Omit<SearchData, "query">;
+type OverviewPaginationData = Omit<SearchData, "query" | "sort">;
 
 export const useLibrary = defineStore(
   "Library",
@@ -76,6 +76,8 @@ export const useLibrary = defineStore(
     const suggestions = ref<Book[]>([]);
     // Search page results are stored here
     const searchResults = ref<Book[]>([]);
+    const searchSortTab = ref<"asc" | "desc">("asc");
+    const searchFieldTab = ref<"title" | "author">("title");
     const searchQuery = ref<string>("");
     const searchData = ref<SearchData>({
       total: 0,
@@ -373,7 +375,6 @@ export const useLibrary = defineStore(
       });
     };
 
-    // Helper function to define the searchBooksByAuthor and searchBooksByTitle
     const searchBooksBy =
       (field: "author" | "title") =>
       async ({
@@ -417,15 +418,12 @@ export const useLibrary = defineStore(
 
         loading.value = true;
         return fetcher<BooksResponse>(
-          `/api/v1/books/search/${field}?q=${encodeURIComponent(query)}&page=${page}${searchData.value.perPage >= 5 ? `&per_page=${searchData.value.perPage}` : ``}`,
+          `/api/v1/books/search/${field}?q=${encodeURIComponent(query)}&page=${page}${searchData.value.perPage >= 5 ? `&per_page=${searchData.value.perPage}` : ``}&sort=${field}&direction=${searchSortTab.value}`,
           { method: "GET" },
         ).finally(() => {
           loading.value = false;
         });
       };
-
-    const searchBooksByTitle = searchBooksBy("title");
-    const searchBooksByAuthor = searchBooksBy("author");
 
     return {
       loading,
@@ -439,10 +437,11 @@ export const useLibrary = defineStore(
       deleteBook,
       suggestions,
       downloadBooks,
-      searchBooksByTitle,
-      searchBooksByAuthor,
       searchData,
       searchQuery,
+      searchSortTab,
+      searchFieldTab,
+      searchBooksBy,
     };
   },
   {
