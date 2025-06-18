@@ -90,7 +90,7 @@ class BookController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/v1/books/store",
+     *     path="/api/v1/books",
      *     tags={"Books"},
      *     summary="Store a new book",
      *     description="Stores a newly created book",
@@ -267,7 +267,7 @@ class BookController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/v1/books/searchTitle",
+     *     path="/api/v1/books/search/title",
      *     tags={"Books"},
      *     summary="Search books by title",
      *     description="Search for books using a partial title match",
@@ -299,7 +299,7 @@ class BookController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/v1/books/searchAuthor",
+     *     path="/api/v1/books/search/author",
      *     tags={"Books"},
      *     summary="Search books by author",
      *     description="Search for books using a partial author match",
