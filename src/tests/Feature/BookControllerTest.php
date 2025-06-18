@@ -177,4 +177,86 @@ class BookControllerTest extends TestCase
         $this->assertStringContainsString('<author>Author</author>', $content);
     }
 
+    public function test_search_title_pagination_and_sorting()
+    {
+        //  Book 01, Book 02, ..., Book 10
+        for ($i = 1; $i <= 10; $i++) {
+            $num = str_pad($i, 2, '0', STR_PAD_LEFT);
+            Book::create(['title' => "Book $num", 'author' => "Author $i"]);
+        }
+
+        // page 1, 5 per page, sorted by title ascending
+        $response = $this->getJson('/api/v1/books/search/title?q=Book&page=1&per_page=5&sort=title&direction=asc');
+        $response->assertStatus(200);
+        $json = $response->json();
+
+        $this->assertArrayHasKey('data', $json);
+        $this->assertArrayHasKey('data', $json['data']);
+        $this->assertCount(5, $json['data']['data']);
+
+        $titles = array_column($json['data']['data'], 'title');
+        $this->assertEquals(['Book 01', 'Book 02', 'Book 03', 'Book 04', 'Book 05'], $titles);
+
+        // page 2, 5 per page, sorted by title descending
+        $responseDesc = $this->getJson('/api/v1/books/search/title?q=Book&page=2&per_page=5&sort=title&direction=desc');
+        $responseDesc->assertStatus(200);
+        $jsonDesc = $responseDesc->json();
+
+        $this->assertArrayHasKey('data', $jsonDesc);
+        $this->assertArrayHasKey('data', $jsonDesc['data']);
+        $this->assertCount(5, $jsonDesc['data']['data']);
+
+        $titlesDesc = array_column($jsonDesc['data']['data'], 'title');
+
+        $responseDescPage1 = $this->getJson('/api/v1/books/search/title?q=Book&page=1&per_page=5&sort=title&direction=desc');
+        $titlesDescPage1 = array_column($responseDescPage1->json()['data']['data'], 'title');
+
+        $this->assertEquals(['Book 10', 'Book 09', 'Book 08', 'Book 07', 'Book 06'], $titlesDescPage1);
+
+        $this->assertEquals(['Book 05', 'Book 04', 'Book 03', 'Book 02', 'Book 01'], $titlesDesc);
+
+        $this->assertCount(5, $titlesDesc);
+    }
+
+    public function test_search_author_pagination_and_sorting()
+    {
+        // Create 10 books with authors zero-padded: Author 01, Author 02, ..., Author 10
+        for ($i = 1; $i <= 10; $i++) {
+            $num = str_pad($i, 2, '0', STR_PAD_LEFT);
+            Book::create(['title' => "Book $num", 'author' => "Author $num"]);
+        }
+
+        // page 1, 5 per page, sorted by author ascending
+        $response = $this->getJson('/api/v1/books/search/author?q=Author&page=1&per_page=5&sort=author&direction=asc');
+        $response->assertStatus(200);
+        $json = $response->json();
+
+        $this->assertArrayHasKey('data', $json);
+        $this->assertArrayHasKey('data', $json['data']);
+        $this->assertCount(5, $json['data']['data']);
+
+        $authors = array_column($json['data']['data'], 'author');
+        $this->assertEquals(['Author 01', 'Author 02', 'Author 03', 'Author 04', 'Author 05'], $authors);
+
+        // page 2, 5 per page, sorted by author descending
+        $responseDesc = $this->getJson('/api/v1/books/search/author?q=Author&page=2&per_page=5&sort=author&direction=desc');
+        $responseDesc->assertStatus(200);
+        $jsonDesc = $responseDesc->json();
+
+        $this->assertArrayHasKey('data', $jsonDesc);
+        $this->assertArrayHasKey('data', $jsonDesc['data']);
+        $this->assertCount(5, $jsonDesc['data']['data']);
+
+        $authorsDesc = array_column($jsonDesc['data']['data'], 'author');
+
+        $responseDescPage1 = $this->getJson('/api/v1/books/search/author?q=Author&page=1&per_page=5&sort=author&direction=desc');
+        $authorsDescPage1 = array_column($responseDescPage1->json()['data']['data'], 'author');
+
+        $this->assertEquals(['Author 10', 'Author 09', 'Author 08', 'Author 07', 'Author 06'], $authorsDescPage1);
+
+        $this->assertEquals(['Author 05', 'Author 04', 'Author 03', 'Author 02', 'Author 01'], $authorsDesc);
+
+        $this->assertCount(5, $authorsDesc);
+    }
+
 }
