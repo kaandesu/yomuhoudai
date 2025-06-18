@@ -28,9 +28,7 @@ class BookControllerTest extends TestCase
         $response = $this->postJson('/api/v1/books', $payload);
 
         $response->assertStatus(201)
-            ->assertJsonFragment(
-                ['title' => 'Brave New World']
-            );
+            ->assertJsonFragment(['title' => 'Brave New World']);
 
         $this->assertDatabaseHas('books', ['title' => 'Brave New World']);
     }
@@ -108,4 +106,75 @@ class BookControllerTest extends TestCase
         $response->assertStatus(200)
                  ->assertJsonFragment(['author' => 'Author Match']);
     }
+
+    public function test_store_requires_title_and_author()
+    {
+        $response = $this->postJson('/api/v1/books', []);
+        $response->assertStatus(500);
+    }
+
+    public function test_update_requires_title_and_author_if_present()
+    {
+        $book = Book::create(['title' => 'Title', 'author' => 'Author']);
+        //  invalid type for title (integer)
+        $response = $this->putJson("/api/v1/books/{$book->id}", ['title' => 123]);
+        $response->assertStatus(500);
+    }
+
+    public function test_can_delete_book()
+    {
+        $book = Book::create(['title' => 'To Delete', 'author' => 'Author']);
+        $response = $this->deleteJson("/api/v1/books/{$book->id}");
+        $response->assertStatus(200);
+        $this->assertDatabaseMissing('books', ['id' => $book->id]);
+    }
+
+    public function test_delete_nonexistent_book_returns_404()
+    {
+        $response = $this->deleteJson('/api/v1/books/9999');
+        $response->assertStatus(404);
+    }
+
+    public function test_index_returns_books_list()
+    {
+        Book::create(['title' => 'Book 1', 'author' => 'Author 1']);
+        Book::create(['title' => 'Book 2', 'author' => 'Author 2']);
+
+        $response = $this->getJson('/api/v1/books');
+        $response->assertStatus(200)
+                 ->assertJsonFragment(['title' => 'Book 1'])
+                 ->assertJsonFragment(['title' => 'Book 2']);
+    }
+
+    public function test_export_returns_csv_data()
+    {
+        Book::create(['title' => 'Exported Book', 'author' => 'Author']);
+
+        $response = $this->get('/api/v1/books/export?format=csv');
+
+        $response->assertStatus(200);
+
+        $contentType = $response->headers->get('Content-Type');
+        $this->assertStringContainsString('text/csv', $contentType);
+
+        $content = $response->getContent();
+        $this->assertStringContainsString('Exported Book', $content);
+        $this->assertStringContainsString('Author', $content);
+    }
+
+    public function test_export_returns_xml_data()
+    {
+        Book::create(['title' => 'Exported Book', 'author' => 'Author']);
+
+        $response = $this->get('/api/v1/books/export?format=xml');
+
+        $response->assertStatus(200);
+
+        $response->assertHeader('Content-Type', 'application/xml');
+
+        $content = $response->getContent();
+        $this->assertStringContainsString('<title>Exported Book</title>', $content);
+        $this->assertStringContainsString('<author>Author</author>', $content);
+    }
+
 }
