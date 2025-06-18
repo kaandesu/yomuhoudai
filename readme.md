@@ -8,6 +8,7 @@ Yomuhoudai is a full-stack web app for browsing, managing, and performing CRUD o
 
 - [Requirements](#requirements)
 - [Setup](#setup)
+- [Running Unit Tests](#running-unit-tests)
 - [Environment Configuration](#environment-configuration)
 - [Frontend Development Setup](#frontend-development-setup)
   - [Option 1: Using Docker Compose](#option-1-using-docker-compose)
@@ -95,6 +96,51 @@ APP_ENV: local
 ```
 
 ---
+
+### Running Unit Tests
+
+To run the feature tests for the BookController, use the following command inside the Docker environment:
+
+```bash
+docker-compose exec -e APP_ENV=testing laravel \
+  ./vendor/bin/phpunit \
+  tests/Feature/BookControllerTest.php
+```
+
+This will execute the test suite located at tests/Feature/BookControllerTest.php with the application in the testing environment
+
+#### BookController - Tested Scenarios
+
+<details>
+  <summary>Click to expand the list of tested scenarios</summary>
+
+- test_can_store_book_with_full_payload
+- test_can_create_book_with_japanese_characters
+- test_can_create_book_with_emojis
+- test_cannot_create_book_with_extremely_long_title
+- test_can_create_book_with_special_symbols
+- test_rejects_html_or_js_injection
+- test_rejects_negative_page_count
+- test_can_store_book_with_zero_width_space
+- test_can_store_book_with_nullables
+- test_store_duplicate_book_returns_409
+- test_can_update_book
+- test_update_nonexistent_book_returns_500
+- test_can_show_book
+- test_show_nonexistent_book_returns_404
+- test_search_title_returns_results
+- test_search_author_returns_results
+- test_store_requires_title_and_author
+- test_update_requires_title_and_author_if_present
+- test_can_delete_book
+- test_delete_nonexistent_book_returns_404
+- test_index_returns_books_list
+- test_export_returns_csv_data
+- test_export_returns_xml_data
+- test_search_title_pagination_and_sorting
+- test_search_author_pagination_and_sorting
+
+</details>
 
 ## Frontend Development Setup
 
