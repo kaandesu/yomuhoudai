@@ -51,39 +51,6 @@ class BookController extends Controller
         );
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/v1/books",
-     *     tags={"Books"},
-     *     summary="Create a new book",
-     *     description="Creates a new book record in the database",
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             required={"title", "author"},
-     *             @OA\Property(property="title", type="string", example="The Great Gatsby"),
-     *             @OA\Property(property="author", type="string", example="F. Scott Fitzgerald"),
-     *             @OA\Property(property="status", type="string", example="completed"),
-     *             @OA\Property(property="categories", type="array", @OA\Items(type="string")),
-     *             @OA\Property(property="currentPage", type="integer", example=100),
-     *             @OA\Property(property="cover", type="string", example="url_to_cover_image"),
-     *             @OA\Property(property="description", type="string", example="A novel about the American dream."),
-     *             @OA\Property(property="pageCount", type="integer", example=200),
-     *             @OA\Property(property="publishedDate", type="string", example="1925-04-10"),
-     *             @OA\Property(property="rating", type="integer", example=8),
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=201,
-     *         description="Book created successfully",
-     *         @OA\JsonContent(ref="#/components/schemas/Book")
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Internal Server Error"
-     *     )
-     * )
-     */
     public function create()
     {
         return $this->jsonResponse([], 'Create endpoint not implemented');
@@ -101,20 +68,28 @@ class BookController extends Controller
      *             required={"title", "author"},
      *             @OA\Property(property="title", type="string", example="The Catcher in the Rye"),
      *             @OA\Property(property="author", type="string", example="J.D. Salinger"),
-     *             @OA\Property(property="status", type="string", example="ongoing"),
-     *             @OA\Property(property="categories", type="array", @OA\Items(type="string")),
-     *             @OA\Property(property="currentPage", type="string", example="150"),
-     *             @OA\Property(property="cover", type="string", example="url_to_cover_image"),
+     *             @OA\Property(property="status", type="string", enum={"completed", "ongoing", "on-hold", "plan-to-read", "dropped"}, example="ongoing"),
+     *             @OA\Property(
+     *                 property="categories",
+     *                 type="array",
+     *                 @OA\Items(type="string")
+     *             ),
+     *             @OA\Property(property="currentPage", type="integer", example=150),
+     *             @OA\Property(property="cover", type="string", example="https://example.com/image.jpg"),
      *             @OA\Property(property="description", type="string", example="A novel about teenage angst."),
      *             @OA\Property(property="pageCount", type="integer", example=277),
-     *             @OA\Property(property="publishedDate", type="string", example="1951-07-16"),
-     *             @OA\Property(property="rating", type="integer", example=9),
+     *             @OA\Property(property="publishedDate", type="string", format="date", example="1951-07-16"),
+     *             @OA\Property(property="rating", type="integer", example=9)
      *         )
      *     ),
      *     @OA\Response(
      *         response=201,
      *         description="Book created successfully",
      *         @OA\JsonContent(ref="#/components/schemas/Book")
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Book already exists"
      *     ),
      *     @OA\Response(
      *         response=500,

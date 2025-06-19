@@ -37,92 +37,9 @@
                 "tags": [
                     "Books"
                 ],
-                "summary": "Create a new book",
-                "description": "Creates a new book record in the database",
-                "operationId": "8ceaae4304444ed201b0f8fd0e21d4b5",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "title",
-                                    "author"
-                                ],
-                                "properties": {
-                                    "title": {
-                                        "type": "string",
-                                        "example": "The Great Gatsby"
-                                    },
-                                    "author": {
-                                        "type": "string",
-                                        "example": "F. Scott Fitzgerald"
-                                    },
-                                    "status": {
-                                        "type": "string",
-                                        "example": "completed"
-                                    },
-                                    "categories": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "currentPage": {
-                                        "type": "integer",
-                                        "example": 100
-                                    },
-                                    "cover": {
-                                        "type": "string",
-                                        "example": "url_to_cover_image"
-                                    },
-                                    "description": {
-                                        "type": "string",
-                                        "example": "A novel about the American dream."
-                                    },
-                                    "pageCount": {
-                                        "type": "integer",
-                                        "example": 200
-                                    },
-                                    "publishedDate": {
-                                        "type": "string",
-                                        "example": "1925-04-10"
-                                    },
-                                    "rating": {
-                                        "type": "integer",
-                                        "example": 8
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Book created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Book"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
-        "/api/v1/books/store": {
-            "post": {
-                "tags": [
-                    "Books"
-                ],
                 "summary": "Store a new book",
                 "description": "Stores a newly created book",
-                "operationId": "952942ab3c7741da1c4afc99418688b5",
+                "operationId": "6c5e00fe01c5e356fa95e728c3cfbc98",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -143,6 +60,13 @@
                                     },
                                     "status": {
                                         "type": "string",
+                                        "enum": [
+                                            "completed",
+                                            "ongoing",
+                                            "on-hold",
+                                            "plan-to-read",
+                                            "dropped"
+                                        ],
                                         "example": "ongoing"
                                     },
                                     "categories": {
@@ -152,12 +76,12 @@
                                         }
                                     },
                                     "currentPage": {
-                                        "type": "string",
-                                        "example": "150"
+                                        "type": "integer",
+                                        "example": 150
                                     },
                                     "cover": {
                                         "type": "string",
-                                        "example": "url_to_cover_image"
+                                        "example": "https://example.com/image.jpg"
                                     },
                                     "description": {
                                         "type": "string",
@@ -169,6 +93,7 @@
                                     },
                                     "publishedDate": {
                                         "type": "string",
+                                        "format": "date",
                                         "example": "1951-07-16"
                                     },
                                     "rating": {
@@ -191,6 +116,9 @@
                                 }
                             }
                         }
+                    },
+                    "409": {
+                        "description": "Book already exists"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -346,14 +274,14 @@
                 }
             }
         },
-        "/api/v1/books/searchTitle": {
+        "/api/v1/books/search/title": {
             "get": {
                 "tags": [
                     "Books"
                 ],
                 "summary": "Search books by title",
                 "description": "Search for books using a partial title match",
-                "operationId": "8c8adc98afe56b488d5c94c5b84de0a0",
+                "operationId": "0ef64c95b0e874aea268a96bd007e44f",
                 "parameters": [
                     {
                         "name": "q",
@@ -381,14 +309,14 @@
                 }
             }
         },
-        "/api/v1/books/searchAuthor": {
+        "/api/v1/books/search/author": {
             "get": {
                 "tags": [
                     "Books"
                 ],
                 "summary": "Search books by author",
                 "description": "Search for books using a partial author match",
-                "operationId": "8b1f45a5fee8ebad22f0a6ae0b9e3ee5",
+                "operationId": "da5b41dcc705426f40b75f9deca0855a",
                 "parameters": [
                     {
                         "name": "q",
