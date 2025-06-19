@@ -390,4 +390,55 @@ class BookControllerTest extends TestCase
         $this->assertCount(5, $authorsDesc);
     }
 
+    public function test_export_fails_when_no_books_exist()
+    {
+        $response = $this->get('/api/v1/books/export?format=csv');
+
+        $response->assertStatus(400)
+                 ->assertJson([
+                     'message' => 'There are no books to export.'
+                 ]);
+    }
+
+    public function test_export_authors_only_exports_unique_authors()
+    {
+        Book::create(['title' => 'Book A', 'author' => 'Same Author']);
+        Book::create(['title' => 'Book B', 'author' => 'Same Author']);
+        Book::create(['title' => 'Book C', 'author' => 'Different Author']);
+
+        $response = $this->get('/api/v1/books/export?type=authors&format=csv');
+
+        $response->assertStatus(200);
+
+        $csv = $response->getContent();
+        $lines = array_filter(explode("\n", trim($csv)));
+
+        $this->assertCount(3, $lines);
+        $this->assertEquals('author', trim($lines[0]));
+
+        $this->assertStringContainsString('Same Author', $lines[1] . $lines[2]);
+        $this->assertStringContainsString('Different Author', $lines[1] . $lines[2]);
+    }
+
+    public function test_export_titles_includes_duplicates()
+    {
+        Book::create(['title' => 'Repeated Title', 'author' => 'Author A']);
+        Book::create(['title' => 'Repeated Title', 'author' => 'Author B']);
+        Book::create(['title' => 'Unique Title', 'author' => 'Author C']);
+
+        $response = $this->get('/api/v1/books/export?type=titles&format=csv');
+
+        $response->assertStatus(200);
+
+        $csv = $response->getContent();
+        $lines = array_filter(explode("\n", trim($csv)));
+
+        $this->assertCount(4, $lines);
+        $this->assertEquals('title', trim($lines[0]));
+
+        $joined = implode("\n", $lines);
+        $this->assertEquals(2, substr_count($joined, 'Repeated Title'));
+        $this->assertStringContainsString('Unique Title', $joined);
+    }
+
 }

@@ -244,6 +244,9 @@
                     },
                     "404": {
                         "description": "Book not found"
+                    },
+                    "409": {
+                        "description": "A book with the same title and author already exists!"
                     }
                 }
             },
