@@ -201,7 +201,8 @@
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
 import { useLibrary, type BookPayload } from "@/stores/library";
-const { createBook, updateBook, loading } = useLibrary();
+const { createBook, updateBook } = useLibrary();
+const { library } = storeToRefs(useLibrary());
 import * as z from "zod";
 
 import { Eye, Edit2 } from "lucide-vue-next";
