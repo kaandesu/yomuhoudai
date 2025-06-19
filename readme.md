@@ -55,7 +55,13 @@ docker-compose exec laravel composer install
 4. Run the database migrations:
 
 ```bash
-docker-compose exec laravel php artisan migrate
+docker-compose exec laravel php artisan migrate --force
+```
+
+5. (Optional) Run the database seeder to preload some sample books:
+
+```bash
+ docker-compose exec laravel php artisan db:seed --force
 ```
 
 Persistent database:
