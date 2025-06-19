@@ -179,6 +179,7 @@ This will execute the test suite located at tests/Feature/BookControllerTest.php
 - test_can_create_book_with_special_symbols
 - test_rejects_html_or_js_injection
 - test_rejects_negative_page_count
+- test_rejects_negative_page_count_update
 - test_can_store_book_with_zero_width_space
 - test_can_store_book_with_nullables
 - test_store_duplicate_book_returns_409

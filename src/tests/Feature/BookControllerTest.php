@@ -101,6 +101,19 @@ class BookControllerTest extends TestCase
         $response->assertStatus(500);
     }
 
+    public function test_rejects_negative_page_count_update()
+    {
+        $book = Book::create([
+            'title' => 'Title',
+            'author' => 'Author'
+        ]);
+
+        $update = ['pageCount' => -10];
+
+        $response = $this->putJson("/api/v1/books/{$book->id}", $update);
+        $response->assertStatus(500);
+    }
+
     public function test_can_store_book_with_zero_width_space()
     {
         $title = "Invisible\u{200B}Book";
