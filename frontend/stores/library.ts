@@ -340,6 +340,7 @@ export const useLibrary = defineStore(
         baseURL: apiBaseUrl,
         responseType: "blob",
         onResponse({ response }) {
+          if (!response.ok) return;
           const blob = response._data;
           const url = window.URL.createObjectURL(blob);
           const link = document.createElement("a");
