@@ -13,7 +13,15 @@ class BookExportService
     {
         $fields = $this->_determineFields($type);
 
-        $books = Book::select($fields)->get();
+        // NOTE: return only the distinct author names
+        if ($type === 'authors') {
+            $books = Book::select($fields)->distinct()->get();
+        } else {
+            // NOTE: not deduplicating the titles
+            // as they point to different books
+            // since they must have different authors
+            $books = Book::select($fields)->get();
+        }
 
         if ($books->isEmpty()) {
             throw new InvalidArgumentException('No books found for export.');
