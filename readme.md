@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./public/logo.webp" height="150"  />
+  <img src="./public/banner.webp" width="100%"  />
 </p>
 
 Yomuhoudai is a full-stack web app for browsing, managing, and performing CRUD operations on a book collection. It uses Laravel for the backend API, Nuxt for the frontend, and supports both local development (via Docker) and production deployment (via Coolify on a Hetzner VPS).
