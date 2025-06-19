@@ -177,7 +177,7 @@ class BookController extends Controller
      *     @OA\Response(
      *         response=404,
      *         description="Book not found"
-     *     )
+     *     ),
      *     @OA\Response(
      *         response=409,
      *         description="A book with the same title and author already exists!"
@@ -416,6 +416,13 @@ class BookController extends Controller
      *         description="Exported file (CSV or XML)"
      *     ),
      *     @OA\Response(
+     *         response=400,
+     *         description="Export failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="There are no books to export.")
+     *         )
+     *     ),
+     *     @OA\Response(
      *         response=500,
      *         description="Export failed",
      *         @OA\JsonContent(
@@ -430,7 +437,11 @@ class BookController extends Controller
         $format = $request->query('format', 'csv');
 
         try {
-            $service = new BookExportService(); // Make sure this class exists and is imported
+            if (\App\Book::count() === 0) {
+                return response()->json(['message' => 'There are no books to export.'], 400);
+            }
+
+            $service = new BookExportService();
             $exportData = $service->export($type, $format);
 
             $filename = "books_export." . $format;
