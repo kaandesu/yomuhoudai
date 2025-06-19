@@ -242,6 +242,11 @@ export const useLibrary = defineStore(
             if (index !== -1) {
               books.value[index] = { ...books.value[index], ...updatedBook };
             }
+
+            const index2 = searchResults.value.findIndex(
+              (b) => b.id === updatedBook.id,
+            );
+            if (index2 !== -1) searchResults.value.splice(index2, 1);
           }
           createToast({
             message: "Book updated successfully",
