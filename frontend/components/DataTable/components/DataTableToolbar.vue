@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-between">
+  <div class="flex items-center justify-start md:gap-x-0 gap-x-4">
     <div class="flex flex-1 items-center space-x-2">
       <!-- NOTE: disabled the status filter as it only filters whats on screen -->
       <DataTableFacetedFilter
@@ -19,84 +19,101 @@
         <Cross2Icon class="ml-2 h-4 w-4" />
       </Button>
 
-      <section class="w-full h-12 flex justify-start items-center">
-        <Tabs
-          default-value="title"
-          v-model="searchFieldTab"
-          class="-ml-4 w-[400px] flex justify-center items-center gap-6"
+      <section
+        class="items-start w-full md:h-12 h-24 flex flex-col md:flex-row gap-y-4 md:gap-y-0 justify-between md:justify-start md:items-center"
+      >
+        <div
+          class="relative w-full max-w-xs md:max-w-[140px] items-center justify-between mr-0 md:mr-2"
         >
-          <TabsContent value="title">
-            <div class="-mt-2 relative w-full max-w-sm items-center">
-              <Input
-                v-model="searchQuery"
-                id="search"
-                type="text"
-                placeholder="Search..."
-                class="pl-10"
-              />
-              <span
-                class="absolute start-0 inset-y-0 flex items-center justify-center px-2"
-              >
-                <Icon
-                  name="ic:baseline-search"
-                  class="size-6 text-muted-foreground"
-                />
-              </span>
-            </div>
-          </TabsContent>
-          <TabsContent value="author">
-            <div class="-mt-2 relative w-full max-w-sm items-center">
-              <Input
-                id="search"
-                v-model="searchQuery"
-                type="text"
-                placeholder="Search..."
-                class="pl-10"
-              />
-              <span
-                class="absolute start-0 inset-y-0 flex items-center justify-center px-2"
-              >
-                <Icon
-                  name="ic:baseline-search"
-                  class="size-6 text-muted-foreground"
-                />
-              </span>
-            </div>
-          </TabsContent>
+          <Input
+            v-model="searchQuery"
+            id="search"
+            type="text"
+            placeholder="Search..."
+            class="pl-10"
+          />
+          <span
+            class="absolute start-0 inset-y-0 flex items-center justify-center px-2"
+          >
+            <Icon
+              name="ic:baseline-search"
+              class="size-6 text-muted-foreground"
+            />
+          </span>
+        </div>
+        <div class="hidden md:flex justify-center items-center gap-x-2">
+          <Tabs
+            default-value="title"
+            v-model="searchFieldTab"
+            class="ml-2 flex justify-center items-center gap-6"
+          >
+            <TabsList class="grid grid-cols-2">
+              <TabsTrigger value="title"> Title </TabsTrigger>
+              <TabsTrigger value="author"> Author </TabsTrigger>
+            </TabsList>
+          </Tabs>
+          <Separator orientation="vertical" class="h-4" />
 
-          <TabsList class="grid grid-cols-2">
-            <TabsTrigger value="title"> Title </TabsTrigger>
-            <TabsTrigger value="author"> Author </TabsTrigger>
-          </TabsList>
-        </Tabs>
-        <Separator orientation="vertical" class="h-4" />
-        <Tabs
-          default-value="title"
-          v-model="searchSortTab"
-          class="ml-2 flex justify-center items-center gap-6"
+          <Tabs
+            default-value="title"
+            v-model="searchSortTab"
+            class="flex justify-center items-center gap-6"
+          >
+            <TabsList class="grid grid-cols-2">
+              <TabsTrigger value="asc">
+                <span class="hidden md:block truncate"> Ascending </span>
+                <Icon
+                  class="ml-0 md:ml-3"
+                  size="1rem"
+                  name="gravity-ui:bars-ascending-align-left-arrow-down"
+                />
+              </TabsTrigger>
+              <TabsTrigger value="desc">
+                <span class="hidden md:inline-block truncate">
+                  Descending
+                </span>
+                <Icon
+                  class="ml-0 md:ml-3"
+                  size="1rem"
+                  name="gravity-ui:bars-descending-align-left-arrow-down"
+                />
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+        <section
+          class="flex md:hidden justify-center items-center gap-x-4 ml-0 md:ml-4"
         >
-          <TabsList class="grid grid-cols-2">
-            <TabsTrigger value="asc">
-              <span class="hidden md:inline-block"> Ascending </span>
-              <Icon
-                class="ml-0 md:ml-3"
-                size="1rem"
-                name="gravity-ui:bars-ascending-align-left-arrow-down"
-              />
-            </TabsTrigger>
-            <TabsTrigger value="desc">
-              <span class="hidden md:inline-block"> Descending </span>
-              <Icon
-                class="ml-0 md:ml-3"
-                size="1rem"
-                name="gravity-ui:bars-descending-align-left-arrow-down"
-              />
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+          <Select v-model="searchFieldTab">
+            <SelectTrigger class="w-30 h-4 backdrop-blur-[3px]">
+              <SelectValue placeholder="Search For" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem class="-ml-2" value="title"> Title </SelectItem>
+                <SelectItem class="-ml-2" value="author"> Author </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+
+          <Separator orientation="vertical" class="h-4" />
+          <Select v-model="searchSortTab">
+            <SelectTrigger class="w-30 h-4 backdrop-blur-[3px]">
+              <SelectValue placeholder="Sort By" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem class="-ml-2" value="asc"> Ascending </SelectItem>
+                <SelectItem class="-ml-2" value="desc"> Descending </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </section>
       </section>
     </div>
-    <section class="flex gap-x-2 items-center">
+    <section
+      class="flex md:h-12 h-24 justify-between flex-col md:flex-row gap-2 items-center md:justify-center"
+    >
       <DownloadPopover />
       <NewDialog />
       <DataTableViewOptions :table="table" />

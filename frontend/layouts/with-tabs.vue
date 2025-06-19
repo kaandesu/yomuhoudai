@@ -8,16 +8,28 @@
       >
         <!-- on sm use dropdown to select the page -->
         <div class="flex items-center gap-4 sm:hidden">
-          <select
-            id="pageSelect"
+          <Select
             v-model="selectedUid"
-            @change="handleTabTrigger(selectedTab?.href ?? '#')"
-            class="rounded-md border px-3 py-1.5 text-lg"
+            @update:model-value="handleTabTrigger(selectedTab?.href ?? '#')"
           >
-            <option v-for="tab in tabs" :key="tab.uid" :value="tab.uid">
-              {{ tab.title }}
-            </option>
-          </select>
+            <SelectTrigger
+              class="w-[124px] h-6 text-md border rounded-md px-3 py-1.5"
+            >
+              <SelectValue placeholder="Select Page" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem
+                  class="-ml-2"
+                  v-for="tab in tabs"
+                  :key="tab.uid"
+                  :value="tab.uid"
+                >
+                  {{ tab.title }}
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
           <div class="ml-auto flex items-center gap-x-4">
             <slot name="bar" />
           </div>

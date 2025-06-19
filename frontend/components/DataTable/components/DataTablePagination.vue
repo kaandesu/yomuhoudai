@@ -47,13 +47,13 @@ const handlePageChange = async (index: number) => {
 
 <template>
   <div class="flex items-center justify-between px-2">
-    <div class="flex-1 text-sm text-muted-foreground">
+    <div class="flex-1 text-xs md:text-sm text-muted-foreground">
       {{ searchData.total }}
       entries found.
     </div>
     <div class="flex items-center space-x-6 lg:space-x-8">
       <div class="flex items-center space-x-2">
-        <p class="text-sm font-medium">Rows per page</p>
+        <p class="text-sm hidden md:block font-medium">Rows per page</p>
         <Select
           :model-value="`${table.getState().pagination.pageSize}`"
           @update:model-value="table.setPageSize"
@@ -75,7 +75,7 @@ const handlePageChange = async (index: number) => {
         </Select>
       </div>
       <div
-        class="flex w-[100px] items-center justify-center text-sm font-medium"
+        class="flex w-full items-center justify-center text-xs md:text-sm font-medium"
       >
         Page {{ searchData.currentPage }} of
         {{ searchData.lastPage }}
