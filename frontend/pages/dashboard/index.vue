@@ -102,7 +102,7 @@
       >
         {{ books.length }}/{{ overviewPaginationData.total }}
         <Button
-          :disabled="loading || overviewPaginationData.total == books.length"
+          :disabled="loading || overviewPaginationData.total >= books.length"
           class="w-24 h-4 backdrop-blur-[4px] bg-transparent flex justify-between rounded-md"
           variant="outline"
           @click="handleLoadMore()"
