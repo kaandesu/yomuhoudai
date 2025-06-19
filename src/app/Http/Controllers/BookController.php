@@ -178,6 +178,10 @@ class BookController extends Controller
      *         response=404,
      *         description="Book not found"
      *     )
+     *     @OA\Response(
+     *         response=409,
+     *         description="A book with the same title and author already exists!"
+     *     )
      * )
      */
     public function update(Request $request, $id): JsonResponse
@@ -197,8 +201,21 @@ class BookController extends Controller
                 'pageCount' => ['nullable', 'integer', 'min:0'],
                 'publishedDate' => ['nullable', 'string', new NoHtml()],
                 'rating' => ['nullable', 'integer'],
-            ]
+                ]
             );
+
+            // only check for duplicates if both title and author are being updated or present
+            $title = $data['title'] ?? $book->title;
+            $author = $data['author'] ?? $book->author;
+
+            $exists = Book::where('title', $title)
+                          ->where('author', $author)
+                          ->where('id', '!=', $book->id)
+                          ->first();
+
+            if ($exists) {
+                return $this->jsonResponse($exists, 'A book with the same title and author already exists!', 409);
+            }
 
             $book->update($data);
 

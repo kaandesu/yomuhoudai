@@ -101,6 +101,7 @@ export const useLibrary = defineStore(
         onResponse({ response }) {
           books.value = response._data.data ?? [];
           if (books.value.length > 0) {
+            overviewPaginationData.value.total = books.value.length;
             createToast({
               message: "Books loaded successfully",
               toastOps: {

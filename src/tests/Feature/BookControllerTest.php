@@ -231,6 +231,28 @@ class BookControllerTest extends TestCase
         $response->assertStatus(500);
     }
 
+    public function test_update_to_duplicate_book_returns_409()
+    {
+        $book1 = Book::create([
+            'title' => 'Original Title',
+            'author' => 'Same Author'
+        ]);
+
+        $book2 = Book::create([
+            'title' => 'Another Title',
+            'author' => 'Same Author'
+        ]);
+
+        $updatePayload = [
+            'title' => 'Original Title',
+            'author' => 'Same Author'
+        ];
+
+        $response = $this->putJson("/api/v1/books/{$book2->id}", $updatePayload);
+
+        $response->assertStatus(409);
+    }
+
     public function test_can_delete_book()
     {
         $book = Book::create(['title' => 'To Delete', 'author' => 'Author']);
