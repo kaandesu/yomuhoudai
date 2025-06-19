@@ -18,7 +18,7 @@ export const useStateManager = defineStore(
 
     const featurePreview = ref<{ aiSuggestions: boolean; heatmap: boolean }>({
       aiSuggestions: false,
-      heatmap: true,
+      heatmap: false,
     });
 
     const currentPageInfo = ref<Page>({ uid: "" });

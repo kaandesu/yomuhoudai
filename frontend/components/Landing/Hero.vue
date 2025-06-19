@@ -25,7 +25,7 @@ const mode = useColorMode();
           <h1>
             {{ slogan[0] }}
             <span
-              class="bg-gradient-to-r from-[#D247BF] to-primary bg-clip-text text-transparent"
+              class="bg-gradient-to-r from-[#fff70F] to-orange-400 bg-clip-text text-transparent"
             >
               {{ slogan[1] }}
             </span>

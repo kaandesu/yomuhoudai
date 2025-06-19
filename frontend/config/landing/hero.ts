@@ -3,7 +3,7 @@ export const hero = {
     label: "Beta",
     value: "Yomuhoudai is live!",
   },
-  slogan: ["Effortless", "Book", "Tracking"],
+  slogan: ["All You Can", "Read"],
   desc: `
     Meet Yomuhoudai — your smart reading companion that helps you track books,
     monitor your progress, and find your next favorite read, all in one place.
