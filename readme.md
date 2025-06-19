@@ -204,6 +204,10 @@ This will execute the test suite located at tests/Feature/BookControllerTest.php
 - test_export_returns_xml_data
 - test_search_title_pagination_and_sorting
 - test_search_author_pagination_and_sorting
+- test_update_to_duplicate_book_returns_409
+- test_export_fails_when_no_books_exist
+- test_export_authors_only_exports_unique_authors
+- test_export_titles_includes_duplicates
 
 </details>
 
