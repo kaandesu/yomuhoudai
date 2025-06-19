@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { landing } from "@/config/landing";
-const { Hero, Benefits, Features, HowItWorks, Team } = landing;
+const { Hero, Benefits, Features, HowItWorks } = landing;
 </script>
 <template>
   <main
@@ -11,7 +11,6 @@ const { Hero, Benefits, Features, HowItWorks, Team } = landing;
     <LandingBenefits v-if="Benefits != undefined" />
     <LandingFeatures v-if="Features != undefined" />
     <LandingHowItWorks v-if="HowItWorks != undefined" />
-    <LandingTeam v-if="Team != undefined" />
   </main>
 </template>
 <style>
