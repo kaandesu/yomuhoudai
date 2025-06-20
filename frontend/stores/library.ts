@@ -145,8 +145,10 @@ export const useLibrary = defineStore(
           })();
           const newBook = response._data?.data;
           if (newBook) {
-            books.value.push(newBook);
+            if (books.value.length == overviewPaginationData.value.total)
+              books.value.push(newBook);
             overviewPaginationData.value.total += 1;
+            searchBooksBy(searchFieldTab.value)({});
             onSuccess?.(newBook);
           }
         },
@@ -237,18 +239,16 @@ export const useLibrary = defineStore(
       const fetcher = $fetch.create({
         baseURL: apiBaseUrl,
         onResponse({ response }) {
+          if (!response.ok) return;
           if (response._data.data != undefined) {
             const updatedBook = response._data.data as Book;
             const index = books.value.findIndex((b) => b.id === updatedBook.id);
             if (index !== -1) {
               books.value[index] = { ...books.value[index], ...updatedBook };
             }
-
-            const index2 = searchResults.value.findIndex(
-              (b) => b.id === updatedBook.id,
-            );
-            if (index2 !== -1) searchResults.value.splice(index2, 1);
           }
+
+          searchBooksBy(searchFieldTab.value)({});
           createToast({
             message: "Book updated successfully",
             toastOps: {
@@ -293,6 +293,7 @@ export const useLibrary = defineStore(
       const fetcher = $fetch.create({
         baseURL: apiBaseUrl,
         onResponse({ response }) {
+          if (!response.ok) return;
           createToast({
             message: "Book deleted successfully",
             toastOps: { description: response._data?.message ?? "" },
@@ -301,8 +302,17 @@ export const useLibrary = defineStore(
 
           const index = books.value.findIndex((b) => b.id === id);
           if (index !== -1) books.value.splice(index, 1);
-          const index2 = searchResults.value.findIndex((b) => b.id === id);
-          if (index2 !== -1) searchResults.value.splice(index2, 1);
+
+          if (
+            searchResults.value.length == 1 &&
+            searchData.value.currentPage >= 2
+          ) {
+            searchBooksBy(searchFieldTab.value)({
+              page: searchData.value.currentPage - 1,
+            });
+          } else {
+            searchBooksBy(searchFieldTab.value)({});
+          }
           overviewPaginationData.value.total -= 1;
           onSuccess?.(response._data);
         },
@@ -385,7 +395,7 @@ export const useLibrary = defineStore(
     const searchBooksBy =
       (field: "author" | "title") =>
       async ({
-        page = 1,
+        page = searchData.value.currentPage,
         onSuccess,
         onError,
       }: {
@@ -397,9 +407,8 @@ export const useLibrary = defineStore(
         const fetcher = $fetch.create({
           baseURL: apiBaseUrl,
           onResponse({ response }) {
+            if (!response.ok) return;
             const result = response._data.data;
-            searchResults.value = result.data ?? [];
-
             searchData.value = {
               total: result.total,
               perPage: result.per_page,
@@ -407,6 +416,8 @@ export const useLibrary = defineStore(
               lastPage: result.last_page,
               query: input ?? "",
             };
+
+            searchResults.value = result.data ?? [];
 
             if (searchResults.value.length > 0) onSuccess?.(result);
           },

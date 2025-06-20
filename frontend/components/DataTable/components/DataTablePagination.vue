@@ -78,7 +78,7 @@ const handlePageChange = async (index: number) => {
         class="flex w-full items-center justify-center text-xs md:text-sm font-medium"
       >
         Page {{ searchData.currentPage }} of
-        {{ searchData.lastPage }}
+        {{ Math.ceil(searchData.total / searchData.perPage) }}
       </div>
       <div class="flex items-center space-x-2">
         <Button
