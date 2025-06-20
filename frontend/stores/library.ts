@@ -184,6 +184,7 @@ export const useLibrary = defineStore(
       const fetcher = $fetch.create({
         baseURL: apiBaseUrl,
         onResponse({ response }) {
+          if (!response.ok) return;
           const result = response._data.data;
           const newBooks = result.data ?? [];
           const currentPageIndex = overviewPaginationData.value.currentPage;
@@ -196,13 +197,51 @@ export const useLibrary = defineStore(
           };
 
           if (currentPageIndex < overviewPaginationData.value.currentPage) {
-            for (let i = 0; i < newBooks.length; i++) {
-              books.value.push(newBooks[i]);
-            }
+            books.value.push(...newBooks);
+          } else if (overviewPaginationData.value.currentPage == 1) {
+            books.value = newBooks;
           }
 
-          if (overviewPaginationData.value.currentPage == 1) {
-            books.value = newBooks;
+          // NOTE: This can happen if the overview page has loaded some (but not all) pages,
+          // and a new book is added that would appear on an earlier page (based on sorting).
+          // Because the earlier page wasn't refreshed, the new book won't show up in the
+          // currently loaded or future pages. To fix this, we refresh the loaded books.
+          if (
+            overviewPaginationData.value.currentPage >=
+              overviewPaginationData.value.lastPage &&
+            books.value.length < overviewPaginationData.value.total
+          ) {
+            createToast({
+              message: "Some books might be missing",
+              toastOps: {
+                description: h("div", [
+                  h(
+                    "span",
+                    "A new book may have been added to an earlier page.",
+                  ),
+                  h(
+                    "button",
+                    {
+                      style: {
+                        marginLeft: "8px",
+                        backgroundColor: "#facc14",
+                        color: "white",
+                        padding: "4px 8px",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                      },
+                      onClick: () => {
+                        getBooksPaginated({ page: 1 });
+                      },
+                    },
+                    "Refresh books",
+                  ),
+                ]),
+                position: "top-right",
+                duration: 8000,
+              },
+              type: "warning",
+            })();
           }
 
           if (newBooks.length > 0) {
